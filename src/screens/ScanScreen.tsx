@@ -4,7 +4,6 @@ import {
   Text,
   StyleSheet,
   TouchableOpacity,
-  Image,
   Alert,
   ActivityIndicator,
 } from "react-native";
@@ -18,74 +17,27 @@ import { SCAN_API_URL } from "../config/api";
 type ScanScreenProps = NativeStackScreenProps<RootStackParamList, "Scan">;
 
 const ScanScreen: React.FC<ScanScreenProps> = ({ navigation }) => {
-  const [pickedImage, setPickedImage] = useState<string | null>(null);
-  const [isScanning, setIsScanning] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
 
-  const uploadImageForScan = async (uri: string) => {
-    setIsScanning(true);
-    setPickedImage(uri);
-
-    const formData = new FormData();
-    formData.append("image", {
-      uri,
-      name: "scan.jpg",
-      type: "image/jpeg",
-    } as any);
-
-    try {
-      const response = await fetch(SCAN_API_URL, {
-        method: "POST",
-        body: formData,
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || "Gagal terhubung ke server.");
-      }
-
-      navigation.navigate("ScanResult", { scannedText: data.scannedText });
-    } catch (error: any) {
-      console.error(error);
-      Alert.alert(
-        "Error",
-        error.message || "Gagal memindai gambar. Silakan coba lagi."
-      );
-    } finally {
-      setIsScanning(false);
-      setPickedImage(null);
-    }
+  // Fungsi ini mengarahkan ke layar pemindai dokumen kustom
+  const handleKameraPress = () => {
+    navigation.navigate("DocumentScanner");
   };
 
-  const handleKameraPress = async () => {
-    const { status } = await ImagePicker.requestCameraPermissionsAsync();
-    if (status !== "granted") {
-      Alert.alert("Izin Diperlukan", "Anda perlu memberikan izin kamera.");
-      return;
-    }
-
-    let result = await ImagePicker.launchCameraAsync({
-      quality: 0.7,
-    });
-
-    if (!result.canceled && result.assets[0].uri) {
-      uploadImageForScan(result.assets[0].uri);
-    }
-  };
-
+  // Fungsi ini menangani unggahan gambar dari galeri
   const handleUnggahPress = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (status !== "granted") {
-      Alert.alert("Izin Diperlukan", "Anda perlu memberikan izin galeri.");
+      Alert.alert(
+        "Izin Diperlukan",
+        "Anda perlu memberikan izin galeri untuk menggunakan fitur ini."
+      );
       return;
     }
 
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      quality: 0.7,
+      quality: 1,
     });
 
     if (!result.canceled && result.assets[0].uri) {
@@ -93,8 +45,42 @@ const ScanScreen: React.FC<ScanScreenProps> = ({ navigation }) => {
     }
   };
 
+  // Fungsi untuk mengunggah dan memproses gambar yang dipilih dari galeri
+  const uploadImageForScan = async (uri: string) => {
+    setIsProcessing(true);
+
+    try {
+      const formData = new FormData();
+      formData.append("image", {
+        uri: uri,
+        name: "upload.jpg",
+        type: "image/jpeg",
+      } as any);
+
+      const response = await fetch(SCAN_API_URL, {
+        method: "POST",
+        body: formData,
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+
+      const data = await response.json();
+      if (!response.ok)
+        throw new Error(data.error || "Gagal terhubung ke server.");
+
+      navigation.navigate("ScanResult", { scannedText: data.scannedText });
+    } catch (error: any) {
+      Alert.alert(
+        "Error",
+        error.message || "Gagal memindai gambar. Silakan coba lagi."
+      );
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
   return (
     <View style={styles.container}>
+      {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity
           onPress={() => navigation.goBack()}
@@ -102,37 +88,29 @@ const ScanScreen: React.FC<ScanScreenProps> = ({ navigation }) => {
         >
           <Ionicons name="chevron-back" size={24} color="black" />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Scan</Text>
+        <Text style={styles.headerTitle}>Scan Dokumen</Text>
       </View>
 
+      {/* Konten Utama */}
       <View style={styles.content}>
-        {isScanning ? (
+        {isProcessing ? (
           <View style={styles.placeholderContainer}>
             <ActivityIndicator size="large" color="#3F7EF3" />
-            <Text style={styles.placeholderText}>
-              Mengirim & memindai teks...
-            </Text>
-            {pickedImage && (
-              <Image
-                source={{ uri: pickedImage }}
-                style={styles.imagePreviewSmall}
-              />
-            )}
+            <Text style={styles.placeholderText}>Sedang memproses...</Text>
           </View>
         ) : (
           <View style={styles.placeholderContainer}>
-            <Ionicons name="image-outline" size={100} color="#E0E0E0" />
-            <Text style={styles.placeholderText}>
-              Pilih gambar untuk dipindai
-            </Text>
+            <Ionicons name="document-text-outline" size={100} color="#E0E0E0" />
+            <Text style={styles.placeholderText}>Pilih metode pemindaian</Text>
           </View>
         )}
 
+        {/* Tombol-tombol Aksi */}
         <View style={styles.buttonContainer}>
           <TouchableOpacity
             style={[styles.button, styles.cameraButton]}
             onPress={handleKameraPress}
-            disabled={isScanning}
+            disabled={isProcessing}
           >
             <Ionicons name="camera" size={32} color="white" />
             <Text style={styles.buttonText}>Kamera</Text>
@@ -141,7 +119,7 @@ const ScanScreen: React.FC<ScanScreenProps> = ({ navigation }) => {
           <TouchableOpacity
             style={[styles.button, styles.uploadButton]}
             onPress={handleUnggahPress}
-            disabled={isScanning}
+            disabled={isProcessing}
           >
             <Ionicons name="cloud-upload" size={32} color="white" />
             <Text style={styles.buttonText}>Unggah</Text>
@@ -163,8 +141,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingTop: 50,
     paddingBottom: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: "#F2F2F2",
   },
   backButton: {
     marginRight: 16,
@@ -193,15 +169,9 @@ const styles = StyleSheet.create({
     color: "#A0A0A0",
     fontSize: 16,
   },
-  imagePreviewSmall: {
-    width: 100,
-    height: 100,
-    borderRadius: 10,
-    marginTop: 20,
-  },
   buttonContainer: {
     width: "100%",
-    marginTop: 20,
+    paddingTop: 20,
   },
   button: {
     width: "100%",
@@ -220,7 +190,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: "white",
-    fontSize: 24,
+    fontSize: 20,
     fontWeight: "bold",
     marginTop: 8,
   },

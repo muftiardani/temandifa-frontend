@@ -9,6 +9,7 @@ import SettingsScreen from "./src/screens/SettingsScreen";
 import VideoCallScreen from "./src/screens/VideoCallScreen";
 import ScanResultScreen from "./src/screens/ScanResultScreen";
 import VoiceResultScreen from "./src/screens/VoiceResultScreen";
+import DocumentScannerScreen from "./src/screens/DocumentScannerScreen";
 
 import { RootStackParamList } from "./src/types/navigation";
 
@@ -56,6 +57,11 @@ export default function App() {
         <Stack.Screen
           name="VoiceResult"
           component={VoiceResultScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="DocumentScanner"
+          component={DocumentScannerScreen}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>

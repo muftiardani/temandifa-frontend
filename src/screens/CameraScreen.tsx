@@ -5,7 +5,6 @@ import {
   StyleSheet,
   Dimensions,
   TouchableOpacity,
-  ActivityIndicator,
 } from "react-native";
 import { CameraView, useCameraPermissions } from "expo-camera";
 import * as Speech from "expo-speech";
@@ -37,8 +36,7 @@ export default function CameraScreen() {
   useEffect(() => {
     let intervalId: NodeJS.Timeout | null = null;
     if (isFocused && permission?.granted) {
-      // Ambil gambar setiap 2.5 detik
-      intervalId = setInterval(takePictureAndDetect, 2500);
+      intervalId = setInterval(takePictureAndDetect, 2500); // Ambil gambar setiap 2.5 detik
     }
     return () => {
       if (intervalId) clearInterval(intervalId);
@@ -50,8 +48,10 @@ export default function CameraScreen() {
       setIsProcessing(true);
       try {
         const photo = await cameraRef.current.takePictureAsync({
-          quality: 0.4,
+          quality: 0.2, // Kualitas gambar lebih rendah untuk pengambilan & pengiriman yang lebih cepat
+          skipProcessing: true,
         });
+
         if (!photo) {
           setIsProcessing(false);
           return;
@@ -88,17 +88,19 @@ export default function CameraScreen() {
 
   const speakTopObject = (detectedObjects: any[]) => {
     if (detectedObjects.length > 0) {
+      // Urutkan untuk mendapatkan objek dengan confidence tertinggi
       const topObject = detectedObjects.sort(
         (a, b) => b.confidence - a.confidence
       )[0];
       const objectName = topObject.class;
       const now = Date.now();
 
+      // Cegah pengulangan suara yang sama terlalu cepat
       if (
         lastSpokenRef.current.name !== objectName ||
         now - lastSpokenRef.current.time > 5000
       ) {
-        Speech.stop();
+        Speech.stop(); // Hentikan suara sebelumnya jika ada
         Speech.speak(`Di depan ada ${objectName}`, { language: "id-ID" });
         lastSpokenRef.current = { name: objectName, time: now };
       }
@@ -128,6 +130,7 @@ export default function CameraScreen() {
   if (!permission) {
     return <View style={styles.container} />;
   }
+
   if (!permission.granted) {
     return (
       <View style={styles.container}>
@@ -150,13 +153,19 @@ export default function CameraScreen() {
         <CameraView style={styles.camera} facing={"back"} ref={cameraRef} />
       )}
       <View style={styles.detectionContainer}>{renderDetections()}</View>
-      {isProcessing && (
-        <ActivityIndicator
-          style={styles.processingIndicator}
-          size="large"
-          color="#FFF"
+
+      <View style={styles.statusIndicator}>
+        <View
+          style={[
+            styles.statusDot,
+            { backgroundColor: isProcessing ? "#FFA500" : "#4CAF50" },
+          ]}
         />
-      )}
+        <Text style={styles.statusText}>
+          {isProcessing ? "Memproses..." : "Siap"}
+        </Text>
+      </View>
+
       <TouchableOpacity
         style={styles.doneButton}
         onPress={() => navigation.goBack()}
@@ -220,9 +229,25 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "600",
   },
-  processingIndicator: {
+  statusIndicator: {
     position: "absolute",
     top: 60,
     right: 20,
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    borderRadius: 20,
+  },
+  statusDot: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    marginRight: 8,
+  },
+  statusText: {
+    color: "white",
+    fontSize: 12,
   },
 });

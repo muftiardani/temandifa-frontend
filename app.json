@@ -27,7 +27,13 @@
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
-      "expo-barcode-scanner"
+      "expo-barcode-scanner",
+      [
+        "react-native-document-scanner-plugin",
+        {
+          "cameraPermission": "Kami memerlukan izin kamera untuk memindai dokumen Anda."
+        }
+      ]
     ]
   }
 }

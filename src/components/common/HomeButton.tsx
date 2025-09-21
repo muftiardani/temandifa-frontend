@@ -1,12 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
-import {
-  Text,
-  TouchableOpacity,
-  View,
-  ViewStyle,
-  StyleSheet,
-} from "react-native";
+import { Text, TouchableOpacity, ViewStyle, StyleSheet } from "react-native";
 
 type HomeButtonProps = {
   title: string;

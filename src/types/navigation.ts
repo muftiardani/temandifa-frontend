@@ -9,6 +9,7 @@ export type RootStackParamList = {
   VideoCall: undefined;
   ScanResult: { scannedText: string };
   VoiceResult: { transcribedText: string };
+  DocumentScanner: undefined;
 };
 
 export type ScreenNavigationProp = NavigationProp<RootStackParamList>;
