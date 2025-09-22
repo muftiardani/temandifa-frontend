@@ -1,18 +1,21 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import {
   View,
   Text,
   StyleSheet,
   TouchableOpacity,
-  Alert,
   ActivityIndicator,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { Audio } from "expo-av";
+import * as Haptics from "expo-haptics";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { RootStackParamList } from "../types/navigation";
+import Toast from "react-native-toast-message";
 
-import { TRANSCRIBE_API_URL } from "../config/api";
+import { RootStackParamList } from "../types/navigation";
+import { apiService } from "../services/api";
+import { commonStyles } from "../constants/Styles";
+import { Colors } from "../constants/Colors";
 
 type VoiceScreenProps = NativeStackScreenProps<RootStackParamList, "Voice">;
 
@@ -22,16 +25,22 @@ const VoiceScreen: React.FC<VoiceScreenProps> = ({ navigation }) => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [permissionResponse, requestPermission] = Audio.usePermissions();
 
-  async function startRecording() {
+  const startRecording = useCallback(async () => {
     try {
       if (permissionResponse?.status !== "granted") {
-        await requestPermission();
+        const permission = await requestPermission();
+        if (permission.status !== "granted") {
+          Toast.show({
+            type: "info",
+            text1: "Izin diperlukan untuk merekam suara.",
+          });
+          return;
+        }
       }
       await Audio.setAudioModeAsync({
         allowsRecordingIOS: true,
         playsInSilentModeIOS: true,
       });
-
       const { recording } = await Audio.Recording.createAsync(
         Audio.RecordingOptionsPresets.HIGH_QUALITY
       );
@@ -39,95 +48,75 @@ const VoiceScreen: React.FC<VoiceScreenProps> = ({ navigation }) => {
       setIsRecording(true);
     } catch (err) {
       console.error("Gagal memulai rekaman", err);
-      Alert.alert(
-        "Error",
-        "Gagal memulai rekaman. Pastikan izin mikrofon telah diberikan."
-      );
+      Toast.show({ type: "error", text1: "Gagal memulai rekaman." });
     }
-  }
+  }, [permissionResponse, requestPermission]);
 
-  async function stopRecordingAndTranscribe() {
+  const stopRecordingAndTranscribe = useCallback(async () => {
     if (!recording) return;
-
     setIsRecording(false);
     setIsProcessing(true);
-
     try {
       await recording.stopAndUnloadAsync();
       await Audio.setAudioModeAsync({ allowsRecordingIOS: false });
       const uri = recording.getURI();
-
-      if (!uri) {
-        throw new Error("URI rekaman tidak ditemukan.");
+      if (!uri) throw new Error("URI rekaman tidak ditemukan.");
+      const result = await apiService.transcribeAudio(uri);
+      if (result) {
+        navigation.navigate("VoiceResult", {
+          transcribedText: result.transcribedText,
+        });
       }
-
-      console.log("Rekaman disimpan di:", uri);
-
-      const formData = new FormData();
-      formData.append("audio", {
-        uri: uri,
-        name: "recording.m4a",
-        type: "audio/m4a",
-      } as any);
-
-      const response = await fetch(TRANSCRIBE_API_URL, {
-        method: "POST",
-        body: formData,
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
-
-      const result = await response.json();
-
-      if (!response.ok) {
-        throw new Error(
-          result.error || "Gagal menghubungi server transkripsi."
-        );
-      }
-
-      navigation.navigate("VoiceResult", {
-        transcribedText: result.transcribedText,
-      });
-    } catch (error: any) {
-      console.error(error);
-      Alert.alert("Error", error.message || "Gagal memproses suara.");
+    } catch (error) {
+      // Error ditangani service layer
     } finally {
       setIsProcessing(false);
       setRecording(null);
     }
-  }
+  }, [recording, navigation]);
+
+  const handleMicPress = () => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    if (isRecording) {
+      stopRecordingAndTranscribe();
+    } else {
+      startRecording();
+    }
+  };
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
+      <View style={commonStyles.header}>
         <TouchableOpacity
           onPress={() => navigation.goBack()}
-          style={styles.backButton}
+          style={commonStyles.backButton}
+          accessibilityLabel="Kembali. Tombol"
         >
-          <Ionicons name="chevron-back" size={24} color="black" />
+          <Ionicons name="chevron-back" size={24} color={Colors.black} />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Voice</Text>
+        <Text style={commonStyles.headerTitle}>Voice</Text>
       </View>
-
       <View style={styles.content}>
         <Text style={styles.infoText}>
           {isProcessing
-            ? "Sedang memproses suara..."
+            ? "Mengubah suara menjadi teks..."
             : isRecording
             ? "Sedang mendengarkan..."
             : "Tekan tombol untuk berbicara"}
         </Text>
-
         {isProcessing ? (
-          <ActivityIndicator size="large" color="#3F7EF3" />
+          <ActivityIndicator size="large" color={Colors.primary} />
         ) : (
           <TouchableOpacity
             style={[styles.micButton, isRecording && styles.micButtonRecording]}
-            onPress={isRecording ? stopRecordingAndTranscribe : startRecording}
+            onPress={handleMicPress}
             disabled={isProcessing}
+            accessibilityLabel={
+              isRecording ? "Berhenti merekam. Tombol" : "Mulai merekam. Tombol"
+            }
+            accessibilityHint="Ketuk dua kali untuk mengaktifkan"
           >
-            <Ionicons name="mic" size={80} color="#fff" />
+            <Ionicons name="mic" size={80} color={Colors.white} />
           </TouchableOpacity>
         )}
       </View>
@@ -136,18 +125,7 @@ const VoiceScreen: React.FC<VoiceScreenProps> = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#fff" },
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingHorizontal: 16,
-    paddingTop: 50,
-    paddingBottom: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: "#F2F2F2",
-  },
-  backButton: { marginRight: 16, padding: 8 },
-  headerTitle: { fontSize: 20, fontWeight: "600", color: "#000" },
+  container: { flex: 1, backgroundColor: Colors.white },
   content: {
     flex: 1,
     justifyContent: "center",
@@ -156,7 +134,7 @@ const styles = StyleSheet.create({
   },
   infoText: {
     fontSize: 18,
-    color: "#666",
+    color: Colors.grey,
     marginBottom: 40,
     textAlign: "center",
   },
@@ -164,12 +142,12 @@ const styles = StyleSheet.create({
     width: 150,
     height: 150,
     borderRadius: 75,
-    backgroundColor: "#3F7EF3",
+    backgroundColor: Colors.primary,
     justifyContent: "center",
     alignItems: "center",
     elevation: 8,
   },
-  micButtonRecording: { backgroundColor: "#ED6A5A" },
+  micButtonRecording: { backgroundColor: Colors.accent },
 });
 
 export default VoiceScreen;

@@ -10,7 +10,10 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import * as Speech from "expo-speech";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
+
 import { RootStackParamList } from "../types/navigation";
+import { commonStyles } from "../constants/Styles";
+import { Colors } from "../constants/Colors";
 
 type ScanResultScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -26,10 +29,10 @@ const ScanResultScreen: React.FC<ScanResultScreenProps> = ({
   const isMounted = useRef(true);
 
   useEffect(() => {
+    isMounted.current = true;
     const unsubscribe = navigation.addListener("beforeRemove", () => {
       Speech.stop();
     });
-
     return () => {
       isMounted.current = false;
       unsubscribe();
@@ -45,13 +48,11 @@ const ScanResultScreen: React.FC<ScanResultScreenProps> = ({
         }
       }
     }, 500);
-
     return () => clearInterval(interval);
   }, [isSpeaking]);
 
   const handleSpeakButton = async () => {
     const speakingStatus = await Speech.isSpeakingAsync();
-
     if (speakingStatus) {
       Speech.stop();
       setIsSpeaking(false);
@@ -73,34 +74,38 @@ const ScanResultScreen: React.FC<ScanResultScreenProps> = ({
   };
 
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <SafeAreaView style={commonStyles.safeArea}>
       <View style={styles.container}>
-        {/* Header */}
-        <View style={styles.header}>
+        <View style={commonStyles.header}>
           <TouchableOpacity
             onPress={() => navigation.goBack()}
-            style={styles.backButton}
+            style={commonStyles.backButton}
+            accessibilityLabel="Kembali. Tombol"
           >
-            <Ionicons name="chevron-back" size={24} color="black" />
+            <Ionicons name="chevron-back" size={24} color={Colors.black} />
           </TouchableOpacity>
-          <Text style={styles.headerTitle}>Hasil Scan</Text>
+          <Text style={commonStyles.headerTitle}>Hasil Scan</Text>
         </View>
 
-        {/* Konten Hasil Teks */}
         <ScrollView style={styles.contentScrollView}>
-          <Text style={styles.resultText}>{scannedText}</Text>
+          <Text style={styles.resultText}>
+            {scannedText || "Tidak ada teks yang terdeteksi."}
+          </Text>
         </ScrollView>
 
-        {/* Tombol Aksi */}
         <View style={styles.bottomBar}>
           <TouchableOpacity
             style={[styles.actionButton, isSpeaking && styles.stopButton]}
             onPress={handleSpeakButton}
+            accessibilityLabel={
+              isSpeaking ? "Berhenti. Tombol" : "Dengarkan hasil scan. Tombol"
+            }
+            accessibilityHint="Ketuk dua kali untuk memutar atau menghentikan suara"
           >
             <Ionicons
               name={isSpeaking ? "stop-circle" : "volume-high"}
               size={32}
-              color="white"
+              color={Colors.white}
             />
             <Text style={styles.actionButtonText}>
               {isSpeaking ? "Berhenti" : "Dengarkan"}
@@ -113,47 +118,16 @@ const ScanResultScreen: React.FC<ScanResultScreenProps> = ({
 };
 
 const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-    backgroundColor: "#fff",
-  },
-  container: {
-    flex: 1,
-  },
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingHorizontal: 16,
-    paddingTop: 50,
-    paddingBottom: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: "#F2F2F2",
-  },
-  backButton: {
-    marginRight: 16,
-    padding: 8,
-  },
-  headerTitle: {
-    fontSize: 20,
-    fontWeight: "600",
-    color: "#000",
-  },
-  contentScrollView: {
-    flex: 1,
-    padding: 20,
-  },
-  resultText: {
-    fontSize: 16,
-    lineHeight: 24,
-    color: "#333",
-  },
+  container: { flex: 1 },
+  contentScrollView: { flex: 1, padding: 20 },
+  resultText: { fontSize: 16, lineHeight: 24, color: Colors.textDefault },
   bottomBar: {
     padding: 20,
     borderTopWidth: 1,
-    borderTopColor: "#F2F2F2",
+    borderTopColor: Colors.lightGrey,
   },
   actionButton: {
-    backgroundColor: "#3F7EF3",
+    backgroundColor: Colors.primary,
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
@@ -161,11 +135,9 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     height: 70,
   },
-  stopButton: {
-    backgroundColor: "#CC444B",
-  },
+  stopButton: { backgroundColor: Colors.danger },
   actionButtonText: {
-    color: "white",
+    color: Colors.white,
     fontSize: 18,
     fontWeight: "bold",
     marginLeft: 10,

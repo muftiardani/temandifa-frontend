@@ -15,13 +15,16 @@
     "expo": "~54.0.7",
     "expo-av": "~16.0.7",
     "expo-camera": "~17.0.8",
+    "expo-haptics": "~15.0.7",
     "expo-image-picker": "~17.0.8",
     "expo-speech": "^14.0.7",
     "react": "19.1.0",
     "react-native": "0.81.4",
     "react-native-document-scanner-plugin": "^1.0.1",
     "react-native-safe-area-context": "~5.6.0",
-    "react-native-screens": "~4.16.0"
+    "react-native-screens": "~4.16.0",
+    "react-native-toast-message": "^2.3.3",
+    "zustand": "^5.0.8"
   },
   "devDependencies": {
     "@types/react": "~19.1.0",

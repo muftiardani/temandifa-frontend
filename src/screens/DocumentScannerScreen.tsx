@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { View, StyleSheet, Text, ActivityIndicator, Alert } from "react-native";
+import { View, StyleSheet, Text, ActivityIndicator } from "react-native";
 import DocumentScanner from "react-native-document-scanner-plugin";
 import * as Speech from "expo-speech";
 import { useNavigation, useIsFocused } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { RootStackParamList } from "../types/navigation";
 
-import { SCAN_API_URL } from "../config/api";
+import { RootStackParamList } from "../types/navigation";
+import { apiService } from "../services/api";
+import { Colors } from "../constants/Colors";
 
 type DocScannerNavigationProp = NativeStackNavigationProp<
   RootStackParamList,
@@ -26,16 +27,19 @@ export default function DocumentScannerScreen() {
   }, [isFocused]);
 
   const startScan = async () => {
-    const { scannedImages, status } = await DocumentScanner.scanDocument();
-
-    if (status === "cancel") {
-      navigation.goBack();
-      return;
-    }
-
-    if (scannedImages && scannedImages.length > 0) {
-      handlePictureTaken(scannedImages[0]);
-    } else {
+    try {
+      const { scannedImages, status } = await DocumentScanner.scanDocument();
+      if (status === "cancel") {
+        navigation.goBack();
+        return;
+      }
+      if (scannedImages && scannedImages.length > 0) {
+        handlePictureTaken(scannedImages[0]);
+      } else {
+        navigation.goBack();
+      }
+    } catch (error) {
+      console.error("Error during document scan:", error);
       navigation.goBack();
     }
   };
@@ -43,31 +47,13 @@ export default function DocumentScannerScreen() {
   const handlePictureTaken = async (imageUri: string) => {
     setIsProcessing(true);
     Speech.speak("Gambar diambil, sedang memproses", { language: "id-ID" });
-
     try {
-      const formData = new FormData();
-      formData.append("image", {
-        uri: imageUri,
-        name: "document.jpg",
-        type: "image/jpeg",
-      } as any);
-
-      const response = await fetch(SCAN_API_URL, {
-        method: "POST",
-        body: formData,
-        headers: { "Content-Type": "multipart/form-data" },
-      });
-
-      const result = await response.json();
-      if (!response.ok) throw new Error(result.error || "Gagal memindai.");
-
+      const result = await apiService.scanImage(imageUri);
       navigation.replace("ScanResult", { scannedText: result.scannedText });
-    } catch (error: any) {
-      console.error(error);
+    } catch (error) {
       Speech.speak("Gagal memproses gambar, silakan coba lagi.", {
         language: "id-ID",
       });
-      Alert.alert("Error", "Gagal memproses gambar, silakan coba lagi.");
       navigation.goBack();
     } finally {
       setIsProcessing(false);
@@ -76,9 +62,9 @@ export default function DocumentScannerScreen() {
 
   return (
     <View style={styles.container}>
-      <ActivityIndicator size="large" color="#007AFF" />
+      <ActivityIndicator size="large" color={Colors.primary} />
       <Text style={styles.statusText}>
-        {isProcessing ? "Memproses gambar..." : "Membuka pemindai..."}
+        {isProcessing ? "Menganalisis Teks..." : "Membuka pemindai..."}
       </Text>
     </View>
   );
@@ -91,9 +77,5 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "rgba(0,0,0,0.5)",
   },
-  statusText: {
-    marginTop: 20,
-    fontSize: 16,
-    color: "white",
-  },
+  statusText: { marginTop: 20, fontSize: 16, color: Colors.white },
 });

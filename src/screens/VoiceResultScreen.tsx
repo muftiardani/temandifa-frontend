@@ -10,6 +10,8 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../types/navigation";
+import { commonStyles } from "../constants/Styles";
+import { Colors } from "../constants/Colors";
 
 type VoiceResultScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -23,16 +25,17 @@ const VoiceResultScreen: React.FC<VoiceResultScreenProps> = ({
   const { transcribedText } = route.params;
 
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <SafeAreaView style={commonStyles.safeArea}>
       <View style={styles.container}>
-        <View style={styles.header}>
+        <View style={commonStyles.header}>
           <TouchableOpacity
             onPress={() => navigation.goBack()}
-            style={styles.backButton}
+            style={commonStyles.backButton}
+            accessibilityLabel="Kembali. Tombol"
           >
-            <Ionicons name="chevron-back" size={24} color="black" />
+            <Ionicons name="chevron-back" size={24} color={Colors.black} />
           </TouchableOpacity>
-          <Text style={styles.headerTitle}>Hasil Suara</Text>
+          <Text style={commonStyles.headerTitle}>Hasil Suara</Text>
         </View>
         <ScrollView style={styles.contentScrollView}>
           <Text style={styles.resultText}>
@@ -45,21 +48,9 @@ const VoiceResultScreen: React.FC<VoiceResultScreenProps> = ({
 };
 
 const styles = StyleSheet.create({
-  safeArea: { flex: 1, backgroundColor: "#fff" },
   container: { flex: 1 },
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingHorizontal: 16,
-    paddingTop: 50,
-    paddingBottom: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: "#F2F2F2",
-  },
-  backButton: { marginRight: 16, padding: 8 },
-  headerTitle: { fontSize: 20, fontWeight: "600", color: "#000" },
   contentScrollView: { flex: 1, padding: 20 },
-  resultText: { fontSize: 18, lineHeight: 26, color: "#333" },
+  resultText: { fontSize: 18, lineHeight: 26, color: Colors.textDefault },
 });
 
 export default VoiceResultScreen;

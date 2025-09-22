@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   View,
   Text,
@@ -10,57 +10,66 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../types/navigation";
+import { commonStyles } from "../constants/Styles";
+import { Colors } from "../constants/Colors";
+import { useAppStore } from "../store/appStore";
 
 type SettingsScreenProps = NativeStackScreenProps<
   RootStackParamList,
   "Settings"
 >;
 
-const SettingsScreen: React.FC<SettingsScreenProps> = ({ navigation }) => {
-  const [isThemeEnabled, setIsThemeEnabled] = useState(false);
-  const toggleThemeSwitch = () =>
-    setIsThemeEnabled((previousState) => !previousState);
+const SettingsItem = ({
+  label,
+  onPress,
+}: {
+  label: string;
+  onPress?: () => void;
+}) => (
+  <TouchableOpacity
+    style={styles.itemContainer}
+    onPress={onPress}
+    accessibilityLabel={`${label}. Tombol`}
+  >
+    <Text style={styles.itemLabel}>{label}</Text>
+    <Ionicons name="chevron-forward" size={24} color="#C7C7CC" />
+  </TouchableOpacity>
+);
 
-  const SettingsItem = ({
-    label,
-    onPress,
-  }: {
-    label: string;
-    onPress?: () => void;
-  }) => (
-    <TouchableOpacity style={styles.itemContainer} onPress={onPress}>
-      <Text style={styles.itemLabel}>{label}</Text>
-      <Ionicons name="chevron-forward" size={24} color="#C7C7CC" />
-    </TouchableOpacity>
-  );
+const SettingsScreen: React.FC<SettingsScreenProps> = ({ navigation }) => {
+  const { theme, toggleTheme } = useAppStore();
+  const isDarkMode = theme === "dark";
 
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <SafeAreaView style={commonStyles.safeArea}>
       <View style={styles.container}>
-        {/* Header */}
-        <View style={styles.header}>
+        <View style={commonStyles.header}>
           <TouchableOpacity
             onPress={() => navigation.goBack()}
-            style={styles.backButton}
+            style={commonStyles.backButton}
+            accessibilityLabel="Kembali. Tombol"
           >
-            <Ionicons name="chevron-back" size={24} color="black" />
+            <Ionicons name="chevron-back" size={24} color={Colors.black} />
           </TouchableOpacity>
-          <Text style={styles.headerTitle}>Pengaturan</Text>
+          <Text style={commonStyles.headerTitle}>Pengaturan</Text>
         </View>
 
-        {/* List Pengaturan */}
         <View style={styles.listContainer}>
-          {/* Tema */}
           <View style={styles.itemContainer}>
-            <Text style={styles.itemLabel}>Tema</Text>
+            <Text style={styles.itemLabel}>Mode Gelap</Text>
             <Switch
-              trackColor={{ false: "#767577", true: "#34C759" }}
-              thumbColor={"#f4f3f4"}
-              onValueChange={toggleThemeSwitch}
-              value={isThemeEnabled}
+              trackColor={{
+                false: Colors.switchInactive,
+                true: Colors.success,
+              }}
+              thumbColor={Colors.lightGrey}
+              onValueChange={toggleTheme}
+              value={isDarkMode}
+              accessibilityLabel={`Mode Gelap, saat ini ${
+                isDarkMode ? "aktif" : "tidak aktif"
+              }. Saklar`}
             />
           </View>
-
           <SettingsItem
             label="Kontak Darurat"
             onPress={() => console.log("Kontak Darurat")}
@@ -87,47 +96,17 @@ const SettingsScreen: React.FC<SettingsScreenProps> = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-    backgroundColor: "#fff",
-  },
-  container: {
-    flex: 1,
-  },
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingHorizontal: 16,
-    paddingTop: 50,
-    paddingBottom: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: "#F2F2F2",
-  },
-  backButton: {
-    marginRight: 16,
-    padding: 8,
-  },
-  headerTitle: {
-    fontSize: 20,
-    fontWeight: "600",
-    color: "#000",
-  },
-  listContainer: {
-    flex: 1,
-    paddingHorizontal: 16,
-    marginTop: 10,
-  },
+  container: { flex: 1 },
+  listContainer: { flex: 1, paddingHorizontal: 16, marginTop: 10 },
   itemContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
     paddingVertical: 16,
     borderBottomWidth: 1,
-    borderBottomColor: "#F2F2F2",
+    borderBottomColor: Colors.lightGrey,
   },
-  itemLabel: {
-    fontSize: 17,
-  },
+  itemLabel: { fontSize: 17 },
   footerText: {
     textAlign: "center",
     color: "#8A8A8E",

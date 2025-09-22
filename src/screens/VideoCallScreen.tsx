@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, Alert } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { CameraView, useCameraPermissions, CameraType } from "expo-camera";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
+import { Colors } from "../constants/Colors";
 
 const VideoCallScreen = () => {
   const [facing, setFacing] = useState<CameraType>("front");
@@ -15,9 +16,7 @@ const VideoCallScreen = () => {
     }
   }, [permission, requestPermission]);
 
-  if (!permission) {
-    return <View />;
-  }
+  if (!permission) return <View />;
 
   if (!permission.granted) {
     return (
@@ -25,8 +24,12 @@ const VideoCallScreen = () => {
         <Text style={{ textAlign: "center", marginBottom: 16 }}>
           Kami butuh izin Anda untuk menggunakan kamera
         </Text>
-        <TouchableOpacity style={styles.buttonBase} onPress={requestPermission}>
-          <Text style={{ color: "white" }}>Berikan Izin</Text>
+        <TouchableOpacity
+          style={styles.buttonBase}
+          onPress={requestPermission}
+          accessibilityLabel="Berikan Izin Kamera. Tombol"
+        >
+          <Text style={{ color: Colors.white }}>Berikan Izin</Text>
         </TouchableOpacity>
       </View>
     );
@@ -43,14 +46,17 @@ const VideoCallScreen = () => {
           <TouchableOpacity
             style={styles.flipButton}
             onPress={toggleCameraFacing}
+            accessibilityLabel="Balikkan Kamera. Tombol"
+            accessibilityHint="Mengganti antara kamera depan dan belakang"
           >
-            <Ionicons name="camera-reverse" size={28} color="black" />
+            <Ionicons name="camera-reverse" size={28} color={Colors.black} />
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.endCallButton}
             onPress={() => navigation.goBack()}
+            accessibilityLabel="Tutup Panggilan. Tombol"
           >
-            <Ionicons name="call" size={42} color="white" />
+            <Ionicons name="call" size={42} color={Colors.white} />
           </TouchableOpacity>
           <View style={styles.placeholder} />
         </View>
@@ -60,19 +66,14 @@ const VideoCallScreen = () => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-  },
+  container: { flex: 1, justifyContent: "center" },
   permissionContainer: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
     padding: 20,
   },
-  camera: {
-    flex: 1,
-  },
+  camera: { flex: 1 },
   buttonContainer: {
     position: "absolute",
     bottom: 60,
@@ -95,17 +96,14 @@ const styles = StyleSheet.create({
     width: 90,
     height: 90,
     borderRadius: 45,
-    backgroundColor: "#CC444B",
+    backgroundColor: Colors.danger,
     justifyContent: "center",
     alignItems: "center",
     transform: [{ rotate: "135deg" }],
   },
-  placeholder: {
-    width: 60,
-    height: 60,
-  },
+  placeholder: { width: 60, height: 60 },
   buttonBase: {
-    backgroundColor: "#007AFF",
+    backgroundColor: Colors.primary,
     paddingHorizontal: 20,
     paddingVertical: 10,
     borderRadius: 8,

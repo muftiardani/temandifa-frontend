@@ -4,34 +4,33 @@ import {
   Text,
   StyleSheet,
   TouchableOpacity,
-  Alert,
   ActivityIndicator,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import * as ImagePicker from "expo-image-picker";
-import { RootStackParamList } from "../types/navigation";
+import Toast from "react-native-toast-message";
 
-import { SCAN_API_URL } from "../config/api";
+import { RootStackParamList } from "../types/navigation";
+import { apiService } from "../services/api";
+import { commonStyles } from "../constants/Styles";
+import { Colors } from "../constants/Colors";
 
 type ScanScreenProps = NativeStackScreenProps<RootStackParamList, "Scan">;
 
 const ScanScreen: React.FC<ScanScreenProps> = ({ navigation }) => {
   const [isProcessing, setIsProcessing] = useState(false);
 
-  // Fungsi ini mengarahkan ke layar pemindai dokumen kustom
-  const handleKameraPress = () => {
-    navigation.navigate("DocumentScanner");
-  };
+  const handleKameraPress = () => navigation.navigate("DocumentScanner");
 
-  // Fungsi ini menangani unggahan gambar dari galeri
   const handleUnggahPress = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (status !== "granted") {
-      Alert.alert(
-        "Izin Diperlukan",
-        "Anda perlu memberikan izin galeri untuk menggunakan fitur ini."
-      );
+      Toast.show({
+        type: "info",
+        text1: "Izin Diperlukan",
+        text2: "Anda perlu memberikan izin galeri untuk menggunakan fitur ini.",
+      });
       return;
     }
 
@@ -45,34 +44,13 @@ const ScanScreen: React.FC<ScanScreenProps> = ({ navigation }) => {
     }
   };
 
-  // Fungsi untuk mengunggah dan memproses gambar yang dipilih dari galeri
   const uploadImageForScan = async (uri: string) => {
     setIsProcessing(true);
-
     try {
-      const formData = new FormData();
-      formData.append("image", {
-        uri: uri,
-        name: "upload.jpg",
-        type: "image/jpeg",
-      } as any);
-
-      const response = await fetch(SCAN_API_URL, {
-        method: "POST",
-        body: formData,
-        headers: { "Content-Type": "multipart/form-data" },
-      });
-
-      const data = await response.json();
-      if (!response.ok)
-        throw new Error(data.error || "Gagal terhubung ke server.");
-
+      const data = await apiService.scanImage(uri);
       navigation.navigate("ScanResult", { scannedText: data.scannedText });
-    } catch (error: any) {
-      Alert.alert(
-        "Error",
-        error.message || "Gagal memindai gambar. Silakan coba lagi."
-      );
+    } catch (error) {
+      // Penanganan error sudah dilakukan di service layer
     } finally {
       setIsProcessing(false);
     }
@@ -80,22 +58,21 @@ const ScanScreen: React.FC<ScanScreenProps> = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      {/* Header */}
-      <View style={styles.header}>
+      <View style={commonStyles.header}>
         <TouchableOpacity
           onPress={() => navigation.goBack()}
-          style={styles.backButton}
+          style={commonStyles.backButton}
+          accessibilityLabel="Kembali. Tombol"
         >
-          <Ionicons name="chevron-back" size={24} color="black" />
+          <Ionicons name="chevron-back" size={24} color={Colors.black} />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Scan Dokumen</Text>
+        <Text style={commonStyles.headerTitle}>Scan Dokumen</Text>
       </View>
 
-      {/* Konten Utama */}
       <View style={styles.content}>
         {isProcessing ? (
           <View style={styles.placeholderContainer}>
-            <ActivityIndicator size="large" color="#3F7EF3" />
+            <ActivityIndicator size="large" color={Colors.primary} />
             <Text style={styles.placeholderText}>Sedang memproses...</Text>
           </View>
         ) : (
@@ -105,14 +82,15 @@ const ScanScreen: React.FC<ScanScreenProps> = ({ navigation }) => {
           </View>
         )}
 
-        {/* Tombol-tombol Aksi */}
         <View style={styles.buttonContainer}>
           <TouchableOpacity
             style={[styles.button, styles.cameraButton]}
             onPress={handleKameraPress}
             disabled={isProcessing}
+            accessibilityLabel="Kamera. Tombol"
+            accessibilityHint="Membuka kamera untuk memindai dokumen"
           >
-            <Ionicons name="camera" size={32} color="white" />
+            <Ionicons name="camera" size={32} color={Colors.white} />
             <Text style={styles.buttonText}>Kamera</Text>
           </TouchableOpacity>
 
@@ -120,8 +98,10 @@ const ScanScreen: React.FC<ScanScreenProps> = ({ navigation }) => {
             style={[styles.button, styles.uploadButton]}
             onPress={handleUnggahPress}
             disabled={isProcessing}
+            accessibilityLabel="Unggah. Tombol"
+            accessibilityHint="Mengunggah gambar dari galeri untuk dipindai"
           >
-            <Ionicons name="cloud-upload" size={32} color="white" />
+            <Ionicons name="cloud-upload" size={32} color={Colors.white} />
             <Text style={styles.buttonText}>Unggah</Text>
           </TouchableOpacity>
         </View>
@@ -131,31 +111,8 @@ const ScanScreen: React.FC<ScanScreenProps> = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-  },
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingHorizontal: 16,
-    paddingTop: 50,
-    paddingBottom: 16,
-  },
-  backButton: {
-    marginRight: 16,
-    padding: 8,
-  },
-  headerTitle: {
-    fontSize: 20,
-    fontWeight: "600",
-    color: "#000",
-  },
-  content: {
-    flex: 1,
-    alignItems: "center",
-    padding: 20,
-  },
+  container: { flex: 1, backgroundColor: Colors.white },
+  content: { flex: 1, alignItems: "center", padding: 20 },
   placeholderContainer: {
     flex: 1,
     justifyContent: "center",
@@ -166,13 +123,10 @@ const styles = StyleSheet.create({
   },
   placeholderText: {
     marginTop: 10,
-    color: "#A0A0A0",
+    color: Colors.textPlaceholder,
     fontSize: 16,
   },
-  buttonContainer: {
-    width: "100%",
-    paddingTop: 20,
-  },
+  buttonContainer: { width: "100%", paddingTop: 20 },
   button: {
     width: "100%",
     height: 100,
@@ -182,14 +136,10 @@ const styles = StyleSheet.create({
     paddingLeft: 20,
     marginBottom: 16,
   },
-  cameraButton: {
-    backgroundColor: "#ED6A5A",
-  },
-  uploadButton: {
-    backgroundColor: "#17BEBB",
-  },
+  cameraButton: { backgroundColor: Colors.accent },
+  uploadButton: { backgroundColor: Colors.secondary },
   buttonText: {
-    color: "white",
+    color: Colors.white,
     fontSize: 20,
     fontWeight: "bold",
     marginTop: 8,

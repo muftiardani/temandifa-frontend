@@ -1,6 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
 import { Text, TouchableOpacity, ViewStyle, StyleSheet } from "react-native";
+import { Colors } from "../../constants/Colors";
 
 type HomeButtonProps = {
   title: string;
@@ -11,37 +12,46 @@ type HomeButtonProps = {
   layout?: "horizontal" | "vertical";
 };
 
-export default function HomeButton({
-  title,
-  icon,
-  backgroundColor,
-  style,
-  onPress,
-  layout = "vertical",
-}: HomeButtonProps) {
-  const isHorizontal = layout === "horizontal";
+const HomeButton = React.memo(
+  ({
+    title,
+    icon,
+    backgroundColor,
+    style,
+    onPress,
+    layout = "vertical",
+  }: HomeButtonProps) => {
+    const isHorizontal = layout === "horizontal";
+    const containerStyle = isHorizontal
+      ? styles.horizontalContainer
+      : styles.verticalContainer;
 
-  const containerStyle = isHorizontal
-    ? styles.horizontalContainer
-    : styles.verticalContainer;
-
-  return (
-    <TouchableOpacity
-      style={[styles.baseContainer, { backgroundColor }, containerStyle, style]}
-      onPress={onPress}
-    >
-      <Ionicons
-        name={icon}
-        size={isHorizontal ? 48 : 36}
-        color="#fff"
-        style={isHorizontal ? styles.horizontalIcon : styles.verticalIcon}
-      />
-      <Text style={[styles.text, isHorizontal && styles.horizontalText]}>
-        {title}
-      </Text>
-    </TouchableOpacity>
-  );
-}
+    return (
+      <TouchableOpacity
+        style={[
+          styles.baseContainer,
+          { backgroundColor },
+          containerStyle,
+          style,
+        ]}
+        onPress={onPress}
+        accessibilityLabel={`${title}. Tombol`}
+        accessibilityHint={`Ketuk dua kali untuk membuka fitur ${title}`}
+        activeOpacity={0.7}
+      >
+        <Ionicons
+          name={icon}
+          size={isHorizontal ? 48 : 36}
+          color={Colors.white}
+          style={isHorizontal ? styles.horizontalIcon : styles.verticalIcon}
+        />
+        <Text style={[styles.text, isHorizontal && styles.horizontalText]}>
+          {title}
+        </Text>
+      </TouchableOpacity>
+    );
+  }
+);
 
 const styles = StyleSheet.create({
   baseContainer: {
@@ -65,7 +75,7 @@ const styles = StyleSheet.create({
     marginRight: 20,
   },
   text: {
-    color: "#fff",
+    color: Colors.white,
     fontSize: 18,
     fontWeight: "600",
   },
@@ -73,3 +83,5 @@ const styles = StyleSheet.create({
     fontSize: 24,
   },
 });
+
+export default HomeButton;
