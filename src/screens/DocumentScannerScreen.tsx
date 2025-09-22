@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { View, StyleSheet, Text, ActivityIndicator, Alert } from "react-native";
 import DocumentScanner from "react-native-document-scanner-plugin";
+import * as Speech from "expo-speech";
 import { useNavigation, useIsFocused } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../types/navigation";
@@ -17,27 +18,21 @@ export default function DocumentScannerScreen() {
   const isFocused = useIsFocused();
   const [isProcessing, setIsProcessing] = useState(false);
 
-  // Jalankan pemindai secara otomatis saat layar ini ditampilkan
   useEffect(() => {
+    Speech.stop();
     if (isFocused) {
       startScan();
     }
   }, [isFocused]);
 
   const startScan = async () => {
-    // Panggil API dari pustaka untuk membuka pemindai
-    const { scannedImages, status } = await DocumentScanner.scanDocument({
-      // Opsi di sini, misalnya:
-      // responseType: 'imageFilePath', // default
-    });
+    const { scannedImages, status } = await DocumentScanner.scanDocument();
 
-    // Jika pengguna membatalkan, kembali ke layar sebelumnya
     if (status === "cancel") {
       navigation.goBack();
       return;
     }
 
-    // Jika ada gambar yang dipindai, proses gambar pertama
     if (scannedImages && scannedImages.length > 0) {
       handlePictureTaken(scannedImages[0]);
     } else {
@@ -47,6 +42,7 @@ export default function DocumentScannerScreen() {
 
   const handlePictureTaken = async (imageUri: string) => {
     setIsProcessing(true);
+    Speech.speak("Gambar diambil, sedang memproses", { language: "id-ID" });
 
     try {
       const formData = new FormData();
@@ -65,10 +61,12 @@ export default function DocumentScannerScreen() {
       const result = await response.json();
       if (!response.ok) throw new Error(result.error || "Gagal memindai.");
 
-      // Gunakan .replace() agar pengguna tidak bisa kembali ke layar pemindai
       navigation.replace("ScanResult", { scannedText: result.scannedText });
     } catch (error: any) {
       console.error(error);
+      Speech.speak("Gagal memproses gambar, silakan coba lagi.", {
+        language: "id-ID",
+      });
       Alert.alert("Error", "Gagal memproses gambar, silakan coba lagi.");
       navigation.goBack();
     } finally {
@@ -76,7 +74,6 @@ export default function DocumentScannerScreen() {
     }
   };
 
-  // Tampilkan layar loading saat memproses
   return (
     <View style={styles.container}>
       <ActivityIndicator size="large" color="#007AFF" />
