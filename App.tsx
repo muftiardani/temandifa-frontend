@@ -2,6 +2,7 @@ import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Toast from "react-native-toast-message";
+import * as Sentry from "@sentry/react-native";
 
 import HomeScreen from "./src/screens/HomeScreen";
 import CameraScreen from "./src/screens/CameraScreen";
@@ -15,9 +16,16 @@ import DocumentScannerScreen from "./src/screens/DocumentScannerScreen";
 
 import { RootStackParamList } from "./src/types/navigation";
 
+Sentry.init({
+  dsn: "https://3d3119812733a74dbb89780f4c0d2716@o4510066684264448.ingest.de.sentry.io/4510067148849232",
+  debug: __DEV__,
+  integrations: [Sentry.reactNavigationIntegration()],
+  tracesSampleRate: 1.0,
+});
+
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
-export default function App() {
+const App = () => {
   return (
     <>
       <NavigationContainer>
@@ -72,4 +80,6 @@ export default function App() {
       <Toast />
     </>
   );
-}
+};
+
+export default Sentry.wrap(App);

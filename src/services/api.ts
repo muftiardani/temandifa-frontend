@@ -1,3 +1,4 @@
+import NetInfo from "@react-native-community/netinfo";
 import Toast from "react-native-toast-message";
 import {
   DETECT_API_URL,
@@ -15,6 +16,16 @@ const postFormData = async (
   fileType: FileType,
   options?: { signal?: AbortSignal }
 ) => {
+  const networkState = await NetInfo.fetch();
+  if (!networkState.isConnected) {
+    Toast.show({
+      type: "error",
+      text1: Strings.general.failure,
+      text2: Strings.general.networkError,
+    });
+    throw new Error(Strings.general.networkError);
+  }
+
   try {
     const formData = new FormData();
     const file = {
@@ -46,18 +57,10 @@ const postFormData = async (
 
     console.error(`Error saat memanggil ${url}:`, error);
 
-    let userMessage = Strings.general.genericError;
-    if (
-      error instanceof TypeError &&
-      error.message.includes("Network request failed")
-    ) {
-      userMessage = Strings.general.networkError;
-    }
-
     Toast.show({
       type: "error",
       text1: Strings.general.failure,
-      text2: userMessage,
+      text2: error.message || Strings.general.genericError,
     });
 
     throw error;
