@@ -14,6 +14,7 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../types/navigation";
 import { commonStyles } from "../constants/Styles";
 import { Colors } from "../constants/Colors";
+import { Strings } from "../constants/Strings";
 
 type ScanResultScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -80,16 +81,18 @@ const ScanResultScreen: React.FC<ScanResultScreenProps> = ({
           <TouchableOpacity
             onPress={() => navigation.goBack()}
             style={commonStyles.backButton}
-            accessibilityLabel="Kembali. Tombol"
+            accessibilityLabel={`${Strings.general.back}. Tombol`}
           >
             <Ionicons name="chevron-back" size={24} color={Colors.black} />
           </TouchableOpacity>
-          <Text style={commonStyles.headerTitle}>Hasil Scan</Text>
+          <Text style={commonStyles.headerTitle}>
+            {Strings.scanResult.title}
+          </Text>
         </View>
 
         <ScrollView style={styles.contentScrollView}>
           <Text style={styles.resultText}>
-            {scannedText || "Tidak ada teks yang terdeteksi."}
+            {scannedText || Strings.scanResult.noTextDetected}
           </Text>
         </ScrollView>
 
@@ -98,7 +101,9 @@ const ScanResultScreen: React.FC<ScanResultScreenProps> = ({
             style={[styles.actionButton, isSpeaking && styles.stopButton]}
             onPress={handleSpeakButton}
             accessibilityLabel={
-              isSpeaking ? "Berhenti. Tombol" : "Dengarkan hasil scan. Tombol"
+              isSpeaking
+                ? `${Strings.scanResult.stop}. Tombol`
+                : `${Strings.scanResult.listen} hasil scan. Tombol`
             }
             accessibilityHint="Ketuk dua kali untuk memutar atau menghentikan suara"
           >
@@ -108,7 +113,7 @@ const ScanResultScreen: React.FC<ScanResultScreenProps> = ({
               color={Colors.white}
             />
             <Text style={styles.actionButtonText}>
-              {isSpeaking ? "Berhenti" : "Dengarkan"}
+              {isSpeaking ? Strings.scanResult.stop : Strings.scanResult.listen}
             </Text>
           </TouchableOpacity>
         </View>

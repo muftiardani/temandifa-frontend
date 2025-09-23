@@ -11,10 +11,10 @@ import {
 import { CameraView, useCameraPermissions } from "expo-camera";
 import * as Speech from "expo-speech";
 import { useNavigation, useIsFocused } from "@react-navigation/native";
-
 import { useCameraStore } from "../store/cameraStore";
 import { apiService } from "../services/api";
 import { Colors } from "../constants/Colors";
+import { Strings } from "../constants/Strings";
 
 const CAM_PREVIEW_WIDTH = Dimensions.get("window").width;
 const CAM_PREVIEW_HEIGHT = Dimensions.get("window").height;
@@ -48,7 +48,9 @@ export default function CameraScreen() {
         now - lastSpokenRef.current.time > 5000
       ) {
         Speech.stop();
-        Speech.speak(`Di depan ada ${objectName}`, { language: "id-ID" });
+        Speech.speak(Strings.cameraScreen.objectInFront(objectName), {
+          language: "id-ID",
+        });
         lastSpokenRef.current = { name: objectName, time: now };
       }
     }
@@ -56,7 +58,6 @@ export default function CameraScreen() {
 
   const takePictureAndDetect = useCallback(
     async (abortController: AbortController) => {
-      // Gunakan .getState() untuk mendapatkan state terbaru di dalam callback
       if (cameraRef.current && !useCameraStore.getState().isProcessing) {
         setIsProcessing(true);
         try {
@@ -65,7 +66,6 @@ export default function CameraScreen() {
             skipProcessing: true,
           });
           if (!photo?.uri) return;
-
           const result = await apiService.detectObject(
             photo.uri,
             abortController.signal
@@ -75,7 +75,6 @@ export default function CameraScreen() {
             speakTopObject(result);
           }
         } catch (error) {
-          // Error sudah ditangani oleh service layer
         } finally {
           setIsProcessing(false);
         }
@@ -87,49 +86,35 @@ export default function CameraScreen() {
   useEffect(() => {
     const abortController = new AbortController();
     let intervalId: NodeJS.Timeout | null = null;
-
     const startInterval = () => {
-      // Pastikan interval tidak duplikat
-      if (!intervalId) {
+      if (!intervalId)
         intervalId = setInterval(
           () => takePictureAndDetect(abortController),
           2500
         );
-      }
     };
-
     const stopInterval = () => {
       if (intervalId) {
         clearInterval(intervalId);
         intervalId = null;
       }
     };
-
     const handleAppStateChange = (nextAppState: AppStateStatus) => {
       if (isFocused && permission?.granted) {
-        if (nextAppState === "active") {
-          startInterval();
-        } else {
-          stopInterval();
-        }
+        if (nextAppState === "active") startInterval();
+        else stopInterval();
       }
     };
-
     const appStateSubscription = AppState.addEventListener(
       "change",
       handleAppStateChange
     );
-
-    if (isFocused && permission?.granted) {
-      startInterval();
-    }
-
-    // Cleanup function
+    if (isFocused && permission?.granted) startInterval();
     return () => {
       stopInterval();
-      abortController.abort(); // Batalkan fetch request yang mungkin sedang berjalan
+      abortController.abort();
       appStateSubscription.remove();
-      clearDetections(); // Bersihkan state saat meninggalkan layar
+      clearDetections();
     };
   }, [isFocused, permission, takePictureAndDetect, clearDetections]);
 
@@ -157,19 +142,18 @@ export default function CameraScreen() {
     });
 
   if (!permission) return <View style={styles.container} />;
-
   if (!permission.granted) {
     return (
       <View style={styles.permissionContainer}>
-        <Text style={styles.permissionText}>
-          Kami butuh izin Anda untuk menggunakan kamera
-        </Text>
+        <Text style={styles.permissionText}>{Strings.permissions.camera}</Text>
         <TouchableOpacity
           onPress={requestPermission}
           style={styles.permissionButton}
-          accessibilityLabel="Berikan Izin Kamera. Tombol"
+          accessibilityLabel={`${Strings.permissions.grantPermission}. Tombol`}
         >
-          <Text style={styles.buttonText}>Berikan Izin</Text>
+          <Text style={styles.buttonText}>
+            {Strings.permissions.grantPermission}
+          </Text>
         </TouchableOpacity>
       </View>
     );
@@ -181,7 +165,6 @@ export default function CameraScreen() {
         <CameraView style={styles.camera} facing="back" ref={cameraRef} />
       )}
       <View style={styles.detectionContainer}>{renderDetections()}</View>
-
       <View style={styles.statusIndicator}>
         <View
           style={[
@@ -190,22 +173,22 @@ export default function CameraScreen() {
           ]}
         />
         <Text style={styles.statusText}>
-          {isProcessing ? "Memproses..." : "Siap"}
+          {isProcessing
+            ? Strings.cameraScreen.processing
+            : Strings.cameraScreen.ready}
         </Text>
       </View>
-
       <TouchableOpacity
         style={styles.doneButton}
         onPress={() => navigation.goBack()}
-        accessibilityLabel="Selesai. Tombol"
-        accessibilityHint="Kembali ke layar utama"
+        accessibilityLabel={`${Strings.cameraScreen.done}. Tombol`}
+        accessibilityHint={`Kembali ke layar utama`}
       >
-        <Text style={styles.doneButtonText}>Selesai</Text>
+        <Text style={styles.doneButtonText}>{Strings.cameraScreen.done}</Text>
       </TouchableOpacity>
     </View>
   );
 }
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,

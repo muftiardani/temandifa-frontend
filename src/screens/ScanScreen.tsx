@@ -15,6 +15,7 @@ import { RootStackParamList } from "../types/navigation";
 import { apiService } from "../services/api";
 import { commonStyles } from "../constants/Styles";
 import { Colors } from "../constants/Colors";
+import { Strings } from "../constants/Strings";
 
 type ScanScreenProps = NativeStackScreenProps<RootStackParamList, "Scan">;
 
@@ -28,8 +29,8 @@ const ScanScreen: React.FC<ScanScreenProps> = ({ navigation }) => {
     if (status !== "granted") {
       Toast.show({
         type: "info",
-        text1: "Izin Diperlukan",
-        text2: "Anda perlu memberikan izin galeri untuk menggunakan fitur ini.",
+        text1: Strings.general.error,
+        text2: Strings.permissions.gallery,
       });
       return;
     }
@@ -48,7 +49,9 @@ const ScanScreen: React.FC<ScanScreenProps> = ({ navigation }) => {
     setIsProcessing(true);
     try {
       const data = await apiService.scanImage(uri);
-      navigation.navigate("ScanResult", { scannedText: data.scannedText });
+      if (data) {
+        navigation.navigate("ScanResult", { scannedText: data.scannedText });
+      }
     } catch (error) {
       // Penanganan error sudah dilakukan di service layer
     } finally {
@@ -62,23 +65,27 @@ const ScanScreen: React.FC<ScanScreenProps> = ({ navigation }) => {
         <TouchableOpacity
           onPress={() => navigation.goBack()}
           style={commonStyles.backButton}
-          accessibilityLabel="Kembali. Tombol"
+          accessibilityLabel={`${Strings.general.back}. Tombol`}
         >
           <Ionicons name="chevron-back" size={24} color={Colors.black} />
         </TouchableOpacity>
-        <Text style={commonStyles.headerTitle}>Scan Dokumen</Text>
+        <Text style={commonStyles.headerTitle}>{Strings.scanScreen.title}</Text>
       </View>
 
       <View style={styles.content}>
         {isProcessing ? (
           <View style={styles.placeholderContainer}>
             <ActivityIndicator size="large" color={Colors.primary} />
-            <Text style={styles.placeholderText}>Sedang memproses...</Text>
+            <Text style={styles.placeholderText}>
+              {Strings.scanScreen.processing}
+            </Text>
           </View>
         ) : (
           <View style={styles.placeholderContainer}>
             <Ionicons name="document-text-outline" size={100} color="#E0E0E0" />
-            <Text style={styles.placeholderText}>Pilih metode pemindaian</Text>
+            <Text style={styles.placeholderText}>
+              {Strings.scanScreen.placeholder}
+            </Text>
           </View>
         )}
 
@@ -87,29 +94,28 @@ const ScanScreen: React.FC<ScanScreenProps> = ({ navigation }) => {
             style={[styles.button, styles.cameraButton]}
             onPress={handleKameraPress}
             disabled={isProcessing}
-            accessibilityLabel="Kamera. Tombol"
+            accessibilityLabel={`${Strings.scanScreen.camera}. Tombol`}
             accessibilityHint="Membuka kamera untuk memindai dokumen"
           >
             <Ionicons name="camera" size={32} color={Colors.white} />
-            <Text style={styles.buttonText}>Kamera</Text>
+            <Text style={styles.buttonText}>{Strings.scanScreen.camera}</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
             style={[styles.button, styles.uploadButton]}
             onPress={handleUnggahPress}
             disabled={isProcessing}
-            accessibilityLabel="Unggah. Tombol"
+            accessibilityLabel={`${Strings.scanScreen.upload}. Tombol`}
             accessibilityHint="Mengunggah gambar dari galeri untuk dipindai"
           >
             <Ionicons name="cloud-upload" size={32} color={Colors.white} />
-            <Text style={styles.buttonText}>Unggah</Text>
+            <Text style={styles.buttonText}>{Strings.scanScreen.upload}</Text>
           </TouchableOpacity>
         </View>
       </View>
     </View>
   );
 };
-
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: Colors.white },
   content: { flex: 1, alignItems: "center", padding: 20 },

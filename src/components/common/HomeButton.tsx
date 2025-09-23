@@ -54,34 +54,18 @@ const HomeButton = React.memo(
 );
 
 const styles = StyleSheet.create({
-  baseContainer: {
-    borderRadius: 20,
-    padding: 20,
-  },
-  verticalContainer: {
-    alignItems: "center",
-    justifyContent: "center",
-  },
+  baseContainer: { borderRadius: 20, padding: 20 },
+  verticalContainer: { alignItems: "center", justifyContent: "center" },
   horizontalContainer: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "flex-start",
     paddingHorizontal: 30,
   },
-  verticalIcon: {
-    marginBottom: 8,
-  },
-  horizontalIcon: {
-    marginRight: 20,
-  },
-  text: {
-    color: Colors.white,
-    fontSize: 18,
-    fontWeight: "600",
-  },
-  horizontalText: {
-    fontSize: 24,
-  },
+  verticalIcon: { marginBottom: 8 },
+  horizontalIcon: { marginRight: 20 },
+  text: { color: Colors.white, fontSize: 18, fontWeight: "600" },
+  horizontalText: { fontSize: 24 },
 });
 
 export default HomeButton;

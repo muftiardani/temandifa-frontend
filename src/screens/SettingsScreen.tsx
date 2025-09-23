@@ -13,6 +13,7 @@ import { RootStackParamList } from "../types/navigation";
 import { commonStyles } from "../constants/Styles";
 import { Colors } from "../constants/Colors";
 import { useAppStore } from "../store/appStore";
+import { Strings } from "../constants/Strings";
 
 type SettingsScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -47,16 +48,16 @@ const SettingsScreen: React.FC<SettingsScreenProps> = ({ navigation }) => {
           <TouchableOpacity
             onPress={() => navigation.goBack()}
             style={commonStyles.backButton}
-            accessibilityLabel="Kembali. Tombol"
+            accessibilityLabel={`${Strings.general.back}. Tombol`}
           >
             <Ionicons name="chevron-back" size={24} color={Colors.black} />
           </TouchableOpacity>
-          <Text style={commonStyles.headerTitle}>Pengaturan</Text>
+          <Text style={commonStyles.headerTitle}>{Strings.settings.title}</Text>
         </View>
 
         <View style={styles.listContainer}>
           <View style={styles.itemContainer}>
-            <Text style={styles.itemLabel}>Mode Gelap</Text>
+            <Text style={styles.itemLabel}>{Strings.settings.darkMode}</Text>
             <Switch
               trackColor={{
                 false: Colors.switchInactive,
@@ -65,31 +66,33 @@ const SettingsScreen: React.FC<SettingsScreenProps> = ({ navigation }) => {
               thumbColor={Colors.lightGrey}
               onValueChange={toggleTheme}
               value={isDarkMode}
-              accessibilityLabel={`Mode Gelap, saat ini ${
+              accessibilityLabel={`${Strings.settings.darkMode}, saat ini ${
                 isDarkMode ? "aktif" : "tidak aktif"
               }. Saklar`}
             />
           </View>
           <SettingsItem
-            label="Kontak Darurat"
-            onPress={() => console.log("Kontak Darurat")}
-          />
-          <SettingsItem label="Bahasa" onPress={() => console.log("Bahasa")} />
-          <SettingsItem
-            label="Panduan & Bantuan"
-            onPress={() => console.log("Panduan & Bantuan")}
+            label={Strings.settings.emergencyContact}
+            onPress={() => console.log(Strings.settings.emergencyContact)}
           />
           <SettingsItem
-            label="Privasi & Keamanan"
-            onPress={() => console.log("Privasi & Keamanan")}
+            label={Strings.settings.language}
+            onPress={() => console.log(Strings.settings.language)}
           />
           <SettingsItem
-            label="Tentang Aplikasi"
-            onPress={() => console.log("Tentang Aplikasi")}
+            label={Strings.settings.helpAndGuide}
+            onPress={() => console.log(Strings.settings.helpAndGuide)}
+          />
+          <SettingsItem
+            label={Strings.settings.privacyAndSecurity}
+            onPress={() => console.log(Strings.settings.privacyAndSecurity)}
+          />
+          <SettingsItem
+            label={Strings.settings.about}
+            onPress={() => console.log(Strings.settings.about)}
           />
         </View>
-
-        <Text style={styles.footerText}>TemanDifa</Text>
+        <Text style={styles.footerText}>{Strings.settings.appName}</Text>
       </View>
     </SafeAreaView>
   );

@@ -8,6 +8,7 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../types/navigation";
 import { apiService } from "../services/api";
 import { Colors } from "../constants/Colors";
+import { Strings } from "../constants/Strings";
 
 type DocScannerNavigationProp = NativeStackNavigationProp<
   RootStackParamList,
@@ -46,12 +47,16 @@ export default function DocumentScannerScreen() {
 
   const handlePictureTaken = async (imageUri: string) => {
     setIsProcessing(true);
-    Speech.speak("Gambar diambil, sedang memproses", { language: "id-ID" });
+    Speech.speak(Strings.scanResult.imageTakenProcessing, {
+      language: "id-ID",
+    });
     try {
       const result = await apiService.scanImage(imageUri);
-      navigation.replace("ScanResult", { scannedText: result.scannedText });
+      if (result) {
+        navigation.replace("ScanResult", { scannedText: result.scannedText });
+      }
     } catch (error) {
-      Speech.speak("Gagal memproses gambar, silakan coba lagi.", {
+      Speech.speak(Strings.scanResult.imageProcessingFailed, {
         language: "id-ID",
       });
       navigation.goBack();
@@ -64,7 +69,9 @@ export default function DocumentScannerScreen() {
     <View style={styles.container}>
       <ActivityIndicator size="large" color={Colors.primary} />
       <Text style={styles.statusText}>
-        {isProcessing ? "Menganalisis Teks..." : "Membuka pemindai..."}
+        {isProcessing
+          ? Strings.scanResult.imageProcessing
+          : Strings.scanResult.scannerOpening}
       </Text>
     </View>
   );

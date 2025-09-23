@@ -16,6 +16,7 @@ import { RootStackParamList } from "../types/navigation";
 import { apiService } from "../services/api";
 import { commonStyles } from "../constants/Styles";
 import { Colors } from "../constants/Colors";
+import { Strings } from "../constants/Strings";
 
 type VoiceScreenProps = NativeStackScreenProps<RootStackParamList, "Voice">;
 
@@ -32,7 +33,8 @@ const VoiceScreen: React.FC<VoiceScreenProps> = ({ navigation }) => {
         if (permission.status !== "granted") {
           Toast.show({
             type: "info",
-            text1: "Izin diperlukan untuk merekam suara.",
+            text1: Strings.general.error,
+            text2: Strings.permissions.microphone,
           });
           return;
         }
@@ -48,7 +50,11 @@ const VoiceScreen: React.FC<VoiceScreenProps> = ({ navigation }) => {
       setIsRecording(true);
     } catch (err) {
       console.error("Gagal memulai rekaman", err);
-      Toast.show({ type: "error", text1: "Gagal memulai rekaman." });
+      Toast.show({
+        type: "error",
+        text1: Strings.general.error,
+        text2: Strings.voiceScreen.recordingFailed,
+      });
     }
   }, [permissionResponse, requestPermission]);
 
@@ -90,19 +96,21 @@ const VoiceScreen: React.FC<VoiceScreenProps> = ({ navigation }) => {
         <TouchableOpacity
           onPress={() => navigation.goBack()}
           style={commonStyles.backButton}
-          accessibilityLabel="Kembali. Tombol"
+          accessibilityLabel={`${Strings.general.back}. Tombol`}
         >
           <Ionicons name="chevron-back" size={24} color={Colors.black} />
         </TouchableOpacity>
-        <Text style={commonStyles.headerTitle}>Voice</Text>
+        <Text style={commonStyles.headerTitle}>
+          {Strings.voiceScreen.title}
+        </Text>
       </View>
       <View style={styles.content}>
         <Text style={styles.infoText}>
           {isProcessing
-            ? "Mengubah suara menjadi teks..."
+            ? Strings.voiceScreen.infoProcessing
             : isRecording
-            ? "Sedang mendengarkan..."
-            : "Tekan tombol untuk berbicara"}
+            ? Strings.voiceScreen.infoListening
+            : Strings.voiceScreen.infoDefault}
         </Text>
         {isProcessing ? (
           <ActivityIndicator size="large" color={Colors.primary} />

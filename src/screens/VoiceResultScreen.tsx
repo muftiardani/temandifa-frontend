@@ -12,6 +12,7 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../types/navigation";
 import { commonStyles } from "../constants/Styles";
 import { Colors } from "../constants/Colors";
+import { Strings } from "../constants/Strings";
 
 type VoiceResultScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -31,15 +32,17 @@ const VoiceResultScreen: React.FC<VoiceResultScreenProps> = ({
           <TouchableOpacity
             onPress={() => navigation.goBack()}
             style={commonStyles.backButton}
-            accessibilityLabel="Kembali. Tombol"
+            accessibilityLabel={`${Strings.general.back}. Tombol`}
           >
             <Ionicons name="chevron-back" size={24} color={Colors.black} />
           </TouchableOpacity>
-          <Text style={commonStyles.headerTitle}>Hasil Suara</Text>
+          <Text style={commonStyles.headerTitle}>
+            {Strings.voiceResult.title}
+          </Text>
         </View>
         <ScrollView style={styles.contentScrollView}>
           <Text style={styles.resultText}>
-            {transcribedText || "Tidak ada teks yang terdeteksi."}
+            {transcribedText || Strings.scanResult.noTextDetected}
           </Text>
         </ScrollView>
       </View>

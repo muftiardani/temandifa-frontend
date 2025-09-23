@@ -1,0 +1,77 @@
+export const Strings = {
+  greetings: {
+    morning: "Selamat Pagi",
+  },
+  home: {
+    subtitle: "Bagaimana saya dapat membantu anda hari ini?",
+    cameraButton: "Kamera",
+    scanButton: "Scan",
+    voiceButton: "Voice",
+    helpButton: "Bantuan",
+    settingsButton: "Pengaturan",
+    emergencyButton: "Panggilan Darurat",
+  },
+  permissions: {
+    camera: "Kami butuh izin Anda untuk menggunakan kamera",
+    microphone: "Kami butuh izin Anda untuk menggunakan mikrofon",
+    gallery: "Anda perlu memberikan izin galeri untuk menggunakan fitur ini.",
+    grantPermission: "Berikan Izin",
+  },
+  cameraScreen: {
+    processing: "Memproses...",
+    ready: "Siap",
+    done: "Selesai",
+    objectInFront: (objectName: string) => `Di depan ada ${objectName}`,
+  },
+  scanScreen: {
+    title: "Scan Dokumen",
+    placeholder: "Pilih metode pemindaian",
+    camera: "Kamera",
+    upload: "Unggah",
+    processing: "Sedang memproses...",
+  },
+  scanResult: {
+    title: "Hasil Scan",
+    noTextDetected: "Tidak ada teks yang terdeteksi.",
+    listen: "Dengarkan",
+    stop: "Berhenti",
+    imageProcessing: "Memproses gambar...",
+    scannerOpening: "Membuka pemindai...",
+    imageProcessingFailed: "Gagal memproses gambar, silakan coba lagi.",
+    imageTakenProcessing: "Gambar diambil, sedang memproses",
+  },
+  voiceScreen: {
+    title: "Voice",
+    infoProcessing: "Mengubah suara menjadi teks...",
+    infoListening: "Sedang mendengarkan...",
+    infoDefault: "Tekan tombol untuk berbicara",
+    recordingFailed:
+      "Gagal memulai rekaman. Pastikan izin mikrofon telah diberikan.",
+  },
+  voiceResult: {
+    title: "Hasil Suara",
+  },
+  settings: {
+    title: "Pengaturan",
+    theme: "Tema",
+    darkMode: "Mode Gelap",
+    emergencyContact: "Kontak Darurat",
+    language: "Bahasa",
+    helpAndGuide: "Panduan & Bantuan",
+    privacyAndSecurity: "Privasi & Keamanan",
+    about: "Tentang Aplikasi",
+    appName: "TemanDifa",
+  },
+  videoCall: {
+    flipCamera: "Balikkan Kamera",
+    endCall: "Tutup Panggilan",
+  },
+  general: {
+    back: "Kembali",
+    error: "Error",
+    failure: "Gagal",
+    networkError: "Gagal terhubung ke server. Periksa koneksi internet Anda.",
+    genericError: "Terjadi kesalahan. Silakan coba lagi nanti.",
+    serverError: "Terjadi kesalahan pada server.",
+  },
+};

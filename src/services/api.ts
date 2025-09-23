@@ -4,6 +4,7 @@ import {
   SCAN_API_URL,
   TRANSCRIBE_API_URL,
 } from "../config/api";
+import { Strings } from "../constants/Strings";
 
 type FileType = "image" | "audio";
 
@@ -34,7 +35,7 @@ const postFormData = async (
     const data = await response.json();
 
     if (!response.ok) {
-      throw new Error(data.error || "Terjadi kesalahan pada server.");
+      throw new Error(data.error || Strings.general.serverError);
     }
     return data;
   } catch (error: any) {
@@ -45,17 +46,17 @@ const postFormData = async (
 
     console.error(`Error saat memanggil ${url}:`, error);
 
-    let userMessage = "Terjadi kesalahan. Silakan coba lagi nanti.";
+    let userMessage = Strings.general.genericError;
     if (
       error instanceof TypeError &&
       error.message.includes("Network request failed")
     ) {
-      userMessage = "Gagal terhubung ke server. Periksa koneksi internet Anda.";
+      userMessage = Strings.general.networkError;
     }
 
     Toast.show({
       type: "error",
-      text1: "Gagal",
+      text1: Strings.general.failure,
       text2: userMessage,
     });
 

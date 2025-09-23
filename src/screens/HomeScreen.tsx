@@ -11,59 +11,50 @@ import { Ionicons } from "@expo/vector-icons";
 import HomeButton from "../components/common/HomeButton";
 import { ScreenNavigationProp } from "../types/navigation";
 import { Colors } from "../constants/Colors";
+import { Strings } from "../constants/Strings";
 
 const HomeScreen: React.FC = () => {
   const navigation = useNavigation<ScreenNavigationProp>();
-
-  const handleCameraPress = () => navigation.navigate("Camera");
-  const handleScanPress = () => navigation.navigate("Scan");
-  const handleVoicePress = () => navigation.navigate("Voice");
-  const handleSettingsPress = () => navigation.navigate("Settings");
-  const handleEmergencyPress = () => navigation.navigate("VideoCall");
 
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
         <View style={styles.header}>
-          <Text style={styles.headerTitle}>Selamat Pagi</Text>
-          <Text style={styles.headerSubtitle}>
-            Bagaimana saya dapat membantu anda hari ini?
-          </Text>
+          <Text style={styles.headerTitle}>{Strings.greetings.morning}</Text>
+          <Text style={styles.headerSubtitle}>{Strings.home.subtitle}</Text>
         </View>
-
         <View style={styles.buttonGrid}>
           <HomeButton
-            title="Kamera"
+            title={Strings.home.cameraButton}
             icon="camera"
             backgroundColor={Colors.primary}
             layout="horizontal"
             style={{ width: "100%", height: 135 }}
-            onPress={handleCameraPress}
+            onPress={() => navigation.navigate("Camera")}
           />
           <View style={styles.row}>
             <HomeButton
-              title="Scan"
+              title={Strings.home.scanButton}
               icon="scan"
               backgroundColor={Colors.accent}
               style={{ flex: 1, height: 140 }}
-              onPress={handleScanPress}
+              onPress={() => navigation.navigate("Scan")}
             />
             <HomeButton
-              title="Voice"
+              title={Strings.home.voiceButton}
               icon="mic"
               backgroundColor={Colors.secondary}
               style={{ flex: 1, height: 140 }}
-              onPress={handleVoicePress}
+              onPress={() => navigation.navigate("Voice")}
             />
           </View>
         </View>
       </View>
-
       <View style={styles.bottomBar}>
         <View style={styles.helpSettingsContainer}>
           <TouchableOpacity
-            accessibilityLabel="Bantuan. Tombol"
-            accessibilityHint="Ketuk dua kali untuk membuka panduan penggunaan aplikasi"
+            accessibilityLabel={`${Strings.home.helpButton}. Tombol`}
+            accessibilityHint={`Ketuk dua kali untuk membuka panduan`}
           >
             <Ionicons
               name="help-circle-outline"
@@ -72,19 +63,18 @@ const HomeScreen: React.FC = () => {
             />
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={handleSettingsPress}
-            accessibilityLabel="Pengaturan. Tombol"
-            accessibilityHint="Ketuk dua kali untuk membuka halaman pengaturan"
+            onPress={() => navigation.navigate("Settings")}
+            accessibilityLabel={`${Strings.home.settingsButton}. Tombol`}
+            accessibilityHint={`Ketuk dua kali untuk membuka ${Strings.settings.title}`}
           >
             <Ionicons name="settings-outline" size={32} color={Colors.white} />
           </TouchableOpacity>
         </View>
-
         <TouchableOpacity
           style={styles.emergencyButton}
-          onPress={handleEmergencyPress}
-          accessibilityLabel="Panggilan Darurat. Tombol"
-          accessibilityHint="Ketuk dua kali untuk memulai panggilan video darurat"
+          onPress={() => navigation.navigate("VideoCall")}
+          accessibilityLabel={`${Strings.home.emergencyButton}. Tombol`}
+          accessibilityHint={`Ketuk dua kali untuk memulai panggilan video darurat`}
         >
           <Ionicons name="call" size={34} color={Colors.white} />
         </TouchableOpacity>
@@ -92,7 +82,6 @@ const HomeScreen: React.FC = () => {
     </SafeAreaView>
   );
 };
-
 const styles = StyleSheet.create({
   safeArea: { flex: 1, backgroundColor: Colors.white },
   container: { flex: 1, paddingHorizontal: 20, paddingTop: 40 },
@@ -133,5 +122,4 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
 });
-
 export default HomeScreen;

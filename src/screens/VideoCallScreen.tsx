@@ -4,6 +4,7 @@ import { CameraView, useCameraPermissions, CameraType } from "expo-camera";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { Colors } from "../constants/Colors";
+import { Strings } from "../constants/Strings";
 
 const VideoCallScreen = () => {
   const [facing, setFacing] = useState<CameraType>("front");
@@ -22,14 +23,16 @@ const VideoCallScreen = () => {
     return (
       <View style={styles.permissionContainer}>
         <Text style={{ textAlign: "center", marginBottom: 16 }}>
-          Kami butuh izin Anda untuk menggunakan kamera
+          {Strings.permissions.camera}
         </Text>
         <TouchableOpacity
           style={styles.buttonBase}
           onPress={requestPermission}
-          accessibilityLabel="Berikan Izin Kamera. Tombol"
+          accessibilityLabel={`${Strings.permissions.grantPermission}. Tombol`}
         >
-          <Text style={{ color: Colors.white }}>Berikan Izin</Text>
+          <Text style={{ color: Colors.white }}>
+            {Strings.permissions.grantPermission}
+          </Text>
         </TouchableOpacity>
       </View>
     );
@@ -46,7 +49,7 @@ const VideoCallScreen = () => {
           <TouchableOpacity
             style={styles.flipButton}
             onPress={toggleCameraFacing}
-            accessibilityLabel="Balikkan Kamera. Tombol"
+            accessibilityLabel={`${Strings.videoCall.flipCamera}. Tombol`}
             accessibilityHint="Mengganti antara kamera depan dan belakang"
           >
             <Ionicons name="camera-reverse" size={28} color={Colors.black} />
@@ -54,7 +57,7 @@ const VideoCallScreen = () => {
           <TouchableOpacity
             style={styles.endCallButton}
             onPress={() => navigation.goBack()}
-            accessibilityLabel="Tutup Panggilan. Tombol"
+            accessibilityLabel={`${Strings.videoCall.endCall}. Tombol`}
           >
             <Ionicons name="call" size={42} color={Colors.white} />
           </TouchableOpacity>
