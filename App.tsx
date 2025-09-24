@@ -14,6 +14,8 @@ import VideoCallScreen from "./src/screens/VideoCallScreen";
 import ScanResultScreen from "./src/screens/ScanResultScreen";
 import VoiceResultScreen from "./src/screens/VoiceResultScreen";
 import DocumentScannerScreen from "./src/screens/DocumentScannerScreen";
+import LanguageScreen from "./src/screens/LanguageScreen";
+import AboutScreen from "./src/screens/AboutScreen";
 
 import { RootStackParamList } from "./src/types/navigation";
 
@@ -74,6 +76,16 @@ const App = () => {
           <Stack.Screen
             name="DocumentScanner"
             component={DocumentScannerScreen}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="Language"
+            component={LanguageScreen}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="About"
+            component={AboutScreen}
             options={{ headerShown: false }}
           />
         </Stack.Navigator>

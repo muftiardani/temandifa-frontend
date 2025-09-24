@@ -10,6 +10,8 @@ export type RootStackParamList = {
   ScanResult: { scannedText: string };
   VoiceResult: { transcribedText: string };
   DocumentScanner: undefined;
+  Language: undefined;
+  About: undefined;
 };
 
 export type ScreenNavigationProp = NavigationProp<RootStackParamList>;

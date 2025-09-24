@@ -72,12 +72,8 @@ const SettingsScreen: React.FC<SettingsScreenProps> = ({ navigation }) => {
             />
           </View>
           <SettingsItem
-            label={Strings.settings.emergencyContact}
-            onPress={() => console.log(Strings.settings.emergencyContact)}
-          />
-          <SettingsItem
             label={Strings.settings.language}
-            onPress={() => console.log(Strings.settings.language)}
+            onPress={() => navigation.navigate("Language")}
           />
           <SettingsItem
             label={Strings.settings.helpAndGuide}
@@ -89,7 +85,7 @@ const SettingsScreen: React.FC<SettingsScreenProps> = ({ navigation }) => {
           />
           <SettingsItem
             label={Strings.settings.about}
-            onPress={() => console.log(Strings.settings.about)}
+            onPress={() => navigation.navigate("About")}
           />
         </View>
         <Text style={styles.footerText}>{Strings.settings.appName}</Text>
@@ -114,7 +110,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: "#8A8A8E",
     fontSize: 16,
-    paddingBottom: 40,
+    paddingBottom: 60,
   },
 });
 
