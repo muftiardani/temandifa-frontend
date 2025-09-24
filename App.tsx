@@ -10,7 +10,7 @@ import CameraScreen from "./src/screens/CameraScreen";
 import ScanScreen from "./src/screens/ScanScreen";
 import VoiceScreen from "./src/screens/VoiceScreen";
 import SettingsScreen from "./src/screens/SettingsScreen";
-import VideoCallScreen from "./src/screens/VideoCallScreen";
+import AgoraVideoCallScreen from "./src/screens/AgoraVideoCallScreen";
 import ScanResultScreen from "./src/screens/ScanResultScreen";
 import VoiceResultScreen from "./src/screens/VoiceResultScreen";
 import DocumentScannerScreen from "./src/screens/DocumentScannerScreen";
@@ -60,7 +60,7 @@ const App = () => {
           />
           <Stack.Screen
             name="VideoCall"
-            component={VideoCallScreen}
+            component={AgoraVideoCallScreen}
             options={{ headerShown: false }}
           />
           <Stack.Screen
