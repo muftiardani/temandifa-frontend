@@ -55,16 +55,11 @@ export const Strings = {
     title: "Pengaturan",
     theme: "Tema",
     darkMode: "Mode Gelap",
-    emergencyContact: "Kontak Darurat",
     language: "Bahasa",
     helpAndGuide: "Panduan & Bantuan",
     privacyAndSecurity: "Privasi & Keamanan",
     about: "Tentang Aplikasi",
     appName: "TemanDifa",
-  },
-  videoCall: {
-    flipCamera: "Balikkan Kamera",
-    endCall: "Tutup Panggilan",
   },
   general: {
     back: "Kembali",

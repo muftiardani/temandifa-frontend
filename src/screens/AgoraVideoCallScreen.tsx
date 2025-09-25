@@ -26,8 +26,8 @@ const AgoraVideoCallScreen = () => {
   const [isMuted, setIsMuted] = useState(false);
   const [isCameraOff, setIsCameraOff] = useState(false);
 
-  const appId = "f45dadd0a1ed4924923430e4e7baabf0";
-  const channelName = "temandifa-emergency";
+  const appId = process.env.EXPO_PUBLIC_AGORA_APP_ID;
+  const channelName = process.env.EXPO_PUBLIC_AGORA_CHANNEL_NAME;
   const token = "";
   const uid = Math.floor(Math.random() * 100000) + 1;
 

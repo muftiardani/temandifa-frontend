@@ -1,10 +1,16 @@
 import { create } from "zustand";
 
+interface DetectionResult {
+  bbox: [number, number, number, number];
+  class: string;
+  confidence: number;
+}
+
 interface CameraState {
   isProcessing: boolean;
-  detections: any[];
+  detections: DetectionResult[];
   setIsProcessing: (status: boolean) => void;
-  setDetections: (detections: any[]) => void;
+  setDetections: (detections: DetectionResult[]) => void;
   clearDetections: () => void;
 }
 
