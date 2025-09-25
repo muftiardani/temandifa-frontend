@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { Audio } from "expo-av";
@@ -6,6 +6,14 @@ import * as Speech from "expo-speech";
 import * as Haptics from "expo-haptics";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import Toast from "react-native-toast-message";
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withRepeat,
+  withTiming,
+  withSequence,
+  Easing,
+} from "react-native-reanimated";
 
 import { RootStackParamList } from "../types/navigation";
 import { apiService } from "../services/api";
@@ -21,6 +29,30 @@ const VoiceScreen: React.FC<VoiceScreenProps> = ({ navigation }) => {
   const [isRecording, setIsRecording] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [permissionResponse, requestPermission] = Audio.usePermissions();
+
+  const scale = useSharedValue(1);
+
+  useEffect(() => {
+    if (isRecording) {
+      scale.value = withRepeat(
+        withSequence(
+          withTiming(1.1, {
+            duration: 1000,
+            easing: Easing.inOut(Easing.ease),
+          }),
+          withTiming(1, { duration: 1000, easing: Easing.inOut(Easing.ease) })
+        ),
+        -1,
+        true
+      );
+    } else {
+      scale.value = withTiming(1, { duration: 200 });
+    }
+  }, [isRecording, scale]);
+
+  const animatedMicStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
+  }));
 
   const startRecording = useCallback(async () => {
     try {
@@ -118,18 +150,25 @@ const VoiceScreen: React.FC<VoiceScreenProps> = ({ navigation }) => {
         {isProcessing ? (
           <LoadingIndicator />
         ) : (
-          <TouchableOpacity
-            style={[styles.micButton, isRecording && styles.micButtonRecording]}
-            onPress={handleMicPress}
-            disabled={isProcessing}
-            accessibilityLabel={
-              isRecording ? "Berhenti merekam. Tombol" : "Mulai merekam. Tombol"
-            }
-            accessibilityHint="Ketuk dua kali untuk mengaktifkan"
-            accessibilityRole="button"
-          >
-            <Ionicons name="mic" size={80} color={Colors.white} />
-          </TouchableOpacity>
+          <Animated.View style={[animatedMicStyle]}>
+            <TouchableOpacity
+              style={[
+                styles.micButton,
+                isRecording && styles.micButtonRecording,
+              ]}
+              onPress={handleMicPress}
+              disabled={isProcessing}
+              accessibilityLabel={
+                isRecording
+                  ? "Berhenti merekam. Tombol"
+                  : "Mulai merekam. Tombol"
+              }
+              accessibilityHint="Ketuk dua kali untuk mengaktifkan"
+              accessibilityRole="button"
+            >
+              <Ionicons name="mic" size={80} color={Colors.white} />
+            </TouchableOpacity>
+          </Animated.View>
         )}
       </View>
     </View>

@@ -15,6 +15,12 @@ import {
 } from "react-native-agora";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withTiming,
+  Easing,
+} from "react-native-reanimated";
 import { Colors } from "../constants/Colors";
 import { Config } from "../config";
 
@@ -27,10 +33,28 @@ const AgoraVideoCallScreen = () => {
   const [isMuted, setIsMuted] = useState(false);
   const [isCameraOff, setIsCameraOff] = useState(false);
 
+  const controlsTranslateY = useSharedValue(100);
+  const controlsOpacity = useSharedValue(0);
+
+  const animatedControlsStyle = useAnimatedStyle(() => ({
+    opacity: controlsOpacity.value,
+    transform: [{ translateY: controlsTranslateY.value }],
+  }));
+
   const appId = Config.agora.appId;
   const channelName = Config.agora.channelName;
   const token = "";
   const uid = Math.floor(Math.random() * 100000) + 1;
+
+  useEffect(() => {
+    if (isJoined) {
+      controlsTranslateY.value = withTiming(0, {
+        duration: 500,
+        easing: Easing.out(Easing.ease),
+      });
+      controlsOpacity.value = withTiming(1, { duration: 500 });
+    }
+  }, [isJoined]);
 
   useEffect(() => {
     setupVideoSDKEngine();
@@ -137,7 +161,7 @@ const AgoraVideoCallScreen = () => {
         </View>
       )}
 
-      <View style={styles.controls}>
+      <Animated.View style={[styles.controls, animatedControlsStyle]}>
         <TouchableOpacity style={styles.iconButton} onPress={toggleCamera}>
           <Ionicons
             name={isCameraOff ? "videocam-off" : "videocam"}
@@ -166,7 +190,7 @@ const AgoraVideoCallScreen = () => {
             style={{ transform: [{ rotate: "135deg" }] }}
           />
         </TouchableOpacity>
-      </View>
+      </Animated.View>
     </SafeAreaView>
   );
 };

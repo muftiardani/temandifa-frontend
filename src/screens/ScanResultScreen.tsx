@@ -27,8 +27,27 @@ const ScanResultScreen: React.FC<ScanResultScreenProps> = ({
   navigation,
 }) => {
   const { scannedText } = route.params;
+  const [displayedText, setDisplayedText] = useState("");
   const [isSpeaking, setIsSpeaking] = useState(false);
   const isMounted = useRef(true);
+
+  useEffect(() => {
+    const words = (scannedText || Strings.scanResult.noTextDetected).split(" ");
+    let currentWords: string[] = [];
+    let wordIndex = 0;
+
+    const intervalId = setInterval(() => {
+      if (wordIndex < words.length) {
+        currentWords.push(words[wordIndex]);
+        setDisplayedText(currentWords.join(" "));
+        wordIndex++;
+      } else {
+        clearInterval(intervalId);
+      }
+    }, 50);
+
+    return () => clearInterval(intervalId);
+  }, [scannedText]);
 
   useEffect(() => {
     isMounted.current = true;
@@ -94,9 +113,7 @@ const ScanResultScreen: React.FC<ScanResultScreenProps> = ({
         </View>
 
         <ScrollView style={styles.contentScrollView}>
-          <Text style={styles.resultText}>
-            {scannedText || Strings.scanResult.noTextDetected}
-          </Text>
+          <Text style={styles.resultText}>{displayedText}</Text>
         </ScrollView>
 
         <View style={styles.bottomBar}>

@@ -1,9 +1,17 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import * as ImagePicker from "expo-image-picker";
 import Toast from "react-native-toast-message";
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withRepeat,
+  withSequence,
+  withTiming,
+  Easing,
+} from "react-native-reanimated";
 
 import { RootStackParamList } from "../types/navigation";
 import { apiService } from "../services/api";
@@ -16,6 +24,23 @@ type ScanScreenProps = NativeStackScreenProps<RootStackParamList, "Scan">;
 
 const ScanScreen: React.FC<ScanScreenProps> = ({ navigation }) => {
   const [isProcessing, setIsProcessing] = useState(false);
+
+  const placeholderTranslateY = useSharedValue(0);
+
+  useEffect(() => {
+    placeholderTranslateY.value = withRepeat(
+      withSequence(
+        withTiming(-10, { duration: 1500, easing: Easing.inOut(Easing.ease) }),
+        withTiming(0, { duration: 1500, easing: Easing.inOut(Easing.ease) })
+      ),
+      -1,
+      true
+    );
+  }, []);
+
+  const animatedPlaceholderStyle = useAnimatedStyle(() => ({
+    transform: [{ translateY: placeholderTranslateY.value }],
+  }));
 
   const handleKameraPress = () => navigation.navigate("DocumentScanner");
 
@@ -76,12 +101,14 @@ const ScanScreen: React.FC<ScanScreenProps> = ({ navigation }) => {
         {isProcessing ? (
           <LoadingIndicator text={Strings.scanScreen.processing} />
         ) : (
-          <View style={styles.placeholderContainer}>
+          <Animated.View
+            style={[styles.placeholderContainer, animatedPlaceholderStyle]}
+          >
             <Ionicons name="document-text-outline" size={100} color="#E0E0E0" />
             <Text style={styles.placeholderText}>
               {Strings.scanScreen.placeholder}
             </Text>
-          </View>
+          </Animated.View>
         )}
 
         <View style={styles.buttonContainer}>
