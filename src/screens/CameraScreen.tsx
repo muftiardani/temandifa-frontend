@@ -150,6 +150,7 @@ export default function CameraScreen() {
           onPress={requestPermission}
           style={styles.permissionButton}
           accessibilityLabel={`${Strings.permissions.grantPermission}. Tombol`}
+          accessibilityRole="button"
         >
           <Text style={styles.buttonText}>
             {Strings.permissions.grantPermission}
@@ -183,6 +184,7 @@ export default function CameraScreen() {
         onPress={() => navigation.goBack()}
         accessibilityLabel={`${Strings.cameraScreen.done}. Tombol`}
         accessibilityHint={`Kembali ke layar utama`}
+        accessibilityRole="button"
       >
         <Text style={styles.doneButtonText}>{Strings.cameraScreen.done}</Text>
       </TouchableOpacity>

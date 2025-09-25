@@ -15,12 +15,15 @@ import ScanResultScreen from "./src/screens/ScanResultScreen";
 import VoiceResultScreen from "./src/screens/VoiceResultScreen";
 import DocumentScannerScreen from "./src/screens/DocumentScannerScreen";
 import LanguageScreen from "./src/screens/LanguageScreen";
+import HelpAndGuideScreen from "./src/screens/HelpAndGuideScreen";
+import PrivacyAndSecurityScreen from "./src/screens/PrivacyAndSecurityScreen";
 import AboutScreen from "./src/screens/AboutScreen";
 
 import { RootStackParamList } from "./src/types/navigation";
+import { Config } from "./src/config";
 
 Sentry.init({
-  dsn: "https://3d3119812733a74dbb89780f4c0d2716@o4510066684264448.ingest.de.sentry.io/4510067148849232",
+  dsn: Config.sentry.dsn,
   debug: __DEV__,
   integrations: [Sentry.reactNavigationIntegration()],
   tracesSampleRate: 1.0,
@@ -81,6 +84,16 @@ const App = () => {
           <Stack.Screen
             name="Language"
             component={LanguageScreen}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="HelpAndGuide"
+            component={HelpAndGuideScreen}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="PrivacyAndSecurity"
+            component={PrivacyAndSecurityScreen}
             options={{ headerShown: false }}
           />
           <Stack.Screen

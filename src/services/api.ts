@@ -1,10 +1,6 @@
 import NetInfo from "@react-native-community/netinfo";
 import Toast from "react-native-toast-message";
-import {
-  DETECT_API_URL,
-  SCAN_API_URL,
-  TRANSCRIBE_API_URL,
-} from "../config/api";
+import { Config } from "../config"; // <-- Diperbarui
 import { Strings } from "../constants/Strings";
 
 type FileType = "image" | "audio";
@@ -69,8 +65,9 @@ const postFormData = async (
 
 export const apiService = {
   detectObject: (uri: string, signal: AbortSignal) =>
-    postFormData(DETECT_API_URL, uri, "image", "image", { signal }),
-  scanImage: (uri: string) => postFormData(SCAN_API_URL, uri, "image", "image"),
+    postFormData(Config.api.detectUrl, uri, "image", "image", { signal }),
+  scanImage: (uri: string) =>
+    postFormData(Config.api.scanUrl, uri, "image", "image"),
   transcribeAudio: (uri: string) =>
-    postFormData(TRANSCRIBE_API_URL, uri, "audio", "audio"),
+    postFormData(Config.api.transcribeUrl, uri, "audio", "audio"),
 };

@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import * as Speech from "expo-speech";
+import * as Haptics from "expo-haptics";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 
 import { RootStackParamList } from "../types/navigation";
@@ -53,6 +54,7 @@ const ScanResultScreen: React.FC<ScanResultScreenProps> = ({
   }, [isSpeaking]);
 
   const handleSpeakButton = async () => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
     const speakingStatus = await Speech.isSpeakingAsync();
     if (speakingStatus) {
       Speech.stop();
@@ -82,6 +84,7 @@ const ScanResultScreen: React.FC<ScanResultScreenProps> = ({
             onPress={() => navigation.goBack()}
             style={commonStyles.backButton}
             accessibilityLabel={`${Strings.general.back}. Tombol`}
+            accessibilityRole="button"
           >
             <Ionicons name="chevron-back" size={24} color={Colors.black} />
           </TouchableOpacity>
@@ -106,6 +109,7 @@ const ScanResultScreen: React.FC<ScanResultScreenProps> = ({
                 : `${Strings.scanResult.listen} hasil scan. Tombol`
             }
             accessibilityHint="Ketuk dua kali untuk memutar atau menghentikan suara"
+            accessibilityRole="button"
           >
             <Ionicons
               name={isSpeaking ? "stop-circle" : "volume-high"}

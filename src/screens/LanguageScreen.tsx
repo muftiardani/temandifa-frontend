@@ -34,6 +34,7 @@ const LanguageScreen: React.FC<LanguageScreenProps> = ({ navigation }) => {
             onPress={() => navigation.goBack()}
             style={commonStyles.backButton}
             accessibilityLabel={`${Strings.general.back}. Tombol`}
+            accessibilityRole="button"
           >
             <Ionicons name="chevron-back" size={24} color={Colors.black} />
           </TouchableOpacity>
@@ -49,6 +50,7 @@ const LanguageScreen: React.FC<LanguageScreenProps> = ({ navigation }) => {
               style={styles.itemContainer}
               onPress={() => setSelectedLanguage(lang.code)}
               accessibilityLabel={`Pilih bahasa ${lang.name}. Tombol`}
+              accessibilityRole="button"
             >
               <Text style={styles.itemLabel}>{lang.name}</Text>
               {selectedLanguage === lang.code && (

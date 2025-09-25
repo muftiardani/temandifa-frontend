@@ -33,6 +33,7 @@ const VoiceResultScreen: React.FC<VoiceResultScreenProps> = ({
             onPress={() => navigation.goBack()}
             style={commonStyles.backButton}
             accessibilityLabel={`${Strings.general.back}. Tombol`}
+            accessibilityRole="button"
           >
             <Ionicons name="chevron-back" size={24} color={Colors.black} />
           </TouchableOpacity>

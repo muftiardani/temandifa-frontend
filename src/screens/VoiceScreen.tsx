@@ -1,13 +1,8 @@
 import React, { useState, useCallback } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  ActivityIndicator,
-} from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { Audio } from "expo-av";
+import * as Speech from "expo-speech";
 import * as Haptics from "expo-haptics";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import Toast from "react-native-toast-message";
@@ -17,6 +12,7 @@ import { apiService } from "../services/api";
 import { commonStyles } from "../constants/Styles";
 import { Colors } from "../constants/Colors";
 import { Strings } from "../constants/Strings";
+import LoadingIndicator from "../components/common/LoadingIndicator";
 
 type VoiceScreenProps = NativeStackScreenProps<RootStackParamList, "Voice">;
 
@@ -28,6 +24,8 @@ const VoiceScreen: React.FC<VoiceScreenProps> = ({ navigation }) => {
 
   const startRecording = useCallback(async () => {
     try {
+      Speech.stop();
+
       if (permissionResponse?.status !== "granted") {
         const permission = await requestPermission();
         if (permission.status !== "granted") {
@@ -73,8 +71,12 @@ const VoiceScreen: React.FC<VoiceScreenProps> = ({ navigation }) => {
           transcribedText: result.transcribedText,
         });
       }
-    } catch (error) {
-      // Error ditangani service layer
+    } catch (error: any) {
+      Toast.show({
+        type: "error",
+        text1: Strings.general.failure,
+        text2: error.message || Strings.general.genericError,
+      });
     } finally {
       setIsProcessing(false);
       setRecording(null);
@@ -97,6 +99,7 @@ const VoiceScreen: React.FC<VoiceScreenProps> = ({ navigation }) => {
           onPress={() => navigation.goBack()}
           style={commonStyles.backButton}
           accessibilityLabel={`${Strings.general.back}. Tombol`}
+          accessibilityRole="button"
         >
           <Ionicons name="chevron-back" size={24} color={Colors.black} />
         </TouchableOpacity>
@@ -113,7 +116,7 @@ const VoiceScreen: React.FC<VoiceScreenProps> = ({ navigation }) => {
             : Strings.voiceScreen.infoDefault}
         </Text>
         {isProcessing ? (
-          <ActivityIndicator size="large" color={Colors.primary} />
+          <LoadingIndicator />
         ) : (
           <TouchableOpacity
             style={[styles.micButton, isRecording && styles.micButtonRecording]}
@@ -123,6 +126,7 @@ const VoiceScreen: React.FC<VoiceScreenProps> = ({ navigation }) => {
               isRecording ? "Berhenti merekam. Tombol" : "Mulai merekam. Tombol"
             }
             accessibilityHint="Ketuk dua kali untuk mengaktifkan"
+            accessibilityRole="button"
           >
             <Ionicons name="mic" size={80} color={Colors.white} />
           </TouchableOpacity>

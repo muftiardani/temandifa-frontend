@@ -55,6 +55,7 @@ const HomeButton = React.memo(
           onPressOut={handlePressOut}
           accessibilityLabel={`${title}. Tombol`}
           accessibilityHint={`Ketuk dua kali untuk membuka fitur ${title}`}
+          accessibilityRole="button"
         >
           <Ionicons
             name={icon}

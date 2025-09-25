@@ -1,11 +1,5 @@
 import React, { useState } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  ActivityIndicator,
-} from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import * as ImagePicker from "expo-image-picker";
@@ -16,6 +10,7 @@ import { apiService } from "../services/api";
 import { commonStyles } from "../constants/Styles";
 import { Colors } from "../constants/Colors";
 import { Strings } from "../constants/Strings";
+import LoadingIndicator from "../components/common/LoadingIndicator";
 
 type ScanScreenProps = NativeStackScreenProps<RootStackParamList, "Scan">;
 
@@ -52,8 +47,12 @@ const ScanScreen: React.FC<ScanScreenProps> = ({ navigation }) => {
       if (data) {
         navigation.navigate("ScanResult", { scannedText: data.scannedText });
       }
-    } catch (error) {
-      // Penanganan error sudah dilakukan di service layer
+    } catch (error: any) {
+      Toast.show({
+        type: "error",
+        text1: Strings.general.failure,
+        text2: error.message || Strings.general.genericError,
+      });
     } finally {
       setIsProcessing(false);
     }
@@ -66,6 +65,7 @@ const ScanScreen: React.FC<ScanScreenProps> = ({ navigation }) => {
           onPress={() => navigation.goBack()}
           style={commonStyles.backButton}
           accessibilityLabel={`${Strings.general.back}. Tombol`}
+          accessibilityRole="button"
         >
           <Ionicons name="chevron-back" size={24} color={Colors.black} />
         </TouchableOpacity>
@@ -74,12 +74,7 @@ const ScanScreen: React.FC<ScanScreenProps> = ({ navigation }) => {
 
       <View style={styles.content}>
         {isProcessing ? (
-          <View style={styles.placeholderContainer}>
-            <ActivityIndicator size="large" color={Colors.primary} />
-            <Text style={styles.placeholderText}>
-              {Strings.scanScreen.processing}
-            </Text>
-          </View>
+          <LoadingIndicator text={Strings.scanScreen.processing} />
         ) : (
           <View style={styles.placeholderContainer}>
             <Ionicons name="document-text-outline" size={100} color="#E0E0E0" />
@@ -96,6 +91,7 @@ const ScanScreen: React.FC<ScanScreenProps> = ({ navigation }) => {
             disabled={isProcessing}
             accessibilityLabel={`${Strings.scanScreen.camera}. Tombol`}
             accessibilityHint="Membuka kamera untuk memindai dokumen"
+            accessibilityRole="button"
           >
             <Ionicons name="camera" size={32} color={Colors.white} />
             <Text style={styles.buttonText}>{Strings.scanScreen.camera}</Text>
@@ -107,6 +103,7 @@ const ScanScreen: React.FC<ScanScreenProps> = ({ navigation }) => {
             disabled={isProcessing}
             accessibilityLabel={`${Strings.scanScreen.upload}. Tombol`}
             accessibilityHint="Mengunggah gambar dari galeri untuk dipindai"
+            accessibilityRole="button"
           >
             <Ionicons name="cloud-upload" size={32} color={Colors.white} />
             <Text style={styles.buttonText}>{Strings.scanScreen.upload}</Text>
@@ -116,6 +113,7 @@ const ScanScreen: React.FC<ScanScreenProps> = ({ navigation }) => {
     </View>
   );
 };
+
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: Colors.white },
   content: { flex: 1, alignItems: "center", padding: 20 },

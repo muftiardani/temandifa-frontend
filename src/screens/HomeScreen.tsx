@@ -85,6 +85,7 @@ const HomeScreen: React.FC = () => {
             <TouchableOpacity
               accessibilityLabel={`${Strings.home.helpButton}. Tombol`}
               accessibilityHint={`Ketuk dua kali untuk membuka panduan`}
+              accessibilityRole="button"
             >
               <Ionicons
                 name="help-circle-outline"
@@ -96,6 +97,7 @@ const HomeScreen: React.FC = () => {
               onPress={handleSettingsPress}
               accessibilityLabel={`${Strings.home.settingsButton}. Tombol`}
               accessibilityHint={`Ketuk dua kali untuk membuka ${Strings.settings.title}`}
+              accessibilityRole="button"
             >
               <Ionicons
                 name="settings-outline"
@@ -109,6 +111,7 @@ const HomeScreen: React.FC = () => {
             onPress={handleEmergencyPress}
             accessibilityLabel={`${Strings.home.emergencyButton}. Tombol`}
             accessibilityHint={`Ketuk dua kali untuk memulai panggilan video darurat`}
+            accessibilityRole="button"
           >
             <Ionicons name="call" size={34} color={Colors.white} />
           </TouchableOpacity>

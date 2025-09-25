@@ -20,21 +20,18 @@ type SettingsScreenProps = NativeStackScreenProps<
   "Settings"
 >;
 
-const SettingsItem = ({
-  label,
-  onPress,
-}: {
-  label: string;
-  onPress?: () => void;
-}) => (
-  <TouchableOpacity
-    style={styles.itemContainer}
-    onPress={onPress}
-    accessibilityLabel={`${label}. Tombol`}
-  >
-    <Text style={styles.itemLabel}>{label}</Text>
-    <Ionicons name="chevron-forward" size={24} color="#C7C7CC" />
-  </TouchableOpacity>
+const SettingsItem = React.memo(
+  ({ label, onPress }: { label: string; onPress?: () => void }) => (
+    <TouchableOpacity
+      style={styles.itemContainer}
+      onPress={onPress}
+      accessibilityLabel={`${label}. Tombol`}
+      accessibilityRole="button"
+    >
+      <Text style={styles.itemLabel}>{label}</Text>
+      <Ionicons name="chevron-forward" size={24} color="#C7C7CC" />
+    </TouchableOpacity>
+  )
 );
 
 const SettingsScreen: React.FC<SettingsScreenProps> = ({ navigation }) => {
@@ -49,6 +46,7 @@ const SettingsScreen: React.FC<SettingsScreenProps> = ({ navigation }) => {
             onPress={() => navigation.goBack()}
             style={commonStyles.backButton}
             accessibilityLabel={`${Strings.general.back}. Tombol`}
+            accessibilityRole="button"
           >
             <Ionicons name="chevron-back" size={24} color={Colors.black} />
           </TouchableOpacity>
@@ -69,6 +67,7 @@ const SettingsScreen: React.FC<SettingsScreenProps> = ({ navigation }) => {
               accessibilityLabel={`${Strings.settings.darkMode}, saat ini ${
                 isDarkMode ? "aktif" : "tidak aktif"
               }. Saklar`}
+              accessibilityRole="switch"
             />
           </View>
           <SettingsItem
@@ -77,11 +76,11 @@ const SettingsScreen: React.FC<SettingsScreenProps> = ({ navigation }) => {
           />
           <SettingsItem
             label={Strings.settings.helpAndGuide}
-            onPress={() => console.log(Strings.settings.helpAndGuide)}
+            onPress={() => navigation.navigate("HelpAndGuide")}
           />
           <SettingsItem
             label={Strings.settings.privacyAndSecurity}
-            onPress={() => console.log(Strings.settings.privacyAndSecurity)}
+            onPress={() => navigation.navigate("PrivacyAndSecurity")}
           />
           <SettingsItem
             label={Strings.settings.about}

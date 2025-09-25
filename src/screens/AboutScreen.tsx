@@ -24,6 +24,7 @@ const AboutScreen: React.FC<AboutScreenProps> = ({ navigation }) => {
             onPress={() => navigation.goBack()}
             style={commonStyles.backButton}
             accessibilityLabel={`${Strings.general.back}. Tombol`}
+            accessibilityRole="button"
           >
             <Ionicons name="chevron-back" size={24} color={Colors.black} />
           </TouchableOpacity>

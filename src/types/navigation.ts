@@ -11,6 +11,8 @@ export type RootStackParamList = {
   VoiceResult: { transcribedText: string };
   DocumentScanner: undefined;
   Language: undefined;
+  HelpAndGuide: undefined;
+  PrivacyAndSecurity: undefined;
   About: undefined;
 };
 

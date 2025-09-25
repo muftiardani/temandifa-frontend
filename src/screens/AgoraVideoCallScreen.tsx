@@ -16,6 +16,7 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { Colors } from "../constants/Colors";
+import { Config } from "../config";
 
 const AgoraVideoCallScreen = () => {
   const navigation = useNavigation();
@@ -26,8 +27,8 @@ const AgoraVideoCallScreen = () => {
   const [isMuted, setIsMuted] = useState(false);
   const [isCameraOff, setIsCameraOff] = useState(false);
 
-  const appId = process.env.EXPO_PUBLIC_AGORA_APP_ID;
-  const channelName = process.env.EXPO_PUBLIC_AGORA_CHANNEL_NAME;
+  const appId = Config.agora.appId;
+  const channelName = Config.agora.channelName;
   const token = "";
   const uid = Math.floor(Math.random() * 100000) + 1;
 
