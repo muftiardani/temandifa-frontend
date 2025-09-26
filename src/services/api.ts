@@ -1,6 +1,6 @@
 import NetInfo from "@react-native-community/netinfo";
 import Toast from "react-native-toast-message";
-import { Config } from "../config"; // <-- Diperbarui
+import { Config } from "../config";
 import { Strings } from "../constants/Strings";
 
 type FileType = "image" | "audio";

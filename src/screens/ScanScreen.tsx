@@ -1,5 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  SafeAreaView,
+} from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import * as ImagePicker from "expo-image-picker";
@@ -84,7 +90,7 @@ const ScanScreen: React.FC<ScanScreenProps> = ({ navigation }) => {
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <View style={commonStyles.header}>
         <TouchableOpacity
           onPress={() => navigation.goBack()}
@@ -137,7 +143,7 @@ const ScanScreen: React.FC<ScanScreenProps> = ({ navigation }) => {
           </TouchableOpacity>
         </View>
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 

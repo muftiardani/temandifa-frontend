@@ -1,5 +1,11 @@
 import React, { useState, useCallback, useEffect } from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  SafeAreaView,
+} from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { Audio } from "expo-av";
 import * as Speech from "expo-speech";
@@ -125,7 +131,7 @@ const VoiceScreen: React.FC<VoiceScreenProps> = ({ navigation }) => {
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <View style={commonStyles.header}>
         <TouchableOpacity
           onPress={() => navigation.goBack()}
@@ -171,7 +177,7 @@ const VoiceScreen: React.FC<VoiceScreenProps> = ({ navigation }) => {
           </Animated.View>
         )}
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 
