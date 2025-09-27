@@ -14,9 +14,9 @@ import ScanResultScreen from "../screens/ScanResultScreen";
 import VoiceResultScreen from "../screens/VoiceResultScreen";
 import DocumentScannerScreen from "../screens/DocumentScannerScreen";
 import LanguageScreen from "../screens/LanguageScreen";
-import AboutScreen from "../screens/AboutScreen";
 import HelpAndGuideScreen from "../screens/HelpAndGuideScreen";
 import PrivacyAndSecurityScreen from "../screens/PrivacyAndSecurityScreen";
+import AboutScreen from "../screens/AboutScreen";
 
 import { RootStackParamList } from "../types/navigation";
 
@@ -37,12 +37,12 @@ const AppNavigator = () => (
     <Stack.Screen name="Settings" component={SettingsScreen} />
     <Stack.Screen name="DocumentScanner" component={DocumentScannerScreen} />
     <Stack.Screen name="Language" component={LanguageScreen} />
-    <Stack.Screen name="About" component={AboutScreen} />
     <Stack.Screen name="HelpAndGuide" component={HelpAndGuideScreen} />
     <Stack.Screen
       name="PrivacyAndSecurity"
       component={PrivacyAndSecurityScreen}
     />
+    <Stack.Screen name="About" component={AboutScreen} />
     <Stack.Screen
       name="VideoCall"
       component={AgoraVideoCallScreen}
@@ -70,7 +70,6 @@ const RootNavigator = () => {
     async function prepare() {
       try {
         await SplashScreen.preventAutoHideAsync();
-        // Lakukan tugas persiapan aplikasi di sini jika ada (misal: memuat font)
       } catch (e) {
         console.warn(e);
       } finally {
