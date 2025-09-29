@@ -9,6 +9,7 @@ Selamat datang di repositori *frontend* untuk aplikasi seluler TemanDifa. Aplika
   - **Transkripsi Suara**: Merekam suara dan mengubahnya menjadi teks untuk kemudahan komunikasi atau pencatatan.
   - **Panggilan Video Darurat**: Fitur panggilan video terintegrasi menggunakan Agora untuk terhubung dengan kontak darurat secara cepat.
   - **Antarmuka yang Dapat Disesuaikan**: Mendukung tema terang dan gelap untuk kenyamanan visual pengguna.
+  - **Pelaporan Error Otomatis**: Terintegrasi dengan Sentry untuk pemantauan dan pelaporan *crash* secara *real-time*.
 
 ## 🛠️ Tumpukan Teknologi
 
@@ -20,6 +21,7 @@ Selamat datang di repositori *frontend* untuk aplikasi seluler TemanDifa. Aplika
 | **Manajemen State** | [Zustand](https://github.com/pmndrs/zustand) |
 | **Panggilan Video** | [Agora SDK](https://www.agora.io/en/) |
 | **Pengujian** | [Jest](https://jestjs.io/), [React Native Testing Library](https://testing-library.com/docs/react-native-testing-library/intro/) |
+| **Pemantauan Error** | [Sentry](https://sentry.io/) |
 
 ## 📋 Prasyarat
 
@@ -43,7 +45,7 @@ Selamat datang di repositori *frontend* untuk aplikasi seluler TemanDifa. Aplika
     ```
 
 3.  **Konfigurasi Variabel Lingkungan:**
-    Buat file `.env` di direktori utama proyek dan isi dengan variabel yang diperlukan. File ini akan digunakan untuk menyimpan konfigurasi seperti URL API backend dan kredensial layanan pihak ketiga.
+    Buat file `.env` di direktori utama proyek. File ini digunakan untuk menyimpan konfigurasi penting.
 
     ```env
     # URL base dari backend TemanDifa
@@ -53,6 +55,9 @@ Selamat datang di repositori *frontend* untuk aplikasi seluler TemanDifa. Aplika
     AGORA_APP_ID=AGORA_APP_ID_ANDA
     AGORA_CHANNEL_NAME=NAMA_CHANNEL_ANDA
     AGORA_TOKEN=TOKEN_AGORA_ANDA
+
+    # DSN untuk integrasi Sentry (Error Reporting)
+    SENTRY_DSN=SENTRY_DSN_ANDA
     ```
 
 4.  **Jalankan aplikasi:**
@@ -89,3 +94,32 @@ npm test
 ```
 
 Proyek ini menggunakan Jest dan React Native Testing Library untuk pengujian.
+
+## 📦 Membangun Aplikasi untuk Produksi
+
+Untuk membuat file aplikasi yang dapat diinstal (*standalone build*), proyek ini menggunakan Expo Application Services (EAS).
+
+1.  **Login ke Akun Expo Anda:**
+
+    ```bash
+    npx eas login
+    ```
+
+2.  **Konfigurasi Proyek (jika belum):**
+
+    ```bash
+    npx eas build:configure
+    ```
+
+3.  **Mulai Proses Build:**
+    Pilih platform yang diinginkan (`android` atau `ios`):
+
+    ```bash
+    # Untuk Android
+    npx eas build --platform android
+
+    # Untuk iOS (memerlukan akun Apple Developer)
+    npx eas build --platform ios
+    ```
+
+    Ikuti instruksi yang muncul di terminal. Setelah selesai, Anda akan mendapatkan tautan untuk mengunduh file aplikasi Anda.
