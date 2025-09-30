@@ -24,6 +24,19 @@ const HomeScreen: React.FC = () => {
   const navigation = useNavigation<ScreenNavigationProp>();
   const t = useLocalization();
 
+  const getGreeting = () => {
+    const currentHour = new Date().getHours();
+    if (currentHour < 12) {
+      return t.greetings.morning;
+    } else if (currentHour < 15) {
+      return t.greetings.afternoon;
+    } else if (currentHour < 19) {
+      return t.greetings.evening;
+    } else {
+      return t.greetings.night;
+    }
+  };
+
   const opacity = useSharedValue(0);
   const translateY = useSharedValue(20);
 
@@ -50,7 +63,7 @@ const HomeScreen: React.FC = () => {
     <SafeAreaView style={styles.safeArea}>
       <Animated.View style={[styles.container, animatedContainerStyle]}>
         <View style={styles.header}>
-          <Text style={styles.headerTitle}>{t.greetings.morning}</Text>
+          <Text style={styles.headerTitle}>{getGreeting()}</Text>
           <Text style={styles.headerSubtitle}>{t.home.subtitle}</Text>
         </View>
 

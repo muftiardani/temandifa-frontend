@@ -1,6 +1,9 @@
 const id = {
   greetings: {
     morning: "Selamat Pagi",
+    afternoon: "Selamat Siang",
+    evening: "Selamat Sore",
+    night: "Selamat Malam",
   },
   home: {
     subtitle: "Bagaimana saya dapat membantu anda hari ini?",
@@ -74,6 +77,9 @@ const id = {
 const en: typeof id = {
   greetings: {
     morning: "Good Morning",
+    afternoon: "Good Afternoon",
+    evening: "Good Evening",
+    night: "Good Night",
   },
   home: {
     subtitle: "How can I help you today?",
