@@ -12,7 +12,7 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../types/navigation";
 import { commonStyles } from "../constants/Styles";
 import { Colors } from "../constants/Colors";
-import { Strings } from "../constants/Strings";
+import { useLocalization } from "../hooks/useLocalization";
 
 type PrivacyAndSecurityScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -22,6 +22,8 @@ type PrivacyAndSecurityScreenProps = NativeStackScreenProps<
 const PrivacyAndSecurityScreen: React.FC<PrivacyAndSecurityScreenProps> = ({
   navigation,
 }) => {
+  const t = useLocalization();
+
   return (
     <SafeAreaView style={commonStyles.safeArea}>
       <View style={styles.container}>
@@ -29,13 +31,13 @@ const PrivacyAndSecurityScreen: React.FC<PrivacyAndSecurityScreenProps> = ({
           <TouchableOpacity
             onPress={() => navigation.goBack()}
             style={commonStyles.backButton}
-            accessibilityLabel={`${Strings.general.back}. Tombol`}
+            accessibilityLabel={`${t.general.back}. Tombol`}
             accessibilityRole="button"
           >
             <Ionicons name="chevron-back" size={24} color={Colors.black} />
           </TouchableOpacity>
           <Text style={commonStyles.headerTitle}>
-            {Strings.settings.privacyAndSecurity}
+            {t.settings.privacyAndSecurity}
           </Text>
         </View>
 

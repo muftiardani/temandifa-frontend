@@ -1,12 +1,12 @@
-export const Strings = {
+const id = {
   greetings: {
     morning: "Selamat Pagi",
   },
   home: {
     subtitle: "Bagaimana saya dapat membantu anda hari ini?",
     cameraButton: "Kamera",
-    scanButton: "Scan",
-    voiceButton: "Voice",
+    scanButton: "Pindai",
+    voiceButton: "Suara",
     helpButton: "Bantuan",
     settingsButton: "Pengaturan",
     emergencyButton: "Panggilan Darurat",
@@ -31,7 +31,7 @@ export const Strings = {
     processing: "Sedang memproses...",
   },
   scanResult: {
-    title: "Hasil Scan",
+    title: "Hasil Pindai",
     noTextDetected: "Tidak ada teks yang terdeteksi.",
     listen: "Dengarkan",
     stop: "Berhenti",
@@ -41,7 +41,7 @@ export const Strings = {
     imageTakenProcessing: "Gambar diambil, sedang memproses",
   },
   voiceScreen: {
-    title: "Voice",
+    title: "Suara",
     infoProcessing: "Mengubah suara menjadi teks...",
     infoListening: "Sedang mendengarkan...",
     infoDefault: "Tekan tombol untuk berbicara",
@@ -70,3 +70,79 @@ export const Strings = {
     serverError: "Terjadi kesalahan pada server.",
   },
 };
+
+const en: typeof id = {
+  greetings: {
+    morning: "Good Morning",
+  },
+  home: {
+    subtitle: "How can I help you today?",
+    cameraButton: "Camera",
+    scanButton: "Scan",
+    voiceButton: "Voice",
+    helpButton: "Help",
+    settingsButton: "Settings",
+    emergencyButton: "Emergency Call",
+  },
+  permissions: {
+    camera: "We need your permission to use the camera",
+    microphone: "We need your permission to use the microphone",
+    gallery: "You need to grant gallery permissions to use this feature.",
+    grantPermission: "Grant Permission",
+  },
+  cameraScreen: {
+    processing: "Processing...",
+    ready: "Ready",
+    done: "Done",
+    objectInFront: (objectName: string) => `In front is ${objectName}`,
+  },
+  scanScreen: {
+    title: "Scan Document",
+    placeholder: "Select a scanning method",
+    camera: "Camera",
+    upload: "Upload",
+    processing: "Processing...",
+  },
+  scanResult: {
+    title: "Scan Result",
+    noTextDetected: "No text detected.",
+    listen: "Listen",
+    stop: "Stop",
+    imageProcessing: "Processing image...",
+    scannerOpening: "Opening scanner...",
+    imageProcessingFailed: "Failed to process image, please try again.",
+    imageTakenProcessing: "Image taken, processing",
+  },
+  voiceScreen: {
+    title: "Voice",
+    infoProcessing: "Converting voice to text...",
+    infoListening: "Listening...",
+    infoDefault: "Press the button to speak",
+    recordingFailed:
+      "Failed to start recording. Make sure microphone permission is granted.",
+  },
+  voiceResult: {
+    title: "Voice Result",
+  },
+  settings: {
+    title: "Settings",
+    theme: "Theme",
+    darkMode: "Dark Mode",
+    language: "Language",
+    helpAndGuide: "Help & Guide",
+    privacyAndSecurity: "Privacy & Security",
+    about: "About App",
+    appName: "TemanDifa",
+  },
+  general: {
+    back: "Back",
+    error: "Error",
+    failure: "Failed",
+    networkError: "Failed to connect to the server. Check your internet connection.",
+    genericError: "An error occurred. Please try again later.",
+    serverError: "An error occurred on the server.",
+  },
+};
+
+
+export const Strings = { id, en };

@@ -12,7 +12,7 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../types/navigation";
 import { commonStyles } from "../constants/Styles";
 import { Colors } from "../constants/Colors";
-import { Strings } from "../constants/Strings";
+import { useLocalization } from "../hooks/useLocalization";
 
 type VoiceResultScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -24,6 +24,7 @@ const VoiceResultScreen: React.FC<VoiceResultScreenProps> = ({
   navigation,
 }) => {
   const { transcribedText } = route.params;
+  const t = useLocalization();
 
   return (
     <SafeAreaView style={commonStyles.safeArea}>
@@ -32,18 +33,16 @@ const VoiceResultScreen: React.FC<VoiceResultScreenProps> = ({
           <TouchableOpacity
             onPress={() => navigation.goBack()}
             style={commonStyles.backButton}
-            accessibilityLabel={`${Strings.general.back}. Tombol`}
+            accessibilityLabel={`${t.general.back}. Tombol`}
             accessibilityRole="button"
           >
             <Ionicons name="chevron-back" size={24} color={Colors.black} />
           </TouchableOpacity>
-          <Text style={commonStyles.headerTitle}>
-            {Strings.voiceResult.title}
-          </Text>
+          <Text style={commonStyles.headerTitle}>{t.voiceResult.title}</Text>
         </View>
         <ScrollView style={styles.contentScrollView}>
           <Text style={styles.resultText}>
-            {transcribedText || Strings.scanResult.noTextDetected}
+            {transcribedText || t.scanResult.noTextDetected}
           </Text>
         </ScrollView>
       </View>

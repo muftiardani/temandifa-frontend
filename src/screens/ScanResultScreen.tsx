@@ -15,7 +15,8 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../types/navigation";
 import { commonStyles } from "../constants/Styles";
 import { Colors } from "../constants/Colors";
-import { Strings } from "../constants/Strings";
+import { useLocalization } from "../hooks/useLocalization";
+import { useAppStore } from "../store/appStore";
 
 type ScanResultScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -30,9 +31,11 @@ const ScanResultScreen: React.FC<ScanResultScreenProps> = ({
   const [displayedText, setDisplayedText] = useState("");
   const [isSpeaking, setIsSpeaking] = useState(false);
   const isMounted = useRef(true);
+  const t = useLocalization();
+  const language = useAppStore((state) => state.language);
 
   useEffect(() => {
-    const words = (scannedText || Strings.scanResult.noTextDetected).split(" ");
+    const words = (scannedText || t.scanResult.noTextDetected).split(" ");
     let currentWords: string[] = [];
     let wordIndex = 0;
 
@@ -47,7 +50,7 @@ const ScanResultScreen: React.FC<ScanResultScreenProps> = ({
     }, 50);
 
     return () => clearInterval(intervalId);
-  }, [scannedText]);
+  }, [scannedText, t]);
 
   useEffect(() => {
     isMounted.current = true;
@@ -81,7 +84,7 @@ const ScanResultScreen: React.FC<ScanResultScreenProps> = ({
     } else {
       setIsSpeaking(true);
       Speech.speak(scannedText, {
-        language: "id-ID",
+        language: language === "id" ? "id-ID" : "en-US",
         onDone: () => {
           if (isMounted.current) setIsSpeaking(false);
         },
@@ -102,14 +105,12 @@ const ScanResultScreen: React.FC<ScanResultScreenProps> = ({
           <TouchableOpacity
             onPress={() => navigation.goBack()}
             style={commonStyles.backButton}
-            accessibilityLabel={`${Strings.general.back}. Tombol`}
+            accessibilityLabel={`${t.general.back}. Tombol`}
             accessibilityRole="button"
           >
             <Ionicons name="chevron-back" size={24} color={Colors.black} />
           </TouchableOpacity>
-          <Text style={commonStyles.headerTitle}>
-            {Strings.scanResult.title}
-          </Text>
+          <Text style={commonStyles.headerTitle}>{t.scanResult.title}</Text>
         </View>
 
         <ScrollView style={styles.contentScrollView}>
@@ -122,8 +123,8 @@ const ScanResultScreen: React.FC<ScanResultScreenProps> = ({
             onPress={handleSpeakButton}
             accessibilityLabel={
               isSpeaking
-                ? `${Strings.scanResult.stop}. Tombol`
-                : `${Strings.scanResult.listen} hasil scan. Tombol`
+                ? `${t.scanResult.stop}. Tombol`
+                : `${t.scanResult.listen} hasil scan. Tombol`
             }
             accessibilityHint="Ketuk dua kali untuk memutar atau menghentikan suara"
             accessibilityRole="button"
@@ -134,7 +135,7 @@ const ScanResultScreen: React.FC<ScanResultScreenProps> = ({
               color={Colors.white}
             />
             <Text style={styles.actionButtonText}>
-              {isSpeaking ? Strings.scanResult.stop : Strings.scanResult.listen}
+              {isSpeaking ? t.scanResult.stop : t.scanResult.listen}
             </Text>
           </TouchableOpacity>
         </View>

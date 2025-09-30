@@ -23,13 +23,14 @@ import { RootStackParamList } from "../types/navigation";
 import { apiService } from "../services/api";
 import { commonStyles } from "../constants/Styles";
 import { Colors } from "../constants/Colors";
-import { Strings } from "../constants/Strings";
 import LoadingIndicator from "../components/common/LoadingIndicator";
+import { useLocalization } from "../hooks/useLocalization";
 
 type ScanScreenProps = NativeStackScreenProps<RootStackParamList, "Scan">;
 
 const ScanScreen: React.FC<ScanScreenProps> = ({ navigation }) => {
   const [isProcessing, setIsProcessing] = useState(false);
+  const t = useLocalization();
 
   const placeholderTranslateY = useSharedValue(0);
 
@@ -55,8 +56,8 @@ const ScanScreen: React.FC<ScanScreenProps> = ({ navigation }) => {
     if (status !== "granted") {
       Toast.show({
         type: "info",
-        text1: Strings.general.error,
-        text2: Strings.permissions.gallery,
+        text1: t.general.error,
+        text2: t.permissions.gallery,
       });
       return;
     }
@@ -81,8 +82,8 @@ const ScanScreen: React.FC<ScanScreenProps> = ({ navigation }) => {
     } catch (error: any) {
       Toast.show({
         type: "error",
-        text1: Strings.general.failure,
-        text2: error.message || Strings.general.genericError,
+        text1: t.general.failure,
+        text2: error.message || t.general.genericError,
       });
     } finally {
       setIsProcessing(false);
@@ -95,24 +96,24 @@ const ScanScreen: React.FC<ScanScreenProps> = ({ navigation }) => {
         <TouchableOpacity
           onPress={() => navigation.goBack()}
           style={commonStyles.backButton}
-          accessibilityLabel={`${Strings.general.back}. Tombol`}
+          accessibilityLabel={`${t.general.back}. Tombol`}
           accessibilityRole="button"
         >
           <Ionicons name="chevron-back" size={24} color={Colors.black} />
         </TouchableOpacity>
-        <Text style={commonStyles.headerTitle}>{Strings.scanScreen.title}</Text>
+        <Text style={commonStyles.headerTitle}>{t.scanScreen.title}</Text>
       </View>
 
       <View style={styles.content}>
         {isProcessing ? (
-          <LoadingIndicator text={Strings.scanScreen.processing} />
+          <LoadingIndicator text={t.scanScreen.processing} />
         ) : (
           <Animated.View
             style={[styles.placeholderContainer, animatedPlaceholderStyle]}
           >
             <Ionicons name="document-text-outline" size={100} color="#E0E0E0" />
             <Text style={styles.placeholderText}>
-              {Strings.scanScreen.placeholder}
+              {t.scanScreen.placeholder}
             </Text>
           </Animated.View>
         )}
@@ -122,24 +123,24 @@ const ScanScreen: React.FC<ScanScreenProps> = ({ navigation }) => {
             style={[styles.button, styles.cameraButton]}
             onPress={handleKameraPress}
             disabled={isProcessing}
-            accessibilityLabel={`${Strings.scanScreen.camera}. Tombol`}
+            accessibilityLabel={`${t.scanScreen.camera}. Tombol`}
             accessibilityHint="Membuka kamera untuk memindai dokumen"
             accessibilityRole="button"
           >
             <Ionicons name="camera" size={32} color={Colors.white} />
-            <Text style={styles.buttonText}>{Strings.scanScreen.camera}</Text>
+            <Text style={styles.buttonText}>{t.scanScreen.camera}</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
             style={[styles.button, styles.uploadButton]}
             onPress={handleUnggahPress}
             disabled={isProcessing}
-            accessibilityLabel={`${Strings.scanScreen.upload}. Tombol`}
+            accessibilityLabel={`${t.scanScreen.upload}. Tombol`}
             accessibilityHint="Mengunggah gambar dari galeri untuk dipindai"
             accessibilityRole="button"
           >
             <Ionicons name="cloud-upload" size={32} color={Colors.white} />
-            <Text style={styles.buttonText}>{Strings.scanScreen.upload}</Text>
+            <Text style={styles.buttonText}>{t.scanScreen.upload}</Text>
           </TouchableOpacity>
         </View>
       </View>

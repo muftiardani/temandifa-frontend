@@ -8,7 +8,8 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../types/navigation";
 import { apiService } from "../services/api";
 import { Colors } from "../constants/Colors";
-import { Strings } from "../constants/Strings";
+import { useLocalization } from "../hooks/useLocalization";
+import { useAppStore } from "../store/appStore";
 
 type DocScannerNavigationProp = NativeStackNavigationProp<
   RootStackParamList,
@@ -19,6 +20,8 @@ export default function DocumentScannerScreen() {
   const navigation = useNavigation<DocScannerNavigationProp>();
   const isFocused = useIsFocused();
   const [isProcessing, setIsProcessing] = useState(false);
+  const t = useLocalization();
+  const language = useAppStore((state) => state.language);
 
   useEffect(() => {
     Speech.stop();
@@ -47,8 +50,8 @@ export default function DocumentScannerScreen() {
 
   const handlePictureTaken = async (imageUri: string) => {
     setIsProcessing(true);
-    Speech.speak(Strings.scanResult.imageTakenProcessing, {
-      language: "id-ID",
+    Speech.speak(t.scanResult.imageTakenProcessing, {
+      language: language === "id" ? "id-ID" : "en-US",
     });
     try {
       const result = await apiService.scanImage(imageUri);
@@ -56,8 +59,8 @@ export default function DocumentScannerScreen() {
         navigation.replace("ScanResult", { scannedText: result.scannedText });
       }
     } catch (error) {
-      Speech.speak(Strings.scanResult.imageProcessingFailed, {
-        language: "id-ID",
+      Speech.speak(t.scanResult.imageProcessingFailed, {
+        language: language === "id" ? "id-ID" : "en-US",
       });
       navigation.goBack();
     } finally {
@@ -70,8 +73,8 @@ export default function DocumentScannerScreen() {
       <ActivityIndicator size="large" color={Colors.primary} />
       <Text style={styles.statusText}>
         {isProcessing
-          ? Strings.scanResult.imageProcessing
-          : Strings.scanResult.scannerOpening}
+          ? t.scanResult.imageProcessing
+          : t.scanResult.scannerOpening}
       </Text>
     </View>
   );

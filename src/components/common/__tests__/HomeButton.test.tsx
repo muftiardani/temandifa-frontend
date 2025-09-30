@@ -8,13 +8,13 @@ describe("HomeButton", () => {
   it("should render the title correctly", () => {
     render(
       <HomeButton
-        title={Strings.home.cameraButton}
+        title={Strings.id.home.cameraButton}
         icon="camera"
         backgroundColor={Colors.primary}
       />
     );
 
-    const buttonTitle = screen.getByText(Strings.home.cameraButton);
+    const buttonTitle = screen.getByText(Strings.id.home.cameraButton);
 
     expect(buttonTitle).toBeTruthy();
   });

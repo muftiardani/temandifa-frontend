@@ -1,7 +1,7 @@
 import NetInfo from "@react-native-community/netinfo";
 import Toast from "react-native-toast-message";
 import { Config } from "../config";
-import { Strings } from "../constants/Strings";
+import { useLocalization } from "../hooks/useLocalization";
 
 type FileType = "image" | "audio";
 
@@ -12,14 +12,15 @@ const postFormData = async (
   fileType: FileType,
   options?: { signal?: AbortSignal }
 ) => {
+  const t = useLocalization();
   const networkState = await NetInfo.fetch();
   if (!networkState.isConnected) {
     Toast.show({
       type: "error",
-      text1: Strings.general.failure,
-      text2: Strings.general.networkError,
+      text1: t.general.failure,
+      text2: t.general.networkError,
     });
-    throw new Error(Strings.general.networkError);
+    throw new Error(t.general.networkError);
   }
 
   try {
@@ -42,7 +43,7 @@ const postFormData = async (
     const data = await response.json();
 
     if (!response.ok) {
-      throw new Error(data.error || Strings.general.serverError);
+      throw new Error(data.error || t.general.serverError);
     }
     return data;
   } catch (error: any) {
@@ -55,8 +56,8 @@ const postFormData = async (
 
     Toast.show({
       type: "error",
-      text1: Strings.general.failure,
-      text2: error.message || Strings.general.genericError,
+      text1: t.general.failure,
+      text2: error.message || t.general.genericError,
     });
 
     throw error;

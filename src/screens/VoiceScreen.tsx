@@ -25,7 +25,7 @@ import { RootStackParamList } from "../types/navigation";
 import { apiService } from "../services/api";
 import { commonStyles } from "../constants/Styles";
 import { Colors } from "../constants/Colors";
-import { Strings } from "../constants/Strings";
+import { useLocalization } from "../hooks/useLocalization";
 import LoadingIndicator from "../components/common/LoadingIndicator";
 
 type VoiceScreenProps = NativeStackScreenProps<RootStackParamList, "Voice">;
@@ -35,6 +35,7 @@ const VoiceScreen: React.FC<VoiceScreenProps> = ({ navigation }) => {
   const [isRecording, setIsRecording] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [permissionResponse, requestPermission] = Audio.usePermissions();
+  const t = useLocalization();
 
   const scale = useSharedValue(1);
 
@@ -69,8 +70,8 @@ const VoiceScreen: React.FC<VoiceScreenProps> = ({ navigation }) => {
         if (permission.status !== "granted") {
           Toast.show({
             type: "info",
-            text1: Strings.general.error,
-            text2: Strings.permissions.microphone,
+            text1: t.general.error,
+            text2: t.permissions.microphone,
           });
           return;
         }
@@ -88,11 +89,11 @@ const VoiceScreen: React.FC<VoiceScreenProps> = ({ navigation }) => {
       console.error("Gagal memulai rekaman", err);
       Toast.show({
         type: "error",
-        text1: Strings.general.error,
-        text2: Strings.voiceScreen.recordingFailed,
+        text1: t.general.error,
+        text2: t.voiceScreen.recordingFailed,
       });
     }
-  }, [permissionResponse, requestPermission]);
+  }, [permissionResponse, requestPermission, t]);
 
   const stopRecordingAndTranscribe = useCallback(async () => {
     if (!recording) return;
@@ -112,14 +113,14 @@ const VoiceScreen: React.FC<VoiceScreenProps> = ({ navigation }) => {
     } catch (error: any) {
       Toast.show({
         type: "error",
-        text1: Strings.general.failure,
-        text2: error.message || Strings.general.genericError,
+        text1: t.general.failure,
+        text2: error.message || t.general.genericError,
       });
     } finally {
       setIsProcessing(false);
       setRecording(null);
     }
-  }, [recording, navigation]);
+  }, [recording, navigation, t]);
 
   const handleMicPress = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
@@ -136,22 +137,20 @@ const VoiceScreen: React.FC<VoiceScreenProps> = ({ navigation }) => {
         <TouchableOpacity
           onPress={() => navigation.goBack()}
           style={commonStyles.backButton}
-          accessibilityLabel={`${Strings.general.back}. Tombol`}
+          accessibilityLabel={`${t.general.back}. Tombol`}
           accessibilityRole="button"
         >
           <Ionicons name="chevron-back" size={24} color={Colors.black} />
         </TouchableOpacity>
-        <Text style={commonStyles.headerTitle}>
-          {Strings.voiceScreen.title}
-        </Text>
+        <Text style={commonStyles.headerTitle}>{t.voiceScreen.title}</Text>
       </View>
       <View style={styles.content}>
         <Text style={styles.infoText}>
           {isProcessing
-            ? Strings.voiceScreen.infoProcessing
+            ? t.voiceScreen.infoProcessing
             : isRecording
-            ? Strings.voiceScreen.infoListening
-            : Strings.voiceScreen.infoDefault}
+            ? t.voiceScreen.infoListening
+            : t.voiceScreen.infoDefault}
         </Text>
         {isProcessing ? (
           <LoadingIndicator />

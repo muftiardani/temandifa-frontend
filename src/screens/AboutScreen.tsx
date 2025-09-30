@@ -11,11 +11,13 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../types/navigation";
 import { commonStyles } from "../constants/Styles";
 import { Colors } from "../constants/Colors";
-import { Strings } from "../constants/Strings";
+import { useLocalization } from "../hooks/useLocalization";
 
 type AboutScreenProps = NativeStackScreenProps<RootStackParamList, "About">;
 
 const AboutScreen: React.FC<AboutScreenProps> = ({ navigation }) => {
+  const t = useLocalization();
+
   return (
     <SafeAreaView style={commonStyles.safeArea}>
       <View style={styles.container}>
@@ -23,16 +25,16 @@ const AboutScreen: React.FC<AboutScreenProps> = ({ navigation }) => {
           <TouchableOpacity
             onPress={() => navigation.goBack()}
             style={commonStyles.backButton}
-            accessibilityLabel={`${Strings.general.back}. Tombol`}
+            accessibilityLabel={`${t.general.back}. Tombol`}
             accessibilityRole="button"
           >
             <Ionicons name="chevron-back" size={24} color={Colors.black} />
           </TouchableOpacity>
-          <Text style={commonStyles.headerTitle}>{Strings.settings.about}</Text>
+          <Text style={commonStyles.headerTitle}>{t.settings.about}</Text>
         </View>
 
         <View style={styles.content}>
-          <Text style={styles.appName}>{Strings.settings.appName}</Text>
+          <Text style={styles.appName}>{t.settings.appName}</Text>
           <Text style={styles.version}>Versi 1.0.0</Text>
           <Text style={styles.description}>
             TemanDifa adalah aplikasi yang dirancang untuk membantu teman-teman

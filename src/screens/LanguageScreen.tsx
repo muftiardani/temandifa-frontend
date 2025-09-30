@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   View,
   Text,
@@ -11,7 +11,8 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../types/navigation";
 import { commonStyles } from "../constants/Styles";
 import { Colors } from "../constants/Colors";
-import { Strings } from "../constants/Strings";
+import { useAppStore } from "../store/appStore";
+import { useLocalization } from "../hooks/useLocalization";
 
 type LanguageScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -19,7 +20,8 @@ type LanguageScreenProps = NativeStackScreenProps<
 >;
 
 const LanguageScreen: React.FC<LanguageScreenProps> = ({ navigation }) => {
-  const [selectedLanguage, setSelectedLanguage] = useState("id");
+  const { language, setLanguage } = useAppStore();
+  const t = useLocalization();
 
   const languages = [
     { code: "id", name: "Bahasa Indonesia" },
@@ -33,14 +35,12 @@ const LanguageScreen: React.FC<LanguageScreenProps> = ({ navigation }) => {
           <TouchableOpacity
             onPress={() => navigation.goBack()}
             style={commonStyles.backButton}
-            accessibilityLabel={`${Strings.general.back}. Tombol`}
+            accessibilityLabel={`${t.general.back}. Tombol`}
             accessibilityRole="button"
           >
             <Ionicons name="chevron-back" size={24} color={Colors.black} />
           </TouchableOpacity>
-          <Text style={commonStyles.headerTitle}>
-            {Strings.settings.language}
-          </Text>
+          <Text style={commonStyles.headerTitle}>{t.settings.language}</Text>
         </View>
 
         <View style={styles.content}>
@@ -48,12 +48,12 @@ const LanguageScreen: React.FC<LanguageScreenProps> = ({ navigation }) => {
             <TouchableOpacity
               key={lang.code}
               style={styles.itemContainer}
-              onPress={() => setSelectedLanguage(lang.code)}
+              onPress={() => setLanguage(lang.code as "id" | "en")}
               accessibilityLabel={`Pilih bahasa ${lang.name}. Tombol`}
               accessibilityRole="button"
             >
               <Text style={styles.itemLabel}>{lang.name}</Text>
-              {selectedLanguage === lang.code && (
+              {language === lang.code && (
                 <Ionicons
                   name="checkmark-circle"
                   size={24}

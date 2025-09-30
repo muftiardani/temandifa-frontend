@@ -14,7 +14,8 @@ import { useNavigation, useIsFocused } from "@react-navigation/native";
 import { useCameraStore } from "../store/cameraStore";
 import { apiService } from "../services/api";
 import { Colors } from "../constants/Colors";
-import { Strings } from "../constants/Strings";
+import { useLocalization } from "../hooks/useLocalization";
+import { useAppStore } from "../store/appStore";
 
 const CAM_PREVIEW_WIDTH = Dimensions.get("window").width;
 const CAM_PREVIEW_HEIGHT = Dimensions.get("window").height;
@@ -35,26 +36,31 @@ export default function CameraScreen() {
   });
   const navigation = useNavigation();
   const isFocused = useIsFocused();
+  const t = useLocalization();
+  const language = useAppStore((state) => state.language);
 
-  const speakTopObject = useCallback((detectedObjects: any[]) => {
-    if (detectedObjects.length > 0) {
-      const topObject = detectedObjects.sort(
-        (a, b) => b.confidence - a.confidence
-      )[0];
-      const objectName = topObject.class;
-      const now = Date.now();
-      if (
-        lastSpokenRef.current.name !== objectName ||
-        now - lastSpokenRef.current.time > 5000
-      ) {
-        Speech.stop();
-        Speech.speak(Strings.cameraScreen.objectInFront(objectName), {
-          language: "id-ID",
-        });
-        lastSpokenRef.current = { name: objectName, time: now };
+  const speakTopObject = useCallback(
+    (detectedObjects: any[]) => {
+      if (detectedObjects.length > 0) {
+        const topObject = detectedObjects.sort(
+          (a, b) => b.confidence - a.confidence
+        )[0];
+        const objectName = topObject.class;
+        const now = Date.now();
+        if (
+          lastSpokenRef.current.name !== objectName ||
+          now - lastSpokenRef.current.time > 5000
+        ) {
+          Speech.stop();
+          Speech.speak(t.cameraScreen.objectInFront(objectName), {
+            language: language === "id" ? "id-ID" : "en-US",
+          });
+          lastSpokenRef.current = { name: objectName, time: now };
+        }
       }
-    }
-  }, []);
+    },
+    [t, language]
+  );
 
   const takePictureAndDetect = useCallback(
     async (abortController: AbortController) => {
@@ -145,16 +151,14 @@ export default function CameraScreen() {
   if (!permission.granted) {
     return (
       <View style={styles.permissionContainer}>
-        <Text style={styles.permissionText}>{Strings.permissions.camera}</Text>
+        <Text style={styles.permissionText}>{t.permissions.camera}</Text>
         <TouchableOpacity
           onPress={requestPermission}
           style={styles.permissionButton}
-          accessibilityLabel={`${Strings.permissions.grantPermission}. Tombol`}
+          accessibilityLabel={`${t.permissions.grantPermission}. Tombol`}
           accessibilityRole="button"
         >
-          <Text style={styles.buttonText}>
-            {Strings.permissions.grantPermission}
-          </Text>
+          <Text style={styles.buttonText}>{t.permissions.grantPermission}</Text>
         </TouchableOpacity>
       </View>
     );
@@ -174,23 +178,22 @@ export default function CameraScreen() {
           ]}
         />
         <Text style={styles.statusText}>
-          {isProcessing
-            ? Strings.cameraScreen.processing
-            : Strings.cameraScreen.ready}
+          {isProcessing ? t.cameraScreen.processing : t.cameraScreen.ready}
         </Text>
       </View>
       <TouchableOpacity
         style={styles.doneButton}
         onPress={() => navigation.goBack()}
-        accessibilityLabel={`${Strings.cameraScreen.done}. Tombol`}
+        accessibilityLabel={`${t.cameraScreen.done}. Tombol`}
         accessibilityHint={`Kembali ke layar utama`}
         accessibilityRole="button"
       >
-        <Text style={styles.doneButtonText}>{Strings.cameraScreen.done}</Text>
+        <Text style={styles.doneButtonText}>{t.cameraScreen.done}</Text>
       </TouchableOpacity>
     </View>
   );
 }
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,

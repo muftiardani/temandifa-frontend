@@ -13,7 +13,7 @@ import { RootStackParamList } from "../types/navigation";
 import { commonStyles } from "../constants/Styles";
 import { Colors } from "../constants/Colors";
 import { useAppStore } from "../store/appStore";
-import { Strings } from "../constants/Strings";
+import { useLocalization } from "../hooks/useLocalization";
 
 type SettingsScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -36,6 +36,7 @@ const SettingsItem = React.memo(
 
 const SettingsScreen: React.FC<SettingsScreenProps> = ({ navigation }) => {
   const { theme, toggleTheme } = useAppStore();
+  const t = useLocalization();
   const isDarkMode = theme === "dark";
 
   return (
@@ -45,17 +46,17 @@ const SettingsScreen: React.FC<SettingsScreenProps> = ({ navigation }) => {
           <TouchableOpacity
             onPress={() => navigation.goBack()}
             style={commonStyles.backButton}
-            accessibilityLabel={`${Strings.general.back}. Tombol`}
+            accessibilityLabel={`${t.general.back}. Tombol`}
             accessibilityRole="button"
           >
             <Ionicons name="chevron-back" size={24} color={Colors.black} />
           </TouchableOpacity>
-          <Text style={commonStyles.headerTitle}>{Strings.settings.title}</Text>
+          <Text style={commonStyles.headerTitle}>{t.settings.title}</Text>
         </View>
 
         <View style={styles.listContainer}>
           <View style={styles.itemContainer}>
-            <Text style={styles.itemLabel}>{Strings.settings.darkMode}</Text>
+            <Text style={styles.itemLabel}>{t.settings.darkMode}</Text>
             <Switch
               trackColor={{
                 false: Colors.switchInactive,
@@ -64,30 +65,30 @@ const SettingsScreen: React.FC<SettingsScreenProps> = ({ navigation }) => {
               thumbColor={Colors.lightGrey}
               onValueChange={toggleTheme}
               value={isDarkMode}
-              accessibilityLabel={`${Strings.settings.darkMode}, saat ini ${
+              accessibilityLabel={`${t.settings.darkMode}, saat ini ${
                 isDarkMode ? "aktif" : "tidak aktif"
               }. Saklar`}
               accessibilityRole="switch"
             />
           </View>
           <SettingsItem
-            label={Strings.settings.language}
+            label={t.settings.language}
             onPress={() => navigation.navigate("Language")}
           />
           <SettingsItem
-            label={Strings.settings.helpAndGuide}
+            label={t.settings.helpAndGuide}
             onPress={() => navigation.navigate("HelpAndGuide")}
           />
           <SettingsItem
-            label={Strings.settings.privacyAndSecurity}
+            label={t.settings.privacyAndSecurity}
             onPress={() => navigation.navigate("PrivacyAndSecurity")}
           />
           <SettingsItem
-            label={Strings.settings.about}
+            label={t.settings.about}
             onPress={() => navigation.navigate("About")}
           />
         </View>
-        <Text style={styles.footerText}>{Strings.settings.appName}</Text>
+        <Text style={styles.footerText}>{t.settings.appName}</Text>
       </View>
     </SafeAreaView>
   );

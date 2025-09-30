@@ -18,10 +18,11 @@ import Animated, {
 import HomeButton from "../components/common/HomeButton";
 import { ScreenNavigationProp } from "../types/navigation";
 import { Colors } from "../constants/Colors";
-import { Strings } from "../constants/Strings";
+import { useLocalization } from "../hooks/useLocalization";
 
 const HomeScreen: React.FC = () => {
   const navigation = useNavigation<ScreenNavigationProp>();
+  const t = useLocalization();
 
   const opacity = useSharedValue(0);
   const translateY = useSharedValue(20);
@@ -49,13 +50,13 @@ const HomeScreen: React.FC = () => {
     <SafeAreaView style={styles.safeArea}>
       <Animated.View style={[styles.container, animatedContainerStyle]}>
         <View style={styles.header}>
-          <Text style={styles.headerTitle}>{Strings.greetings.morning}</Text>
-          <Text style={styles.headerSubtitle}>{Strings.home.subtitle}</Text>
+          <Text style={styles.headerTitle}>{t.greetings.morning}</Text>
+          <Text style={styles.headerSubtitle}>{t.home.subtitle}</Text>
         </View>
 
         <View style={styles.buttonGrid}>
           <HomeButton
-            title={Strings.home.cameraButton}
+            title={t.home.cameraButton}
             icon="camera"
             backgroundColor={Colors.primary}
             layout="horizontal"
@@ -64,14 +65,14 @@ const HomeScreen: React.FC = () => {
           />
           <View style={styles.row}>
             <HomeButton
-              title={Strings.home.scanButton}
+              title={t.home.scanButton}
               icon="scan"
               backgroundColor={Colors.accent}
               style={{ flex: 1, height: 140 }}
               onPress={handleScanPress}
             />
             <HomeButton
-              title={Strings.home.voiceButton}
+              title={t.home.voiceButton}
               icon="mic"
               backgroundColor={Colors.secondary}
               style={{ flex: 1, height: 140 }}
@@ -83,7 +84,7 @@ const HomeScreen: React.FC = () => {
         <View style={styles.bottomBar}>
           <View style={styles.helpSettingsContainer}>
             <TouchableOpacity
-              accessibilityLabel={`${Strings.home.helpButton}. Tombol`}
+              accessibilityLabel={`${t.home.helpButton}. Tombol`}
               accessibilityHint={`Ketuk dua kali untuk membuka panduan`}
               accessibilityRole="button"
             >
@@ -95,8 +96,8 @@ const HomeScreen: React.FC = () => {
             </TouchableOpacity>
             <TouchableOpacity
               onPress={handleSettingsPress}
-              accessibilityLabel={`${Strings.home.settingsButton}. Tombol`}
-              accessibilityHint={`Ketuk dua kali untuk membuka ${Strings.settings.title}`}
+              accessibilityLabel={`${t.home.settingsButton}. Tombol`}
+              accessibilityHint={`Ketuk dua kali untuk membuka ${t.settings.title}`}
               accessibilityRole="button"
             >
               <Ionicons
@@ -109,7 +110,7 @@ const HomeScreen: React.FC = () => {
           <TouchableOpacity
             style={styles.emergencyButton}
             onPress={handleEmergencyPress}
-            accessibilityLabel={`${Strings.home.emergencyButton}. Tombol`}
+            accessibilityLabel={`${t.home.emergencyButton}. Tombol`}
             accessibilityHint={`Ketuk dua kali untuk memulai panggilan video darurat`}
             accessibilityRole="button"
           >
