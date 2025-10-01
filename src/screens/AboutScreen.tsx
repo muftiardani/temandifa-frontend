@@ -8,6 +8,8 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import Constants from "expo-constants";
+
 import { RootStackParamList } from "../types/navigation";
 import { useAppTheme } from "../hooks/useAppTheme";
 
@@ -15,6 +17,8 @@ type AboutScreenProps = NativeStackScreenProps<RootStackParamList, "About">;
 
 const AboutScreen: React.FC<AboutScreenProps> = ({ navigation }) => {
   const { t, colors } = useAppTheme();
+
+  const appVersion = Constants.expoConfig?.version;
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
@@ -38,7 +42,7 @@ const AboutScreen: React.FC<AboutScreenProps> = ({ navigation }) => {
             {t.settings.appName}
           </Text>
           <Text style={[styles.version, { color: colors.grey }]}>
-            Versi 1.0.0
+            Versi {appVersion}
           </Text>
           <Text style={[styles.description, { color: colors.text }]}>
             TemanDifa adalah aplikasi yang dirancang untuk membantu teman-teman

@@ -1,4 +1,3 @@
-import NetInfo from "@react-native-community/netinfo";
 import { Config } from "../config";
 
 export class NetworkError extends Error {
@@ -17,11 +16,6 @@ const postFormData = async (
   fileType: FileType,
   options?: { signal?: AbortSignal }
 ) => {
-  const networkState = await NetInfo.fetch();
-  if (!networkState.isConnected) {
-    throw new NetworkError("No internet connection");
-  }
-
   try {
     const formData = new FormData();
     const file = {
@@ -49,6 +43,15 @@ const postFormData = async (
     if (error.name === "AbortError") {
       console.log("API request was canceled:", url);
       return;
+    }
+
+    if (
+      error instanceof TypeError &&
+      error.message === "Network request failed"
+    ) {
+      throw new NetworkError(
+        "Gagal terhubung ke server. Periksa koneksi internet Anda."
+      );
     }
 
     console.error(`Error calling ${url}:`, error);

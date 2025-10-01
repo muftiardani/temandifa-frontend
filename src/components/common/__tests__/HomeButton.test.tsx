@@ -1,5 +1,5 @@
 import React from "react";
-import { render, screen } from "@testing-library/react-native";
+import { render, screen, fireEvent } from "@testing-library/react-native";
 import HomeButton from "../HomeButton";
 import { lightColors } from "../../../constants/Colors";
 
@@ -37,7 +37,12 @@ describe("HomeButton", () => {
   });
 
   it("calls onPress prop when pressed", () => {
-    const { getByText } = render(<HomeButton {...defaultProps} />);
-    const button = getByText("Tombol Uji");
-  });
+  const onPressMock = jest.fn();
+  render(<HomeButton {...defaultProps} onPress={onPressMock} />);
+
+  const button = screen.getByText("Tombol Uji");
+  fireEvent.press(button);
+
+  expect(onPressMock).toHaveBeenCalledTimes(1);
+});
 });
