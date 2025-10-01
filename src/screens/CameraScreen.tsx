@@ -13,8 +13,7 @@ import * as Speech from "expo-speech";
 import { useNavigation, useIsFocused } from "@react-navigation/native";
 import { useCameraStore } from "../store/cameraStore";
 import { apiService } from "../services/api";
-import { Colors } from "../constants/Colors";
-import { useLocalization } from "../hooks/useLocalization";
+import { useAppTheme } from "../hooks/useAppTheme";
 import { useAppStore } from "../store/appStore";
 
 const CAM_PREVIEW_WIDTH = Dimensions.get("window").width;
@@ -36,7 +35,7 @@ export default function CameraScreen() {
   });
   const navigation = useNavigation();
   const isFocused = useIsFocused();
-  const t = useLocalization();
+  const { t, colors } = useAppTheme();
   const language = useAppStore((state) => state.language);
 
   const speakTopObject = useCallback(
@@ -125,36 +124,48 @@ export default function CameraScreen() {
   }, [isFocused, permission, takePictureAndDetect, clearDetections]);
 
   const renderDetections = () =>
-    detections.map((detection, i) => {
-      const { bbox, confidence, class: className } = detection;
-      return (
-        <View
-          key={i}
-          style={[
-            styles.bbox,
-            {
-              top: bbox[1] * CAM_PREVIEW_HEIGHT,
-              left: bbox[0] * CAM_PREVIEW_WIDTH,
-              width: bbox[2] * CAM_PREVIEW_WIDTH,
-              height: bbox[3] * CAM_PREVIEW_HEIGHT,
-            },
-          ]}
-        >
-          <Text style={styles.bboxLabel}>{`${className} (${(
-            confidence * 100
-          ).toFixed(0)}%)`}</Text>
-        </View>
-      );
-    });
+    detections.map((detection, i) => (
+      <View
+        key={i}
+        style={[
+          styles.bbox,
+          {
+            borderColor: colors.primary,
+            top: detection.bbox[1] * CAM_PREVIEW_HEIGHT,
+            left: detection.bbox[0] * CAM_PREVIEW_WIDTH,
+            width: detection.bbox[2] * CAM_PREVIEW_WIDTH,
+            height: detection.bbox[3] * CAM_PREVIEW_HEIGHT,
+          },
+        ]}
+      >
+        <Text
+          style={[styles.bboxLabel, { backgroundColor: colors.primary }]}
+        >{`${detection.class} (${(detection.confidence * 100).toFixed(
+          0
+        )}%)`}</Text>
+      </View>
+    ));
 
-  if (!permission) return <View style={styles.container} />;
+  if (!permission)
+    return (
+      <View
+        style={[styles.container, { backgroundColor: colors.background }]}
+      />
+    );
   if (!permission.granted) {
     return (
-      <View style={styles.permissionContainer}>
-        <Text style={styles.permissionText}>{t.permissions.camera}</Text>
+      <View
+        style={[
+          styles.permissionContainer,
+          { backgroundColor: colors.background },
+        ]}
+      >
+        <Text style={[styles.permissionText, { color: colors.text }]}>
+          {t.permissions.camera}
+        </Text>
         <TouchableOpacity
           onPress={requestPermission}
-          style={styles.permissionButton}
+          style={[styles.permissionButton, { backgroundColor: colors.primary }]}
           accessibilityLabel={`${t.permissions.grantPermission}. Tombol`}
           accessibilityRole="button"
         >
@@ -174,7 +185,7 @@ export default function CameraScreen() {
         <View
           style={[
             styles.statusDot,
-            { backgroundColor: isProcessing ? Colors.warning : Colors.success },
+            { backgroundColor: isProcessing ? colors.warning : colors.success },
           ]}
         />
         <Text style={styles.statusText}>
@@ -185,7 +196,7 @@ export default function CameraScreen() {
         style={styles.doneButton}
         onPress={() => navigation.goBack()}
         accessibilityLabel={`${t.cameraScreen.done}. Tombol`}
-        accessibilityHint={`Kembali ke layar utama`}
+        accessibilityHint="Kembali ke layar utama"
         accessibilityRole="button"
       >
         <Text style={styles.doneButtonText}>{t.cameraScreen.done}</Text>
@@ -197,9 +208,9 @@ export default function CameraScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.black,
     justifyContent: "center",
     alignItems: "center",
+    backgroundColor: "#000",
   },
   camera: { width: CAM_PREVIEW_WIDTH, height: CAM_PREVIEW_HEIGHT },
   permissionContainer: {
@@ -207,16 +218,14 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     padding: 20,
-    backgroundColor: Colors.black,
   },
-  permissionText: { color: Colors.white, textAlign: "center", padding: 20 },
+  permissionText: { textAlign: "center", padding: 20 },
   permissionButton: {
-    backgroundColor: Colors.primary,
     paddingHorizontal: 20,
     paddingVertical: 10,
     borderRadius: 8,
   },
-  buttonText: { color: Colors.white },
+  buttonText: { color: "#fff" },
   detectionContainer: {
     position: "absolute",
     top: 0,
@@ -224,15 +233,9 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "100%",
   },
-  bbox: {
-    position: "absolute",
-    borderWidth: 2,
-    borderColor: Colors.primary,
-    borderRadius: 5,
-  },
+  bbox: { position: "absolute", borderWidth: 2, borderRadius: 5 },
   bboxLabel: {
-    backgroundColor: Colors.primary,
-    color: Colors.white,
+    color: "#fff",
     fontSize: 12,
     padding: 2,
     position: "absolute",
@@ -248,7 +251,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 100,
     borderRadius: 50,
   },
-  doneButtonText: { color: Colors.black, fontSize: 18, fontWeight: "600" },
+  doneButtonText: { color: "#000", fontSize: 18, fontWeight: "600" },
   statusIndicator: {
     position: "absolute",
     top: 60,
@@ -261,5 +264,5 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
   statusDot: { width: 10, height: 10, borderRadius: 5, marginRight: 8 },
-  statusText: { color: Colors.white, fontSize: 12 },
+  statusText: { color: "#fff", fontSize: 12 },
 });

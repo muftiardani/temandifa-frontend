@@ -20,12 +20,9 @@ import Animated, {
   withSequence,
   Easing,
 } from "react-native-reanimated";
-
 import { RootStackParamList } from "../types/navigation";
 import { apiService } from "../services/api";
-import { commonStyles } from "../constants/Styles";
-import { Colors } from "../constants/Colors";
-import { useLocalization } from "../hooks/useLocalization";
+import { useAppTheme } from "../hooks/useAppTheme";
 import LoadingIndicator from "../components/common/LoadingIndicator";
 
 type VoiceScreenProps = NativeStackScreenProps<RootStackParamList, "Voice">;
@@ -35,7 +32,7 @@ const VoiceScreen: React.FC<VoiceScreenProps> = ({ navigation }) => {
   const [isRecording, setIsRecording] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [permissionResponse, requestPermission] = Audio.usePermissions();
-  const t = useLocalization();
+  const { t, colors } = useAppTheme();
 
   const scale = useSharedValue(1);
 
@@ -64,7 +61,6 @@ const VoiceScreen: React.FC<VoiceScreenProps> = ({ navigation }) => {
   const startRecording = useCallback(async () => {
     try {
       Speech.stop();
-
       if (permissionResponse?.status !== "granted") {
         const permission = await requestPermission();
         if (permission.status !== "granted") {
@@ -132,20 +128,22 @@ const VoiceScreen: React.FC<VoiceScreenProps> = ({ navigation }) => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={commonStyles.header}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
+      <View style={[styles.header, { borderBottomColor: colors.border }]}>
         <TouchableOpacity
           onPress={() => navigation.goBack()}
-          style={commonStyles.backButton}
+          style={styles.backButton}
           accessibilityLabel={`${t.general.back}. Tombol`}
           accessibilityRole="button"
         >
-          <Ionicons name="chevron-back" size={24} color={Colors.black} />
+          <Ionicons name="chevron-back" size={24} color={colors.text} />
         </TouchableOpacity>
-        <Text style={commonStyles.headerTitle}>{t.voiceScreen.title}</Text>
+        <Text style={[styles.headerTitle, { color: colors.headerText }]}>
+          {t.voiceScreen.title}
+        </Text>
       </View>
       <View style={styles.content}>
-        <Text style={styles.infoText}>
+        <Text style={[styles.infoText, { color: colors.grey }]}>
           {isProcessing
             ? t.voiceScreen.infoProcessing
             : isRecording
@@ -159,7 +157,9 @@ const VoiceScreen: React.FC<VoiceScreenProps> = ({ navigation }) => {
             <TouchableOpacity
               style={[
                 styles.micButton,
-                isRecording && styles.micButtonRecording,
+                {
+                  backgroundColor: isRecording ? colors.accent : colors.primary,
+                },
               ]}
               onPress={handleMicPress}
               disabled={isProcessing}
@@ -171,7 +171,7 @@ const VoiceScreen: React.FC<VoiceScreenProps> = ({ navigation }) => {
               accessibilityHint="Ketuk dua kali untuk mengaktifkan"
               accessibilityRole="button"
             >
-              <Ionicons name="mic" size={80} color={Colors.white} />
+              <Ionicons name="mic" size={80} color={colors.white} />
             </TouchableOpacity>
           </Animated.View>
         )}
@@ -181,29 +181,31 @@ const VoiceScreen: React.FC<VoiceScreenProps> = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: Colors.white },
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: 16,
+    paddingTop: 50,
+    paddingBottom: 16,
+    borderBottomWidth: 1,
+  },
+  backButton: { marginRight: 16, padding: 8 },
+  headerTitle: { fontSize: 20, fontWeight: "600" },
   content: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
     padding: 20,
   },
-  infoText: {
-    fontSize: 18,
-    color: Colors.grey,
-    marginBottom: 40,
-    textAlign: "center",
-  },
+  infoText: { fontSize: 18, marginBottom: 40, textAlign: "center" },
   micButton: {
     width: 150,
     height: 150,
     borderRadius: 75,
-    backgroundColor: Colors.primary,
     justifyContent: "center",
     alignItems: "center",
     elevation: 8,
   },
-  micButtonRecording: { backgroundColor: Colors.accent },
 });
 
 export default VoiceScreen;

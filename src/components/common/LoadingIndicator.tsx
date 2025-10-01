@@ -1,17 +1,23 @@
 import React from "react";
 import { View, ActivityIndicator, Text, StyleSheet } from "react-native";
-import { Colors } from "../../constants/Colors";
+import { useAppTheme } from "../../hooks/useAppTheme";
 
 interface Props {
   text?: string;
 }
 
-const LoadingIndicator: React.FC<Props> = ({ text }) => (
-  <View style={styles.container}>
-    <ActivityIndicator size="large" color={Colors.primary} />
-    {text && <Text style={styles.text}>{text}</Text>}
-  </View>
-);
+const LoadingIndicator: React.FC<Props> = ({ text }) => {
+  const { colors } = useAppTheme();
+
+  return (
+    <View style={styles.container}>
+      <ActivityIndicator size="large" color={colors.primary} />
+      {text && (
+        <Text style={[styles.text, { color: colors.grey }]}>{text}</Text>
+      )}
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -23,7 +29,6 @@ const styles = StyleSheet.create({
   text: {
     marginTop: 12,
     fontSize: 16,
-    color: Colors.grey,
   },
 });
 

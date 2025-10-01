@@ -1,7 +1,12 @@
 import NetInfo from "@react-native-community/netinfo";
-import Toast from "react-native-toast-message";
 import { Config } from "../config";
-import { useLocalization } from "../hooks/useLocalization";
+
+export class NetworkError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "NetworkError";
+  }
+}
 
 type FileType = "image" | "audio";
 
@@ -12,15 +17,9 @@ const postFormData = async (
   fileType: FileType,
   options?: { signal?: AbortSignal }
 ) => {
-  const t = useLocalization();
   const networkState = await NetInfo.fetch();
   if (!networkState.isConnected) {
-    Toast.show({
-      type: "error",
-      text1: t.general.failure,
-      text2: t.general.networkError,
-    });
-    throw new Error(t.general.networkError);
+    throw new NetworkError("No internet connection");
   }
 
   try {
@@ -43,23 +42,16 @@ const postFormData = async (
     const data = await response.json();
 
     if (!response.ok) {
-      throw new Error(data.error || t.general.serverError);
+      throw new Error(data.error || "A server error occurred.");
     }
     return data;
   } catch (error: any) {
     if (error.name === "AbortError") {
-      console.log("Permintaan API dibatalkan:", url);
+      console.log("API request was canceled:", url);
       return;
     }
 
-    console.error(`Error saat memanggil ${url}:`, error);
-
-    Toast.show({
-      type: "error",
-      text1: t.general.failure,
-      text2: error.message || t.general.genericError,
-    });
-
+    console.error(`Error calling ${url}:`, error);
     throw error;
   }
 };

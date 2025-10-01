@@ -9,10 +9,8 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../types/navigation";
-import { commonStyles } from "../constants/Styles";
-import { Colors } from "../constants/Colors";
 import { useAppStore } from "../store/appStore";
-import { useLocalization } from "../hooks/useLocalization";
+import { useAppTheme } from "../hooks/useAppTheme";
 
 type LanguageScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -21,7 +19,7 @@ type LanguageScreenProps = NativeStackScreenProps<
 
 const LanguageScreen: React.FC<LanguageScreenProps> = ({ navigation }) => {
   const { language, setLanguage } = useAppStore();
-  const t = useLocalization();
+  const { t, colors } = useAppTheme();
 
   const languages = [
     { code: "id", name: "Bahasa Indonesia" },
@@ -29,35 +27,41 @@ const LanguageScreen: React.FC<LanguageScreenProps> = ({ navigation }) => {
   ];
 
   return (
-    <SafeAreaView style={commonStyles.safeArea}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
       <View style={styles.container}>
-        <View style={commonStyles.header}>
+        <View style={[styles.header, { borderBottomColor: colors.border }]}>
           <TouchableOpacity
             onPress={() => navigation.goBack()}
-            style={commonStyles.backButton}
+            style={styles.backButton}
             accessibilityLabel={`${t.general.back}. Tombol`}
             accessibilityRole="button"
           >
-            <Ionicons name="chevron-back" size={24} color={Colors.black} />
+            <Ionicons name="chevron-back" size={24} color={colors.text} />
           </TouchableOpacity>
-          <Text style={commonStyles.headerTitle}>{t.settings.language}</Text>
+          <Text style={[styles.headerTitle, { color: colors.headerText }]}>
+            {t.settings.language}
+          </Text>
         </View>
 
         <View style={styles.content}>
           {languages.map((lang) => (
             <TouchableOpacity
               key={lang.code}
-              style={styles.itemContainer}
+              style={[
+                styles.itemContainer,
+                { borderBottomColor: colors.border },
+              ]}
               onPress={() => setLanguage(lang.code as "id" | "en")}
               accessibilityLabel={`Pilih bahasa ${lang.name}. Tombol`}
-              accessibilityRole="button"
             >
-              <Text style={styles.itemLabel}>{lang.name}</Text>
+              <Text style={[styles.itemLabel, { color: colors.text }]}>
+                {lang.name}
+              </Text>
               {language === lang.code && (
                 <Ionicons
                   name="checkmark-circle"
                   size={24}
-                  color={Colors.primary}
+                  color={colors.primary}
                 />
               )}
             </TouchableOpacity>
@@ -70,6 +74,22 @@ const LanguageScreen: React.FC<LanguageScreenProps> = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: 16,
+    paddingTop: 50,
+    paddingBottom: 16,
+    borderBottomWidth: 1,
+  },
+  backButton: {
+    marginRight: 16,
+    padding: 8,
+  },
+  headerTitle: {
+    fontSize: 20,
+    fontWeight: "600",
+  },
   content: { flex: 1, padding: 20 },
   itemContainer: {
     flexDirection: "row",
@@ -77,7 +97,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingVertical: 16,
     borderBottomWidth: 1,
-    borderBottomColor: Colors.lightGrey,
   },
   itemLabel: { fontSize: 17 },
 });

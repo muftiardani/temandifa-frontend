@@ -10,82 +10,91 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../types/navigation";
-import { commonStyles } from "../constants/Styles";
-import { Colors } from "../constants/Colors";
 import { useAppStore } from "../store/appStore";
-import { useLocalization } from "../hooks/useLocalization";
+import { useAppTheme } from "../hooks/useAppTheme";
 
 type SettingsScreenProps = NativeStackScreenProps<
   RootStackParamList,
   "Settings"
 >;
 
-const SettingsItem = React.memo(
-  ({ label, onPress }: { label: string; onPress?: () => void }) => (
-    <TouchableOpacity
-      style={styles.itemContainer}
-      onPress={onPress}
-      accessibilityLabel={`${label}. Tombol`}
-      accessibilityRole="button"
-    >
-      <Text style={styles.itemLabel}>{label}</Text>
-      <Ionicons name="chevron-forward" size={24} color="#C7C7CC" />
-    </TouchableOpacity>
-  )
+const SettingsItem = ({
+  label,
+  onPress,
+  textColor,
+}: {
+  label: string;
+  onPress?: () => void;
+  textColor: string;
+}) => (
+  <TouchableOpacity
+    style={[styles.itemContainer]}
+    onPress={onPress}
+    accessibilityLabel={label}
+    accessibilityRole="button"
+  >
+    <Text style={[styles.itemLabel, { color: textColor }]}>{label}</Text>
+    <Ionicons name="chevron-forward" size={24} color="#C7C7CC" />
+  </TouchableOpacity>
 );
 
 const SettingsScreen: React.FC<SettingsScreenProps> = ({ navigation }) => {
-  const { theme, toggleTheme } = useAppStore();
-  const t = useLocalization();
+  const { toggleTheme } = useAppStore();
+  const { t, colors, theme } = useAppTheme();
   const isDarkMode = theme === "dark";
 
   return (
-    <SafeAreaView style={commonStyles.safeArea}>
-      <View style={styles.container}>
-        <View style={commonStyles.header}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
+      <View style={{ flex: 1 }}>
+        <View style={[styles.header, { borderBottomColor: colors.border }]}>
           <TouchableOpacity
             onPress={() => navigation.goBack()}
-            style={commonStyles.backButton}
-            accessibilityLabel={`${t.general.back}. Tombol`}
+            style={styles.backButton}
+            accessibilityLabel={t.general.back}
             accessibilityRole="button"
           >
-            <Ionicons name="chevron-back" size={24} color={Colors.black} />
+            <Ionicons name="chevron-back" size={24} color={colors.text} />
           </TouchableOpacity>
-          <Text style={commonStyles.headerTitle}>{t.settings.title}</Text>
+          <Text style={[styles.headerTitle, { color: colors.headerText }]}>
+            {t.settings.title}
+          </Text>
         </View>
-
         <View style={styles.listContainer}>
-          <View style={styles.itemContainer}>
-            <Text style={styles.itemLabel}>{t.settings.darkMode}</Text>
+          <View
+            style={[styles.itemContainer, { borderBottomColor: colors.border }]}
+          >
+            <Text style={[styles.itemLabel, { color: colors.text }]}>
+              {t.settings.darkMode}
+            </Text>
             <Switch
-              trackColor={{
-                false: Colors.switchInactive,
-                true: Colors.success,
-              }}
-              thumbColor={Colors.lightGrey}
+              trackColor={{ false: "#767577", true: colors.primary }}
+              thumbColor={isDarkMode ? colors.white : "#f4f3f4"}
+              ios_backgroundColor="#3e3e3e"
               onValueChange={toggleTheme}
               value={isDarkMode}
-              accessibilityLabel={`${t.settings.darkMode}, saat ini ${
-                isDarkMode ? "aktif" : "tidak aktif"
-              }. Saklar`}
+              accessibilityLabel={t.settings.darkMode}
               accessibilityRole="switch"
             />
           </View>
           <SettingsItem
             label={t.settings.language}
             onPress={() => navigation.navigate("Language")}
+            textColor={colors.text}
           />
           <SettingsItem
             label={t.settings.helpAndGuide}
             onPress={() => navigation.navigate("HelpAndGuide")}
+            textColor={colors.text}
           />
           <SettingsItem
             label={t.settings.privacyAndSecurity}
             onPress={() => navigation.navigate("PrivacyAndSecurity")}
+            textColor={colors.text}
           />
           <SettingsItem
             label={t.settings.about}
             onPress={() => navigation.navigate("About")}
+            textColor={colors.text}
           />
         </View>
         <Text style={styles.footerText}>{t.settings.appName}</Text>
@@ -95,7 +104,16 @@ const SettingsScreen: React.FC<SettingsScreenProps> = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1 },
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: 16,
+    paddingTop: 50,
+    paddingBottom: 16,
+    borderBottomWidth: 1,
+  },
+  backButton: { marginRight: 16, padding: 8 },
+  headerTitle: { fontSize: 20, fontWeight: "600" },
   listContainer: { flex: 1, paddingHorizontal: 16, marginTop: 10 },
   itemContainer: {
     flexDirection: "row",
@@ -103,7 +121,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingVertical: 16,
     borderBottomWidth: 1,
-    borderBottomColor: Colors.lightGrey,
   },
   itemLabel: { fontSize: 17 },
   footerText: {

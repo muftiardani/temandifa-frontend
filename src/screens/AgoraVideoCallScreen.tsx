@@ -5,6 +5,9 @@ import {
   TouchableOpacity,
   Text,
   SafeAreaView,
+  Platform,
+  PermissionsAndroid,
+  Alert,
 } from "react-native";
 import {
   ClientRoleType,
@@ -13,7 +16,6 @@ import {
   ChannelProfileType,
   RtcSurfaceView,
 } from "react-native-agora";
-import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import Animated, {
   useSharedValue,
@@ -21,11 +23,13 @@ import Animated, {
   withTiming,
   Easing,
 } from "react-native-reanimated";
-import { Colors } from "../constants/Colors";
+import { Ionicons } from "@expo/vector-icons";
 import { Config } from "../config";
+import { useAppTheme } from "../hooks/useAppTheme";
 
 const AgoraVideoCallScreen = () => {
   const navigation = useNavigation();
+  const { colors } = useAppTheme();
   const agoraEngineRef = useRef<IRtcEngine | null>(null);
 
   const [isJoined, setIsJoined] = useState(false);
@@ -41,10 +45,49 @@ const AgoraVideoCallScreen = () => {
     transform: [{ translateY: controlsTranslateY.value }],
   }));
 
-  const appId = Config.agora.appId;
-  const channelName = Config.agora.channelName;
-  const token = "";
-  const uid = Math.floor(Math.random() * 100000) + 1;
+  const getPermission = async () => {
+    if (Platform.OS === "android") {
+      await PermissionsAndroid.requestMultiple([
+        PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
+        PermissionsAndroid.PERMISSIONS.CAMERA,
+      ]);
+    }
+  };
+
+  useEffect(() => {
+    const setupAgoraEngine = async () => {
+      try {
+        await getPermission();
+        agoraEngineRef.current = createAgoraRtcEngine();
+        const agoraEngine = agoraEngineRef.current;
+        agoraEngine.registerEventHandler({
+          onJoinChannelSuccess: () => {
+            setIsJoined(true);
+          },
+          onUserJoined: (_connection, Uid) => {
+            setRemoteUid(Uid);
+          },
+          onUserOffline: () => {
+            setRemoteUid(0);
+          },
+        });
+        agoraEngine.initialize({
+          appId: Config.agora.appId,
+          channelProfile: ChannelProfileType.ChannelProfileLiveBroadcasting,
+        });
+        agoraEngine.enableVideo();
+        join();
+      } catch (e) {
+        console.log(e);
+      }
+    };
+
+    setupAgoraEngine();
+
+    return () => {
+      leave();
+    };
+  }, []);
 
   useEffect(() => {
     if (isJoined) {
@@ -56,89 +99,65 @@ const AgoraVideoCallScreen = () => {
     }
   }, [isJoined]);
 
-  useEffect(() => {
-    setupVideoSDKEngine();
-    return () => {
-      leave();
-    };
-  }, []);
-
-  const setupVideoSDKEngine = async () => {
+  const join = async () => {
+    if (isJoined || !agoraEngineRef.current) return;
     try {
-      agoraEngineRef.current = createAgoraRtcEngine();
-      const agoraEngine = agoraEngineRef.current;
-
-      agoraEngine.registerEventHandler({
-        onJoinChannelSuccess: () => {
-          console.log("Successfully joined channel");
-          setIsJoined(true);
-        },
-        onUserJoined: (_connection, Uid) => {
-          console.log("Remote user joined", Uid);
-          setRemoteUid(Uid);
-        },
-        onUserOffline: (_connection, Uid) => {
-          console.log("Remote user left", Uid);
-          setRemoteUid(0);
-        },
-      });
-
-      agoraEngine.initialize({
-        appId: appId,
-        channelProfile: ChannelProfileType.ChannelProfileLiveBroadcasting,
-      });
-
-      agoraEngine.enableVideo();
-      join();
+      await agoraEngineRef.current.startPreview();
+      await agoraEngineRef.current.joinChannel(
+        Config.agora.token,
+        Config.agora.channelName,
+        0,
+        { clientRoleType: ClientRoleType.ClientRoleBroadcaster }
+      );
     } catch (e) {
       console.log(e);
     }
   };
 
-  const join = async () => {
-    if (isJoined) return;
+  const leave = () => {
     try {
-      const agoraEngine = agoraEngineRef.current;
-      await agoraEngine?.setClientRole(ClientRoleType.ClientRoleBroadcaster);
-      await agoraEngine?.startPreview();
-      await agoraEngine?.joinChannel(token, channelName, uid, {});
-    } catch (e) {
-      console.log("Join channel error:", e);
-    }
-  };
-
-  const leave = async () => {
-    try {
-      await agoraEngineRef.current?.leaveChannel();
+      agoraEngineRef.current?.leaveChannel();
       agoraEngineRef.current?.release();
       setRemoteUid(0);
       setIsJoined(false);
-      console.log("Left the channel");
     } catch (e) {
       console.log(e);
     }
   };
 
   const handleLeave = () => {
-    leave().finally(() => navigation.goBack());
+    leave();
+    navigation.goBack();
   };
 
   const toggleMute = async () => {
-    await agoraEngineRef.current?.muteLocalAudioStream(!isMuted);
-    setIsMuted(!isMuted);
+    try {
+      await agoraEngineRef.current?.muteLocalAudioStream(!isMuted);
+      setIsMuted(!isMuted);
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   const toggleCamera = async () => {
-    await agoraEngineRef.current?.enableLocalVideo(!isCameraOff);
-    setIsCameraOff(!isCameraOff);
+    try {
+      await agoraEngineRef.current?.enableLocalVideo(!isCameraOff);
+      setIsCameraOff(!isCameraOff);
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   const switchCamera = async () => {
-    await agoraEngineRef.current?.switchCamera();
+    try {
+      await agoraEngineRef.current?.switchCamera();
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   return (
-    <SafeAreaView style={styles.main}>
+    <SafeAreaView style={[styles.main, { backgroundColor: colors.black }]}>
       {isJoined ? (
         <React.Fragment>
           {remoteUid !== 0 ? (
@@ -148,16 +167,23 @@ const AgoraVideoCallScreen = () => {
             />
           ) : (
             <View style={styles.placeholder}>
-              <Text style={styles.placeholderText}>
+              <Text style={[styles.placeholderText, { color: colors.white }]}>
                 Menunggu pengguna lain...
               </Text>
             </View>
           )}
-          <RtcSurfaceView canvas={{ uid: 0 }} style={styles.localView} />
+          {!isCameraOff && (
+            <RtcSurfaceView
+              canvas={{ uid: 0 }}
+              style={[styles.localView, { borderColor: colors.primary }]}
+            />
+          )}
         </React.Fragment>
       ) : (
         <View style={styles.placeholder}>
-          <Text style={styles.placeholderText}>Menyambungkan...</Text>
+          <Text style={[styles.placeholderText, { color: colors.white }]}>
+            Menyambungkan...
+          </Text>
         </View>
       )}
 
@@ -166,27 +192,27 @@ const AgoraVideoCallScreen = () => {
           <Ionicons
             name={isCameraOff ? "videocam-off" : "videocam"}
             size={28}
-            color={Colors.white}
+            color={colors.white}
           />
         </TouchableOpacity>
         <TouchableOpacity style={styles.iconButton} onPress={toggleMute}>
           <Ionicons
             name={isMuted ? "mic-off" : "mic"}
             size={28}
-            color={Colors.white}
+            color={colors.white}
           />
         </TouchableOpacity>
         <TouchableOpacity style={styles.iconButton} onPress={switchCamera}>
-          <Ionicons name="camera-reverse" size={28} color={Colors.white} />
+          <Ionicons name="camera-reverse" size={28} color={colors.white} />
         </TouchableOpacity>
         <TouchableOpacity
-          style={[styles.iconButton, { backgroundColor: Colors.danger }]}
+          style={[styles.iconButton, { backgroundColor: colors.danger }]}
           onPress={handleLeave}
         >
           <Ionicons
             name="call"
             size={32}
-            color={Colors.white}
+            color={colors.white}
             style={{ transform: [{ rotate: "135deg" }] }}
           />
         </TouchableOpacity>
@@ -196,7 +222,7 @@ const AgoraVideoCallScreen = () => {
 };
 
 const styles = StyleSheet.create({
-  main: { flex: 1, backgroundColor: "#000" },
+  main: { flex: 1 },
   videoView: { width: "100%", height: "100%" },
   localView: {
     position: "absolute",
@@ -205,8 +231,8 @@ const styles = StyleSheet.create({
     right: 20,
     bottom: 120,
     borderRadius: 8,
-    borderColor: Colors.primary,
     borderWidth: 2,
+    overflow: "hidden",
   },
   placeholder: {
     flex: 1,
@@ -214,7 +240,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   placeholderText: {
-    color: Colors.white,
     fontSize: 18,
   },
   controls: {

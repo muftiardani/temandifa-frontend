@@ -14,38 +14,28 @@ import Animated, {
   withTiming,
   Easing,
 } from "react-native-reanimated";
-
 import HomeButton from "../components/common/HomeButton";
 import { ScreenNavigationProp } from "../types/navigation";
-import { Colors } from "../constants/Colors";
-import { useLocalization } from "../hooks/useLocalization";
+import { useAppTheme } from "../hooks/useAppTheme";
 
 const HomeScreen: React.FC = () => {
   const navigation = useNavigation<ScreenNavigationProp>();
-  const t = useLocalization();
+  const { t, colors } = useAppTheme();
 
   const getGreeting = () => {
     const currentHour = new Date().getHours();
-    if (currentHour < 12) {
-      return t.greetings.morning;
-    } else if (currentHour < 15) {
-      return t.greetings.afternoon;
-    } else if (currentHour < 19) {
-      return t.greetings.evening;
-    } else {
-      return t.greetings.night;
-    }
+    if (currentHour < 12) return t.greetings.morning;
+    if (currentHour < 15) return t.greetings.afternoon;
+    if (currentHour < 19) return t.greetings.evening;
+    return t.greetings.night;
   };
 
   const opacity = useSharedValue(0);
   const translateY = useSharedValue(20);
-
-  const animatedContainerStyle = useAnimatedStyle(() => {
-    return {
-      opacity: opacity.value,
-      transform: [{ translateY: translateY.value }],
-    };
-  });
+  const animatedContainerStyle = useAnimatedStyle(() => ({
+    opacity: opacity.value,
+    transform: [{ translateY: translateY.value }],
+  }));
 
   useEffect(() => {
     const animationConfig = { duration: 600, easing: Easing.out(Easing.ease) };
@@ -60,18 +50,22 @@ const HomeScreen: React.FC = () => {
   const handleEmergencyPress = () => navigation.navigate("VideoCall");
 
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
       <Animated.View style={[styles.container, animatedContainerStyle]}>
         <View style={styles.header}>
-          <Text style={styles.headerTitle}>{getGreeting()}</Text>
-          <Text style={styles.headerSubtitle}>{t.home.subtitle}</Text>
+          <Text style={[styles.headerTitle, { color: colors.headerText }]}>
+            {getGreeting()}
+          </Text>
+          <Text style={[styles.headerSubtitle, { color: colors.grey }]}>
+            {t.home.subtitle}
+          </Text>
         </View>
 
         <View style={styles.buttonGrid}>
           <HomeButton
             title={t.home.cameraButton}
             icon="camera"
-            backgroundColor={Colors.primary}
+            backgroundColor={colors.primary}
             layout="horizontal"
             style={{ width: "100%", height: 135 }}
             onPress={handleCameraPress}
@@ -80,14 +74,14 @@ const HomeScreen: React.FC = () => {
             <HomeButton
               title={t.home.scanButton}
               icon="scan"
-              backgroundColor={Colors.accent}
+              backgroundColor={colors.accent}
               style={{ flex: 1, height: 140 }}
               onPress={handleScanPress}
             />
             <HomeButton
               title={t.home.voiceButton}
               icon="mic"
-              backgroundColor={Colors.secondary}
+              backgroundColor={colors.secondary}
               style={{ flex: 1, height: 140 }}
               onPress={handleVoicePress}
             />
@@ -97,37 +91,38 @@ const HomeScreen: React.FC = () => {
         <View style={styles.bottomBar}>
           <View style={styles.helpSettingsContainer}>
             <TouchableOpacity
-              accessibilityLabel={`${t.home.helpButton}. Tombol`}
-              accessibilityHint={`Ketuk dua kali untuk membuka panduan`}
+              onPress={() => navigation.navigate("HelpAndGuide")}
+              accessibilityLabel={t.home.helpButton}
+              accessibilityHint="Membuka panduan aplikasi"
               accessibilityRole="button"
             >
               <Ionicons
                 name="help-circle-outline"
                 size={40}
-                color={Colors.white}
+                color={colors.white}
               />
             </TouchableOpacity>
             <TouchableOpacity
               onPress={handleSettingsPress}
-              accessibilityLabel={`${t.home.settingsButton}. Tombol`}
-              accessibilityHint={`Ketuk dua kali untuk membuka ${t.settings.title}`}
+              accessibilityLabel={t.home.settingsButton}
+              accessibilityHint={`Membuka ${t.settings.title}`}
               accessibilityRole="button"
             >
               <Ionicons
                 name="settings-outline"
                 size={32}
-                color={Colors.white}
+                color={colors.white}
               />
             </TouchableOpacity>
           </View>
           <TouchableOpacity
             style={styles.emergencyButton}
             onPress={handleEmergencyPress}
-            accessibilityLabel={`${t.home.emergencyButton}. Tombol`}
-            accessibilityHint={`Ketuk dua kali untuk memulai panggilan video darurat`}
+            accessibilityLabel={t.home.emergencyButton}
+            accessibilityHint="Memulai panggilan video darurat"
             accessibilityRole="button"
           >
-            <Ionicons name="call" size={34} color={Colors.white} />
+            <Ionicons name="call" size={34} color={colors.white} />
           </TouchableOpacity>
         </View>
       </Animated.View>
@@ -136,16 +131,10 @@ const HomeScreen: React.FC = () => {
 };
 
 const styles = StyleSheet.create({
-  safeArea: { flex: 1, backgroundColor: Colors.white },
   container: { flex: 1, paddingHorizontal: 20, paddingTop: 40 },
   header: { marginBottom: 30 },
-  headerTitle: {
-    fontSize: 36,
-    fontWeight: "700",
-    marginBottom: 8,
-    color: Colors.black,
-  },
-  headerSubtitle: { fontSize: 18, color: Colors.grey },
+  headerTitle: { fontSize: 36, fontWeight: "700", marginBottom: 8 },
+  headerSubtitle: { fontSize: 18 },
   buttonGrid: { gap: 20 },
   row: { flexDirection: "row", gap: 20 },
   bottomBar: {
@@ -160,14 +149,14 @@ const styles = StyleSheet.create({
   helpSettingsContainer: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: Colors.darkGrey,
+    backgroundColor: "#383D3B",
     borderRadius: 50,
     height: 75,
     paddingHorizontal: 30,
     gap: 25,
   },
   emergencyButton: {
-    backgroundColor: Colors.danger,
+    backgroundColor: "#CC444B",
     width: 75,
     height: 75,
     borderRadius: 37.5,

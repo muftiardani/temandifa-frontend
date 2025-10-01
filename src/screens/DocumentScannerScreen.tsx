@@ -4,11 +4,9 @@ import DocumentScanner from "react-native-document-scanner-plugin";
 import * as Speech from "expo-speech";
 import { useNavigation, useIsFocused } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-
 import { RootStackParamList } from "../types/navigation";
 import { apiService } from "../services/api";
-import { Colors } from "../constants/Colors";
-import { useLocalization } from "../hooks/useLocalization";
+import { useAppTheme } from "../hooks/useAppTheme";
 import { useAppStore } from "../store/appStore";
 
 type DocScannerNavigationProp = NativeStackNavigationProp<
@@ -20,7 +18,7 @@ export default function DocumentScannerScreen() {
   const navigation = useNavigation<DocScannerNavigationProp>();
   const isFocused = useIsFocused();
   const [isProcessing, setIsProcessing] = useState(false);
-  const t = useLocalization();
+  const { t, colors } = useAppTheme();
   const language = useAppStore((state) => state.language);
 
   useEffect(() => {
@@ -70,7 +68,7 @@ export default function DocumentScannerScreen() {
 
   return (
     <View style={styles.container}>
-      <ActivityIndicator size="large" color={Colors.primary} />
+      <ActivityIndicator size="large" color={colors.primary} />
       <Text style={styles.statusText}>
         {isProcessing
           ? t.scanResult.imageProcessing
@@ -87,5 +85,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "rgba(0,0,0,0.5)",
   },
-  statusText: { marginTop: 20, fontSize: 16, color: Colors.white },
+  statusText: {
+    marginTop: 20,
+    fontSize: 16,
+    color: "#FFFFFF",
+  },
 });

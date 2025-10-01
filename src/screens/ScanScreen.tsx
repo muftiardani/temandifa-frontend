@@ -21,16 +21,14 @@ import Animated, {
 
 import { RootStackParamList } from "../types/navigation";
 import { apiService } from "../services/api";
-import { commonStyles } from "../constants/Styles";
-import { Colors } from "../constants/Colors";
 import LoadingIndicator from "../components/common/LoadingIndicator";
-import { useLocalization } from "../hooks/useLocalization";
+import { useAppTheme } from "../hooks/useAppTheme";
 
 type ScanScreenProps = NativeStackScreenProps<RootStackParamList, "Scan">;
 
 const ScanScreen: React.FC<ScanScreenProps> = ({ navigation }) => {
   const [isProcessing, setIsProcessing] = useState(false);
-  const t = useLocalization();
+  const { t, colors } = useAppTheme();
 
   const placeholderTranslateY = useSharedValue(0);
 
@@ -67,7 +65,7 @@ const ScanScreen: React.FC<ScanScreenProps> = ({ navigation }) => {
       quality: 1,
     });
 
-    if (!result.canceled && result.assets[0].uri) {
+    if (!result.canceled && result.assets && result.assets.length > 0) {
       uploadImageForScan(result.assets[0].uri);
     }
   };
@@ -91,17 +89,19 @@ const ScanScreen: React.FC<ScanScreenProps> = ({ navigation }) => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={commonStyles.header}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
+      <View style={[styles.header, { borderBottomColor: colors.border }]}>
         <TouchableOpacity
           onPress={() => navigation.goBack()}
-          style={commonStyles.backButton}
+          style={styles.backButton}
           accessibilityLabel={`${t.general.back}. Tombol`}
           accessibilityRole="button"
         >
-          <Ionicons name="chevron-back" size={24} color={Colors.black} />
+          <Ionicons name="chevron-back" size={24} color={colors.text} />
         </TouchableOpacity>
-        <Text style={commonStyles.headerTitle}>{t.scanScreen.title}</Text>
+        <Text style={[styles.headerTitle, { color: colors.headerText }]}>
+          {t.scanScreen.title}
+        </Text>
       </View>
 
       <View style={styles.content}>
@@ -109,10 +109,19 @@ const ScanScreen: React.FC<ScanScreenProps> = ({ navigation }) => {
           <LoadingIndicator text={t.scanScreen.processing} />
         ) : (
           <Animated.View
-            style={[styles.placeholderContainer, animatedPlaceholderStyle]}
+            style={[
+              styles.placeholderContainer,
+              { backgroundColor: colors.placeholder }, // <-- Error diperbaiki di sini
+              animatedPlaceholderStyle,
+            ]}
           >
             <Ionicons name="document-text-outline" size={100} color="#E0E0E0" />
-            <Text style={styles.placeholderText}>
+            <Text
+              style={[
+                styles.placeholderText,
+                { color: colors.textPlaceholder },
+              ]}
+            >
               {t.scanScreen.placeholder}
             </Text>
           </Animated.View>
@@ -120,26 +129,26 @@ const ScanScreen: React.FC<ScanScreenProps> = ({ navigation }) => {
 
         <View style={styles.buttonContainer}>
           <TouchableOpacity
-            style={[styles.button, styles.cameraButton]}
+            style={[styles.button, { backgroundColor: colors.accent }]}
             onPress={handleKameraPress}
             disabled={isProcessing}
             accessibilityLabel={`${t.scanScreen.camera}. Tombol`}
             accessibilityHint="Membuka kamera untuk memindai dokumen"
             accessibilityRole="button"
           >
-            <Ionicons name="camera" size={32} color={Colors.white} />
+            <Ionicons name="camera" size={32} color={colors.white} />
             <Text style={styles.buttonText}>{t.scanScreen.camera}</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={[styles.button, styles.uploadButton]}
+            style={[styles.button, { backgroundColor: colors.secondary }]}
             onPress={handleUnggahPress}
             disabled={isProcessing}
             accessibilityLabel={`${t.scanScreen.upload}. Tombol`}
             accessibilityHint="Mengunggah gambar dari galeri untuk dipindai"
             accessibilityRole="button"
           >
-            <Ionicons name="cloud-upload" size={32} color={Colors.white} />
+            <Ionicons name="cloud-upload" size={32} color={colors.white} />
             <Text style={styles.buttonText}>{t.scanScreen.upload}</Text>
           </TouchableOpacity>
         </View>
@@ -149,22 +158,42 @@ const ScanScreen: React.FC<ScanScreenProps> = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: Colors.white },
-  content: { flex: 1, alignItems: "center", padding: 20 },
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: 16,
+    paddingTop: 50,
+    paddingBottom: 16,
+    borderBottomWidth: 1,
+  },
+  backButton: {
+    marginRight: 16,
+    padding: 8,
+  },
+  headerTitle: {
+    fontSize: 20,
+    fontWeight: "600",
+  },
+  content: {
+    flex: 1,
+    alignItems: "center",
+    padding: 20,
+  },
   placeholderContainer: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
     width: "100%",
-    backgroundColor: "#F7F7F7",
     borderRadius: 16,
   },
   placeholderText: {
     marginTop: 10,
-    color: Colors.textPlaceholder,
     fontSize: 16,
   },
-  buttonContainer: { width: "100%", paddingTop: 20 },
+  buttonContainer: {
+    width: "100%",
+    paddingTop: 20,
+  },
   button: {
     width: "100%",
     height: 100,
@@ -174,10 +203,8 @@ const styles = StyleSheet.create({
     paddingLeft: 20,
     marginBottom: 16,
   },
-  cameraButton: { backgroundColor: Colors.accent },
-  uploadButton: { backgroundColor: Colors.secondary },
   buttonText: {
-    color: Colors.white,
+    color: "#fff",
     fontSize: 20,
     fontWeight: "bold",
     marginTop: 8,

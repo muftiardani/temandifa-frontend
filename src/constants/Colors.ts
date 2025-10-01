@@ -1,16 +1,42 @@
-export const Colors = {
+const brandColors = {
   primary: "#3F7EF3",
   secondary: "#17BEBB",
   accent: "#ED6A5A",
   danger: "#CC444B",
-  white: "#fff",
-  black: "#000",
-  grey: "#666",
-  lightGrey: "#F2F2F2",
-  darkGrey: "#383D3B",
   success: "#34C759",
   warning: "#FFA500",
-  switchInactive: "#767577",
-  textDefault: "#333",
+};
+
+export const lightColors = {
+  ...brandColors,
+  background: "#FFFFFF",
+  text: "#333333",
+  headerText: "#000000",
+  card: "#FFFFFF",
+  border: "#F2F2F2",
+  placeholder: "#F7F7F7",
+  grey: "#666666",
+  lightGrey: "#F2F2F2",
+  darkGrey: "#383D3B",
   textPlaceholder: "#A0A0A0",
+  switchInactive: "#767577",
+  white: "#FFFFFF",
+  black: "#000000",
+};
+
+export const darkColors = {
+  ...brandColors,
+  background: "#121212",
+  text: "#FFFFFF",
+  headerText: "#FFFFFF",
+  card: "#1E1E1E",
+  border: "#272727",
+  placeholder: "#1E1E1E",
+  grey: "#999999",
+  lightGrey: "#F2F2F2",
+  darkGrey: "#383D3B",
+  textPlaceholder: "#A0A0A0",
+  switchInactive: "#767577",
+  white: "#FFFFFF",
+  black: "#000000",
 };
