@@ -55,6 +55,21 @@ export default function CameraScreen() {
     );
 
   if (!permission.granted) {
+    if (!permission.canAskAgain) {
+      return (
+        <View
+          style={[
+            styles.permissionContainer,
+            { backgroundColor: colors.background },
+          ]}
+        >
+          <Text style={[styles.permissionText, { color: colors.text }]}>
+            {t.permissions.cameraDenied}
+          </Text>
+        </View>
+      );
+    }
+
     return (
       <View
         style={[

@@ -19,6 +19,8 @@ const id = {
     microphone: "Kami butuh izin Anda untuk menggunakan mikrofon",
     gallery: "Anda perlu memberikan izin galeri untuk menggunakan fitur ini.",
     grantPermission: "Berikan Izin",
+    cameraDenied: "Izin kamera dinonaktifkan. Aktifkan melalui pengaturan ponsel.",
+    microphoneDenied: "Izin mikrofon dinonaktifkan. Aktifkan melalui pengaturan ponsel.",
   },
   cameraScreen: {
     processing: "Memproses...",
@@ -95,6 +97,8 @@ const en: typeof id = {
     microphone: "We need your permission to use the microphone",
     gallery: "You need to grant gallery permissions to use this feature.",
     grantPermission: "Grant Permission",
+    cameraDenied: "Camera permission is disabled. Please enable it in the phone settings.",
+    microphoneDenied: "Microphone permission is disabled. Please enable it in the phone settings.",
   },
   cameraScreen: {
     processing: "Processing...",
@@ -149,6 +153,5 @@ const en: typeof id = {
     serverError: "An error occurred on the server.",
   },
 };
-
 
 export const Strings = { id, en };

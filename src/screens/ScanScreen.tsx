@@ -111,7 +111,7 @@ const ScanScreen: React.FC<ScanScreenProps> = ({ navigation }) => {
           <Animated.View
             style={[
               styles.placeholderContainer,
-              { backgroundColor: colors.placeholder }, // <-- Error diperbaiki di sini
+              { backgroundColor: colors.placeholder },
               animatedPlaceholderStyle,
             ]}
           >

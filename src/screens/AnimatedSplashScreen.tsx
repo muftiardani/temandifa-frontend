@@ -7,6 +7,7 @@ import Animated, {
   Easing,
   runOnJS,
 } from "react-native-reanimated";
+import { AnimationDurations } from "../constants/animations";
 
 const SPLASH_ICON = require("../../assets/splash-icon.png");
 
@@ -29,12 +30,15 @@ const AnimatedSplashScreen: React.FC<Props> = ({ onAnimationComplete }) => {
     };
 
     scale.value = withTiming(1.5, {
-      duration: 1200,
+      duration: AnimationDurations.splashScreenScale,
       easing: Easing.inOut(Easing.ease),
     });
     opacity.value = withTiming(
       0,
-      { duration: 1000, easing: Easing.inOut(Easing.ease) },
+      {
+        duration: AnimationDurations.splashScreenFade,
+        easing: Easing.inOut(Easing.ease),
+      },
       (isFinished) => {
         if (isFinished) {
           runOnJS(onComplete)();

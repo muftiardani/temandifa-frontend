@@ -18,24 +18,26 @@ type SettingsScreenProps = NativeStackScreenProps<
   "Settings"
 >;
 
-const SettingsItem = ({
-  label,
-  onPress,
-  textColor,
-}: {
-  label: string;
-  onPress?: () => void;
-  textColor: string;
-}) => (
-  <TouchableOpacity
-    style={[styles.itemContainer]}
-    onPress={onPress}
-    accessibilityLabel={label}
-    accessibilityRole="button"
-  >
-    <Text style={[styles.itemLabel, { color: textColor }]}>{label}</Text>
-    <Ionicons name="chevron-forward" size={24} color="#C7C7CC" />
-  </TouchableOpacity>
+const SettingsItem = React.memo(
+  ({
+    label,
+    onPress,
+    textColor,
+  }: {
+    label: string;
+    onPress?: () => void;
+    textColor: string;
+  }) => (
+    <TouchableOpacity
+      style={[styles.itemContainer]}
+      onPress={onPress}
+      accessibilityLabel={label}
+      accessibilityRole="button"
+    >
+      <Text style={[styles.itemLabel, { color: textColor }]}>{label}</Text>
+      <Ionicons name="chevron-forward" size={24} color="#C7C7CC" />
+    </TouchableOpacity>
+  )
 );
 
 const SettingsScreen: React.FC<SettingsScreenProps> = ({ navigation }) => {
