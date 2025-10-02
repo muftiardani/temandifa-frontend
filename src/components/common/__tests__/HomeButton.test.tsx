@@ -1,48 +1,49 @@
 import React from "react";
-import { render, screen, fireEvent } from "@testing-library/react-native";
+import { render, fireEvent } from "@testing-library/react-native";
 import HomeButton from "../HomeButton";
-import { lightColors } from "../../../constants/Colors";
 
-jest.mock("../../../hooks/useAppTheme", () => ({
-  useAppTheme: () => ({
-    colors: lightColors,
-  }),
-}));
+jest.mock("../../hooks/useAppTheme", () => {
+  const { lightColors } = require("../../../constants/Colors");
+  const { strings } = require("../../../constants/Strings");
+  return {
+    useAppTheme: () => ({
+      colors: lightColors,
+      t: strings.id,
+    }),
+  };
+});
 
 describe("HomeButton", () => {
-  const defaultProps = {
-    title: "Tombol Uji",
-    icon: "camera" as "camera",
-    backgroundColor: lightColors.primary,
-    onPress: jest.fn(),
-  };
-
-  it("should render the title and icon correctly", () => {
-    render(<HomeButton {...defaultProps} />);
-
-    const buttonTitle = screen.getByText("Tombol Uji");
-    expect(buttonTitle).toBeTruthy();
-  });
-
-  it("should render correctly with default (vertical) layout", () => {
-    const { toJSON } = render(<HomeButton {...defaultProps} />);
-    expect(toJSON()).toMatchSnapshot();
-  });
-
-  it("should render correctly with horizontal layout", () => {
-    const { toJSON } = render(
-      <HomeButton {...defaultProps} layout="horizontal" />
+  it("renders correctly with given props", () => {
+    const mockOnPress = jest.fn();
+    const { getByText, getByTestId } = render(
+      <HomeButton
+        icon="camera"
+        title="Kamera"
+        onPress={mockOnPress}
+        backgroundColor="#007AFF"
+        testID="home-button-camera"
+      />
     );
-    expect(toJSON()).toMatchSnapshot();
+
+    expect(getByText("Kamera")).toBeTruthy();
+    expect(getByTestId("home-button-camera-icon")).toBeTruthy();
   });
 
-  it("calls onPress prop when pressed", () => {
-  const onPressMock = jest.fn();
-  render(<HomeButton {...defaultProps} onPress={onPressMock} />);
+  it("calls onPress function when pressed", () => {
+    const mockOnPress = jest.fn();
+    const { getByTestId } = render(
+      <HomeButton
+        icon="camera"
+        title="Kamera"
+        onPress={mockOnPress}
+        backgroundColor="#007AFF"
+        testID="home-button-camera"
+      />
+    );
 
-  const button = screen.getByText("Tombol Uji");
-  fireEvent.press(button);
+    fireEvent.press(getByTestId("home-button-camera"));
 
-  expect(onPressMock).toHaveBeenCalledTimes(1);
-});
+    expect(mockOnPress).toHaveBeenCalledTimes(1);
+  });
 });

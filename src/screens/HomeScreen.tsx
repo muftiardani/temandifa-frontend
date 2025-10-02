@@ -15,11 +15,13 @@ import Animated, {
   Easing,
 } from "react-native-reanimated";
 import HomeButton from "../components/common/HomeButton";
-import { ScreenNavigationProp } from "../types/navigation";
+import { RootStackScreenProps } from "../types/navigation";
 import { useAppTheme } from "../hooks/useAppTheme";
 
+type HomeScreenNavigationProp = RootStackScreenProps<"Home">["navigation"];
+
 const HomeScreen: React.FC = () => {
-  const navigation = useNavigation<ScreenNavigationProp>();
+  const navigation = useNavigation<HomeScreenNavigationProp>();
   const { t, colors } = useAppTheme();
 
   const getGreeting = () => {

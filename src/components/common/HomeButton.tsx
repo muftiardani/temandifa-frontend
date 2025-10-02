@@ -1,83 +1,114 @@
 import React from "react";
 import {
-  View,
-  Text,
-  TouchableOpacity,
+  Pressable,
   StyleSheet,
+  Text,
+  View,
   StyleProp,
   ViewStyle,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withSpring,
+} from "react-native-reanimated";
 import { useAppTheme } from "../../hooks/useAppTheme";
 
-type IconName = "camera" | "scan" | "mic";
-type Layout = "vertical" | "horizontal";
-
-interface HomeButtonProps {
+type HomeButtonProps = {
+  icon: keyof typeof Ionicons.glyphMap;
   title: string;
-  icon: IconName;
+  onPress: () => void;
   backgroundColor: string;
-  onPress?: () => void;
+  layout?: "horizontal" | "vertical";
   style?: StyleProp<ViewStyle>;
-  layout?: Layout;
-}
+  testID?: string;
+};
 
-const HomeButton: React.FC<HomeButtonProps> = ({
-  title,
+const HomeButton = ({
   icon,
-  backgroundColor,
+  title,
   onPress,
-  style,
+  backgroundColor,
   layout = "vertical",
-}) => {
+  style,
+  testID,
+}: HomeButtonProps) => {
   const { colors } = useAppTheme();
 
-  const containerStyle = [
-    styles.container,
-    { backgroundColor },
-    layout === "horizontal" ? styles.layoutHorizontal : styles.layoutVertical,
-    style,
-  ];
+  const scale = useSharedValue(1);
+
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{ scale: scale.value }],
+    };
+  });
+
+  const handlePressIn = () => {
+    scale.value = withSpring(0.95);
+  };
+
+  const handlePressOut = () => {
+    scale.value = withSpring(1);
+  };
+
+  const isHorizontal = layout === "horizontal";
 
   return (
-    <TouchableOpacity
-      style={containerStyle}
-      onPress={onPress}
-      accessibilityLabel={title}
-      accessibilityRole="button"
-    >
-      <Ionicons name={icon} size={42} color={colors.white} />
-      <Text style={[styles.title, { color: colors.white }]}>{title}</Text>
-    </TouchableOpacity>
+    <Animated.View style={[styles.container, animatedStyle, style]}>
+      <Pressable
+        onPress={onPress}
+        onPressIn={handlePressIn}
+        onPressOut={handlePressOut}
+        style={[
+          styles.button,
+          {
+            backgroundColor,
+            flexDirection: isHorizontal ? "row" : "column",
+            justifyContent: isHorizontal ? "flex-start" : "center",
+            paddingLeft: isHorizontal ? 30 : 0,
+          },
+        ]}
+        testID={testID}
+      >
+        <Ionicons
+          name={icon}
+          size={isHorizontal ? 40 : 50}
+          color={colors.white}
+          testID={testID ? `${testID}-icon` : undefined}
+        />
+        <Text
+          style={[
+            styles.text,
+            {
+              color: colors.white,
+              marginLeft: isHorizontal ? 20 : 0,
+              fontSize: isHorizontal ? 24 : 18,
+            },
+          ]}
+        >
+          {title}
+        </Text>
+      </Pressable>
+    </Animated.View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    borderRadius: 24,
-    padding: 20,
+    borderRadius: 20,
+    overflow: "hidden",
+  },
+  button: {
+    width: "100%",
+    height: "100%",
     alignItems: "center",
     justifyContent: "center",
-    elevation: 4,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
   },
-  layoutVertical: {
-    alignItems: "flex-start",
-    justifyContent: "space-between",
-  },
-  layoutHorizontal: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "flex-start",
-    gap: 20,
-  },
-  title: {
-    fontSize: 22,
-    fontWeight: "bold",
-    marginTop: 8,
+  text: {
+    marginTop: 10,
+    fontWeight: "600",
+    textAlign: "center",
   },
 });
 
