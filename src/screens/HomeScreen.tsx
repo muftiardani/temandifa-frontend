@@ -6,7 +6,6 @@ import {
   StyleSheet,
   TouchableOpacity,
 } from "react-native";
-import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 import Animated, {
   useSharedValue,
@@ -14,14 +13,14 @@ import Animated, {
   withTiming,
   Easing,
 } from "react-native-reanimated";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import HomeButton from "../components/common/HomeButton";
-import { RootStackScreenProps } from "../types/navigation";
+import { RootStackParamList } from "../types/navigation";
 import { useAppTheme } from "../hooks/useAppTheme";
 
-type HomeScreenNavigationProp = RootStackScreenProps<"Home">["navigation"];
+type Props = NativeStackScreenProps<RootStackParamList, "Home">;
 
-const HomeScreen: React.FC = () => {
-  const navigation = useNavigation<HomeScreenNavigationProp>();
+const HomeScreen: React.FC<Props> = ({ navigation }) => {
   const { t, colors } = useAppTheme();
 
   const getGreeting = () => {

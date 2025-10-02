@@ -23,16 +23,19 @@ const SettingsItem = React.memo(
     label,
     onPress,
     textColor,
+    accessibilityHint,
   }: {
     label: string;
     onPress?: () => void;
     textColor: string;
+    accessibilityHint?: string;
   }) => (
     <TouchableOpacity
       style={[styles.itemContainer]}
       onPress={onPress}
       accessibilityLabel={label}
       accessibilityRole="button"
+      accessibilityHint={accessibilityHint}
     >
       <Text style={[styles.itemLabel, { color: textColor }]}>{label}</Text>
       <Ionicons name="chevron-forward" size={24} color="#C7C7CC" />
@@ -82,21 +85,25 @@ const SettingsScreen: React.FC<SettingsScreenProps> = ({ navigation }) => {
             label={t.settings.language}
             onPress={() => navigation.navigate("Language")}
             textColor={colors.text}
+            accessibilityHint={`Navigasi ke halaman ${t.settings.language}`}
           />
           <SettingsItem
             label={t.settings.helpAndGuide}
             onPress={() => navigation.navigate("HelpAndGuide")}
             textColor={colors.text}
+            accessibilityHint={`Navigasi ke halaman ${t.settings.helpAndGuide}`}
           />
           <SettingsItem
             label={t.settings.privacyAndSecurity}
             onPress={() => navigation.navigate("PrivacyAndSecurity")}
             textColor={colors.text}
+            accessibilityHint={`Navigasi ke halaman ${t.settings.privacyAndSecurity}`}
           />
           <SettingsItem
             label={t.settings.about}
             onPress={() => navigation.navigate("About")}
             textColor={colors.text}
+            accessibilityHint={`Navigasi ke halaman ${t.settings.about}`}
           />
         </View>
         <Text style={styles.footerText}>{t.settings.appName}</Text>

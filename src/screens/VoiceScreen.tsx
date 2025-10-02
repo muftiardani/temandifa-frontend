@@ -13,8 +13,8 @@ import Animated, {
   useSharedValue,
   useAnimatedStyle,
   withRepeat,
-  withTiming,
   withSequence,
+  withTiming,
   Easing,
 } from "react-native-reanimated";
 import { RootStackParamList } from "../types/navigation";
@@ -82,7 +82,10 @@ const VoiceScreen: React.FC<VoiceScreenProps> = ({ navigation }) => {
         </Text>
       </View>
       <View style={styles.content}>
-        <Text style={[styles.infoText, { color: colors.grey }]}>
+        <Text
+          style={[styles.infoText, { color: colors.grey }]}
+          accessibilityLiveRegion="polite"
+        >
           {isProcessing
             ? t.voiceScreen.infoProcessing
             : isRecording

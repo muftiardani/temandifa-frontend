@@ -105,7 +105,7 @@ export default function CameraScreen() {
             { backgroundColor: isProcessing ? colors.warning : colors.success },
           ]}
         />
-        <Text style={styles.statusText}>
+        <Text style={styles.statusText} accessibilityLiveRegion="polite">
           {isProcessing ? t.cameraScreen.processing : t.cameraScreen.ready}
         </Text>
       </View>

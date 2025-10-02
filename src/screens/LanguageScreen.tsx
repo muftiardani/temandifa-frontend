@@ -52,7 +52,9 @@ const LanguageScreen: React.FC<LanguageScreenProps> = ({ navigation }) => {
                 { borderBottomColor: colors.border },
               ]}
               onPress={() => setLanguage(lang.code as "id" | "en")}
-              accessibilityLabel={`Pilih bahasa ${lang.name}. Tombol`}
+              accessibilityRole="button"
+              accessibilityState={{ checked: language === lang.code }}
+              accessibilityLabel={`Pilih bahasa ${lang.name}.`}
             >
               <Text style={[styles.itemLabel, { color: colors.text }]}>
                 {lang.name}

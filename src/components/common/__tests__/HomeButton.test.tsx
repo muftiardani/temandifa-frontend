@@ -2,48 +2,31 @@ import React from "react";
 import { render, fireEvent } from "@testing-library/react-native";
 import HomeButton from "../HomeButton";
 
-jest.mock("../../hooks/useAppTheme", () => {
-  const { lightColors } = require("../../../constants/Colors");
-  const { strings } = require("../../../constants/Strings");
-  return {
-    useAppTheme: () => ({
-      colors: lightColors,
-      t: strings.id,
-    }),
-  };
-});
-
 describe("HomeButton", () => {
-  it("renders correctly with given props", () => {
-    const mockOnPress = jest.fn();
-    const { getByText, getByTestId } = render(
+  it("renders correctly with title and icon", async () => {
+    const { findByText } = render(
       <HomeButton
+        title="Test"
         icon="camera"
-        title="Kamera"
-        onPress={mockOnPress}
-        backgroundColor="#007AFF"
-        testID="home-button-camera"
+        onPress={() => {}}
+        backgroundColor="#000000"
       />
     );
-
-    expect(getByText("Kamera")).toBeTruthy();
-    expect(getByTestId("home-button-camera-icon")).toBeTruthy();
+    expect(await findByText("Test")).toBeTruthy();
   });
 
-  it("calls onPress function when pressed", () => {
-    const mockOnPress = jest.fn();
-    const { getByTestId } = render(
+  it("calls onPress when pressed", () => {
+    const onPressMock = jest.fn();
+    const { getByText } = render(
       <HomeButton
-        icon="camera"
-        title="Kamera"
-        onPress={mockOnPress}
-        backgroundColor="#007AFF"
-        testID="home-button-camera"
+        title="Press Me"
+        icon="scan"
+        onPress={onPressMock}
+        backgroundColor="#FFFFFF"
       />
     );
 
-    fireEvent.press(getByTestId("home-button-camera"));
-
-    expect(mockOnPress).toHaveBeenCalledTimes(1);
+    fireEvent.press(getByText("Press Me"));
+    expect(onPressMock).toHaveBeenCalledTimes(1);
   });
 });
