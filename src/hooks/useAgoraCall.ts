@@ -98,8 +98,9 @@ export const useAgoraCall = () => {
 
   const toggleCamera = async () => {
     try {
-      await agoraEngineRef.current?.enableLocalVideo(!isCameraOff);
-      setIsCameraOff(!isCameraOff);
+      const newCameraState = !isCameraOff;
+      await agoraEngineRef.current?.muteLocalVideoStream(newCameraState);
+      setIsCameraOff(newCameraState);
     } catch (e) {
       console.log(e);
     }

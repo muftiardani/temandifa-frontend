@@ -65,12 +65,16 @@ const AgoraVideoCallScreen = () => {
               </Text>
             </View>
           )}
-          {!isCameraOff && (
-            <RtcSurfaceView
-              canvas={{ uid: 0 }}
-              style={[styles.localView, { borderColor: colors.primary }]}
-            />
-          )}
+          <RtcSurfaceView
+            canvas={{ uid: 0 }}
+            style={[
+              styles.localView,
+              {
+                borderColor: colors.primary,
+                display: isCameraOff ? "none" : "flex",
+              },
+            ]}
+          />
         </React.Fragment>
       ) : (
         <View style={styles.placeholder}>
