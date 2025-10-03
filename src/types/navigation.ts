@@ -1,6 +1,7 @@
 import { NavigationProp } from "@react-navigation/native";
 
 export type RootStackParamList = {
+  Onboarding: undefined;
   Home: undefined;
   Camera: undefined;
   Scan: undefined;

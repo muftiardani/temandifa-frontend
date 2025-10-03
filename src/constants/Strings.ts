@@ -14,6 +14,31 @@ const id = {
     settingsButton: "Pengaturan",
     emergencyButton: "Panggilan Darurat",
   },
+  onboarding: {
+    slides: [
+      {
+        key: "1",
+        icon: "camera-outline" as const,
+        title: "Deteksi Objek",
+        description: "Arahkan kamera untuk mengidentifikasi objek di sekitar Anda secara real-time.",
+      },
+      {
+        key: "2",
+        icon: "scan-outline" as const,
+        title: "Pindai Teks & Suara",
+        description: "Ubah teks dari gambar atau rekaman suara menjadi format yang dapat Anda dengarkan.",
+      },
+      {
+        key: "3",
+        icon: "call-outline" as const,
+        title: "Panggilan Darurat",
+        description: "Hubungi kontak darurat dengan cepat melalui panggilan video terintegrasi.",
+      },
+    ],
+    skip: "Lewati",
+    next: "Lanjutkan",
+    getStarted: "Mulai Sekarang",
+  },
   permissions: {
     camera: "Kami butuh izin Anda untuk menggunakan kamera",
     microphone: "Kami butuh izin Anda untuk menggunakan mikrofon",
@@ -91,6 +116,31 @@ const en: typeof id = {
     helpButton: "Help",
     settingsButton: "Settings",
     emergencyButton: "Emergency Call",
+  },
+  onboarding: {
+    slides: [
+      {
+        key: "1",
+        icon: "camera-outline" as const,
+        title: "Object Detection",
+        description: "Point your camera to identify objects around you in real-time.",
+      },
+      {
+        key: "2",
+        icon: "scan-outline" as const,
+        title: "Scan Text & Voice",
+        description: "Convert text from images or voice recordings into a format you can listen to.",
+      },
+      {
+        key: "3",
+        icon: "call-outline" as const,
+        title: "Emergency Call",
+        description: "Quickly contact your emergency contacts through an integrated video call.",
+      },
+    ],
+    skip: "Skip",
+    next: "Next",
+    getStarted: "Get Started",
   },
   permissions: {
     camera: "We need your permission to use the camera",

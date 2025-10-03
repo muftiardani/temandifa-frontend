@@ -8,6 +8,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import * as SplashScreen from "expo-splash-screen";
 
 import AnimatedSplashScreen from "../screens/AnimatedSplashScreen";
+import OnboardingScreen from "../screens/OnboardingScreen";
 import HomeScreen from "../screens/HomeScreen";
 import CameraScreen from "../screens/CameraScreen";
 import ScanScreen from "../screens/ScanScreen";
@@ -52,9 +53,10 @@ const MyDarkTheme = {
 
 const AppNavigator = () => (
   <Stack.Navigator
-    initialRouteName="Home"
+    initialRouteName="Onboarding"
     screenOptions={{ headerShown: false, animation: "slide_from_right" }}
   >
+    <Stack.Screen name="Onboarding" component={OnboardingScreen} options={{ animation: "fade" }}/>
     <Stack.Screen name="Home" component={HomeScreen} />
     <Stack.Screen name="Camera" component={CameraScreen} />
     <Stack.Screen name="Scan" component={ScanScreen} />

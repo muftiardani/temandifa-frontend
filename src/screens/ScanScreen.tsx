@@ -23,6 +23,7 @@ import { RootStackParamList } from "../types/navigation";
 import { apiService } from "../services/api";
 import LoadingIndicator from "../components/common/LoadingIndicator";
 import { useAppTheme } from "../hooks/useAppTheme";
+import { AnimationDurations } from "../constants/animations";
 
 type ScanScreenProps = NativeStackScreenProps<RootStackParamList, "Scan">;
 
@@ -35,8 +36,14 @@ const ScanScreen: React.FC<ScanScreenProps> = ({ navigation }) => {
   useEffect(() => {
     placeholderTranslateY.value = withRepeat(
       withSequence(
-        withTiming(-10, { duration: 1500, easing: Easing.inOut(Easing.ease) }),
-        withTiming(0, { duration: 1500, easing: Easing.inOut(Easing.ease) })
+        withTiming(-10, {
+          duration: AnimationDurations.scanScreenPlaceholder,
+          easing: Easing.inOut(Easing.ease),
+        }),
+        withTiming(0, {
+          duration: AnimationDurations.scanScreenPlaceholder,
+          easing: Easing.inOut(Easing.ease),
+        })
       ),
       -1,
       true
