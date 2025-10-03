@@ -54,7 +54,7 @@ const id = {
     objectInFront: (objectName: string) => `Di depan ada ${objectName}`,
   },
   scanScreen: {
-    title: "Scan Dokumen",
+    title: "Pindai Dokumen",
     placeholder: "Pilih metode pemindaian",
     camera: "Kamera",
     upload: "Unggah",

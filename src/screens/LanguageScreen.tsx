@@ -64,6 +64,7 @@ const LanguageScreen: React.FC<LanguageScreenProps> = ({ navigation }) => {
                   name="checkmark-circle"
                   size={24}
                   color={colors.primary}
+                  style={styles.checkmarkIcon}
                 />
               )}
             </TouchableOpacity>
@@ -95,12 +96,17 @@ const styles = StyleSheet.create({
   content: { flex: 1, padding: 20 },
   itemContainer: {
     flexDirection: "row",
-    justifyContent: "space-between",
     alignItems: "center",
     paddingVertical: 16,
     borderBottomWidth: 1,
   },
-  itemLabel: { fontSize: 17 },
+  itemLabel: {
+    fontSize: 17,
+  },
+  checkmarkIcon: {
+    position: "absolute",
+    right: 0,
+  },
 });
 
 export default LanguageScreen;

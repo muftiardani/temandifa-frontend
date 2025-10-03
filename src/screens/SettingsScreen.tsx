@@ -23,15 +23,17 @@ const SettingsItem = React.memo(
     label,
     onPress,
     textColor,
+    borderColor,
     accessibilityHint,
   }: {
     label: string;
     onPress?: () => void;
     textColor: string;
+    borderColor: string;
     accessibilityHint?: string;
   }) => (
     <TouchableOpacity
-      style={[styles.itemContainer]}
+      style={[styles.itemContainer, { borderBottomColor: borderColor }]}
       onPress={onPress}
       accessibilityLabel={label}
       accessibilityRole="button"
@@ -85,24 +87,28 @@ const SettingsScreen: React.FC<SettingsScreenProps> = ({ navigation }) => {
             label={t.settings.language}
             onPress={() => navigation.navigate("Language")}
             textColor={colors.text}
+            borderColor={colors.border}
             accessibilityHint={`Navigasi ke halaman ${t.settings.language}`}
           />
           <SettingsItem
             label={t.settings.helpAndGuide}
             onPress={() => navigation.navigate("HelpAndGuide")}
             textColor={colors.text}
+            borderColor={colors.border}
             accessibilityHint={`Navigasi ke halaman ${t.settings.helpAndGuide}`}
           />
           <SettingsItem
             label={t.settings.privacyAndSecurity}
             onPress={() => navigation.navigate("PrivacyAndSecurity")}
             textColor={colors.text}
+            borderColor={colors.border}
             accessibilityHint={`Navigasi ke halaman ${t.settings.privacyAndSecurity}`}
           />
           <SettingsItem
             label={t.settings.about}
             onPress={() => navigation.navigate("About")}
             textColor={colors.text}
+            borderColor={colors.border}
             accessibilityHint={`Navigasi ke halaman ${t.settings.about}`}
           />
         </View>
