@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   Text,
   SafeAreaView,
+  ActivityIndicator,
 } from "react-native";
 import { RtcSurfaceView } from "react-native-agora";
 import Animated, {
@@ -20,6 +21,7 @@ import { useAgoraCall } from "../hooks/useAgoraCall";
 
 const AgoraVideoCallScreen = () => {
   const { colors } = useAppTheme();
+
   const {
     isJoined,
     remoteUid,
@@ -31,105 +33,79 @@ const AgoraVideoCallScreen = () => {
     switchCamera,
   } = useAgoraCall();
 
-  const controlsTranslateY = useSharedValue(100);
   const controlsOpacity = useSharedValue(0);
-
   const animatedControlsStyle = useAnimatedStyle(() => ({
     opacity: controlsOpacity.value,
-    transform: [{ translateY: controlsTranslateY.value }],
   }));
 
   useEffect(() => {
     if (isJoined) {
-      controlsTranslateY.value = withTiming(0, {
+      controlsOpacity.value = withTiming(1, {
         duration: 500,
         easing: Easing.out(Easing.ease),
       });
-      controlsOpacity.value = withTiming(1, { duration: 500 });
     }
-  }, [isJoined]);
+  }, [isJoined, controlsOpacity]);
+
+  const renderMainView = () => {
+    if (!isJoined) {
+      return (
+        <View style={styles.placeholder}>
+          <ActivityIndicator size="large" color={colors.primary} />
+          <Text style={[styles.placeholderText, { color: colors.white }]}>
+            Menyambungkan ke panggilan...
+          </Text>
+        </View>
+      );
+    }
+
+    if (remoteUid !== 0) {
+      return (
+        <RtcSurfaceView canvas={{ uid: remoteUid }} style={styles.videoView} />
+      );
+    }
+
+    return (
+      <View style={styles.placeholder}>
+        <Text style={[styles.placeholderText, { color: colors.white }]}>
+          Menunggu pengguna lain bergabung...
+        </Text>
+      </View>
+    );
+  };
 
   return (
     <SafeAreaView style={[styles.main, { backgroundColor: colors.black }]}>
-      {isJoined ? (
-        <React.Fragment>
-          {remoteUid !== 0 ? (
-            <RtcSurfaceView
-              canvas={{ uid: remoteUid }}
-              style={styles.videoView}
-            />
-          ) : (
-            <View style={styles.placeholder}>
-              <Text style={[styles.placeholderText, { color: colors.white }]}>
-                Menunggu pengguna lain...
-              </Text>
-            </View>
-          )}
-          <RtcSurfaceView
-            canvas={{ uid: 0 }}
-            style={[
-              styles.localView,
-              {
-                borderColor: colors.primary,
-                display: isCameraOff ? "none" : "flex",
-              },
-            ]}
-          />
-        </React.Fragment>
-      ) : (
-        <View style={styles.placeholder}>
-          <Text style={[styles.placeholderText, { color: colors.white }]}>
-            Menyambungkan...
-          </Text>
-        </View>
+      {renderMainView()}
+
+      {isJoined && !isCameraOff && (
+        <RtcSurfaceView
+          canvas={{ uid: 0 }}
+          style={[styles.localView, { borderColor: colors.primary }]}
+        />
       )}
 
       <Animated.View style={[styles.controls, animatedControlsStyle]}>
-        <TouchableOpacity
-          style={styles.iconButton}
-          onPress={toggleCamera}
-          accessibilityRole="button"
-          accessibilityLabel={
-            isCameraOff ? "Nyalakan kamera" : "Matikan kamera"
-          }
-          accessibilityHint="Ketuk dua kali untuk menyalakan atau mematikan kamera Anda"
-        >
+        <TouchableOpacity style={styles.iconButton} onPress={toggleCamera}>
           <Ionicons
             name={isCameraOff ? "videocam-off" : "videocam"}
             size={28}
             color={colors.white}
           />
         </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.iconButton}
-          onPress={toggleMute}
-          accessibilityRole="button"
-          accessibilityLabel={
-            isMuted ? "Bunyikan mikrofon" : "Bisukan mikrofon"
-          }
-          accessibilityHint="Ketuk dua kali untuk membisukan atau membunyikan mikrofon Anda"
-        >
+        <TouchableOpacity style={styles.iconButton} onPress={toggleMute}>
           <Ionicons
             name={isMuted ? "mic-off" : "mic"}
             size={28}
             color={colors.white}
           />
         </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.iconButton}
-          onPress={switchCamera}
-          accessibilityRole="button"
-          accessibilityLabel="Ganti kamera"
-          accessibilityHint="Ketuk dua kali untuk mengganti antara kamera depan dan belakang"
-        >
+        <TouchableOpacity style={styles.iconButton} onPress={switchCamera}>
           <Ionicons name="camera-reverse" size={28} color={colors.white} />
         </TouchableOpacity>
         <TouchableOpacity
           style={[styles.iconButton, { backgroundColor: colors.danger }]}
           onPress={handleLeave}
-          accessibilityRole="button"
-          accessibilityLabel="Tutup panggilan"
-          accessibilityHint="Ketuk dua kali untuk mengakhiri panggilan video"
         >
           <Ionicons
             name="call"
@@ -144,7 +120,7 @@ const AgoraVideoCallScreen = () => {
 };
 
 const styles = StyleSheet.create({
-  main: { flex: 1 },
+  main: { flex: 1, justifyContent: "center", alignItems: "center" },
   videoView: { width: "100%", height: "100%" },
   localView: {
     position: "absolute",
@@ -156,17 +132,11 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     overflow: "hidden",
   },
-  placeholder: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  placeholderText: {
-    fontSize: 18,
-  },
+  placeholder: { flex: 1, justifyContent: "center", alignItems: "center" },
+  placeholderText: { fontSize: 18, marginTop: 12 },
   controls: {
     position: "absolute",
-    bottom: 30,
+    bottom: 40,
     left: 0,
     right: 0,
     flexDirection: "row",
@@ -174,7 +144,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   iconButton: {
-    backgroundColor: "rgba(255, 255, 255, 0.2)",
+    backgroundColor: "rgba(0, 0, 0, 0.4)",
     width: 60,
     height: 60,
     borderRadius: 30,

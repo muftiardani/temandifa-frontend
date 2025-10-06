@@ -42,13 +42,13 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
     const animationConfig = { duration: 600, easing: Easing.out(Easing.ease) };
     opacity.value = withTiming(1, animationConfig);
     translateY.value = withTiming(0, animationConfig);
-  }, []);
+  }, [opacity, translateY]);
 
   const handleCameraPress = () => navigation.navigate("Camera");
   const handleScanPress = () => navigation.navigate("Scan");
   const handleVoicePress = () => navigation.navigate("Voice");
   const handleSettingsPress = () => navigation.navigate("Settings");
-  const handleEmergencyPress = () => navigation.navigate("VideoCall");
+  const handleVideoCallPress = () => navigation.navigate("Dial");
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
@@ -118,9 +118,9 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
           </View>
           <TouchableOpacity
             style={styles.emergencyButton}
-            onPress={handleEmergencyPress}
-            accessibilityLabel={t.home.emergencyButton}
-            accessibilityHint="Memulai panggilan video darurat"
+            onPress={handleVideoCallPress}
+            accessibilityLabel="Panggilan Video"
+            accessibilityHint="Membuka layar untuk memulai panggilan video"
             accessibilityRole="button"
           >
             <Ionicons name="call" size={34} color={colors.white} />

@@ -1,4 +1,4 @@
-import { NavigationProp } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
 export type RootStackParamList = {
   Onboarding: undefined;
@@ -15,6 +15,10 @@ export type RootStackParamList = {
   HelpAndGuide: undefined;
   PrivacyAndSecurity: undefined;
   About: undefined;
+  Dial: undefined;
+  IncomingCall: undefined;
+  OutgoingCall: undefined;
 };
 
-export type ScreenNavigationProp = NavigationProp<RootStackParamList>;
+export type ScreenNavigationProp =
+  NativeStackNavigationProp<RootStackParamList>;

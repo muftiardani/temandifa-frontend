@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect, useCallback } from "react";
 import { Platform, PermissionsAndroid } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import {
@@ -7,111 +7,102 @@ import {
   IRtcEngine,
   ChannelProfileType,
 } from "react-native-agora";
-import { Config } from "../config";
+import { useCallStore } from "../store/callStore";
 
 export const useAgoraCall = () => {
   const navigation = useNavigation();
   const agoraEngineRef = useRef<IRtcEngine | null>(null);
+
+  const { channelName, token, uid, clearCall } = useCallStore();
 
   const [isJoined, setIsJoined] = useState(false);
   const [remoteUid, setRemoteUid] = useState(0);
   const [isMuted, setIsMuted] = useState(false);
   const [isCameraOff, setIsCameraOff] = useState(false);
 
-  useEffect(() => {
-    const getPermission = async () => {
-      if (Platform.OS === "android") {
-        await PermissionsAndroid.requestMultiple([
-          PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
-          PermissionsAndroid.PERMISSIONS.CAMERA,
-        ]);
-      }
-    };
+  const getPermission = async () => {
+    if (Platform.OS === "android") {
+      await PermissionsAndroid.requestMultiple([
+        PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
+        PermissionsAndroid.PERMISSIONS.CAMERA,
+      ]);
+    }
+  };
 
-    const setupAgoraEngine = async () => {
+  const leave = useCallback(() => {
+    try {
+      if (agoraEngineRef.current) {
+        agoraEngineRef.current.leaveChannel();
+        agoraEngineRef.current.release();
+        agoraEngineRef.current = null;
+      }
+      setRemoteUid(0);
+      setIsJoined(false);
+    } catch (e) {
+      console.log("Leave Error:", e);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!channelName || !token || !uid) {
+      return;
+    }
+
+    const setupAndJoin = async () => {
       try {
         await getPermission();
         agoraEngineRef.current = createAgoraRtcEngine();
-        const agoraEngine = agoraEngineRef.current;
-        agoraEngine.registerEventHandler({
+        const engine = agoraEngineRef.current;
+
+        engine.registerEventHandler({
           onJoinChannelSuccess: () => setIsJoined(true),
           onUserJoined: (_connection, Uid) => setRemoteUid(Uid),
           onUserOffline: () => setRemoteUid(0),
         });
-        agoraEngine.initialize({
-          appId: Config.agora.appId,
+
+        engine.initialize({
+          appId: process.env.EXPO_PUBLIC_AGORA_APP_ID!,
           channelProfile: ChannelProfileType.ChannelProfileLiveBroadcasting,
         });
-        agoraEngine.enableVideo();
-        join();
+
+        engine.enableVideo();
+        await engine.startPreview();
+        await engine.joinChannel(token, channelName, uid, {
+          clientRoleType: ClientRoleType.ClientRoleBroadcaster,
+        });
       } catch (e) {
-        console.log(e);
+        console.log("Setup & Join Error:", e);
       }
     };
 
-    setupAgoraEngine();
+    setupAndJoin();
 
     return () => {
       leave();
     };
-  }, []);
-
-  const join = async () => {
-    if (isJoined || !agoraEngineRef.current) return;
-    try {
-      await agoraEngineRef.current.startPreview();
-      await agoraEngineRef.current.joinChannel(
-        Config.agora.token,
-        Config.agora.channelName,
-        0,
-        { clientRoleType: ClientRoleType.ClientRoleBroadcaster }
-      );
-    } catch (e) {
-      console.log(e);
-    }
-  };
-
-  const leave = () => {
-    try {
-      agoraEngineRef.current?.leaveChannel();
-      agoraEngineRef.current?.release();
-      setRemoteUid(0);
-      setIsJoined(false);
-    } catch (e) {
-      console.log(e);
-    }
-  };
+  }, [channelName, token, uid, leave]);
 
   const handleLeave = () => {
     leave();
-    navigation.goBack();
+    clearCall();
+    if (navigation.canGoBack()) {
+      navigation.goBack();
+    }
   };
 
   const toggleMute = async () => {
-    try {
-      await agoraEngineRef.current?.muteLocalAudioStream(!isMuted);
-      setIsMuted(!isMuted);
-    } catch (e) {
-      console.log(e);
-    }
+    await agoraEngineRef.current?.muteLocalAudioStream(!isMuted);
+    setIsMuted(!isMuted);
   };
 
   const toggleCamera = async () => {
-    try {
-      const newCameraState = !isCameraOff;
-      await agoraEngineRef.current?.muteLocalVideoStream(newCameraState);
-      setIsCameraOff(newCameraState);
-    } catch (e) {
-      console.log(e);
-    }
+    const newCameraState = !isCameraOff;
+    await agoraEngineRef.current?.muteLocalVideoStream(newCameraState);
+    setIsCameraOff(newCameraState);
   };
 
   const switchCamera = async () => {
-    try {
-      await agoraEngineRef.current?.switchCamera();
-    } catch (e) {
-      console.log(e);
-    }
+    await agoraEngineRef.current?.switchCamera();
   };
 
   return {

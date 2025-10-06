@@ -1,11 +1,13 @@
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useCallback, useEffect, useRef } from "react";
 import {
   NavigationContainer,
   DefaultTheme,
   DarkTheme,
+  NavigationContainerRef,
 } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import * as SplashScreen from "expo-splash-screen";
+import * as Notifications from "expo-notifications";
 
 import AnimatedSplashScreen from "../screens/AnimatedSplashScreen";
 import OnboardingScreen from "../screens/OnboardingScreen";
@@ -22,9 +24,13 @@ import LanguageScreen from "../screens/LanguageScreen";
 import HelpAndGuideScreen from "../screens/HelpAndGuideScreen";
 import PrivacyAndSecurityScreen from "../screens/PrivacyAndSecurityScreen";
 import AboutScreen from "../screens/AboutScreen";
+import DialScreen from "../screens/DialScreen";
+import IncomingCallScreen from "../screens/IncomingCallScreen";
+import OutgoingCallScreen from "../screens/OutgoingCallScreen";
 
 import { RootStackParamList } from "../types/navigation";
 import { useAppStore } from "../store/appStore";
+import { useCallStore } from "../store/callStore";
 import { lightColors, darkColors } from "../constants/Colors";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -39,7 +45,6 @@ const MyLightTheme = {
     border: lightColors.border,
   },
 };
-
 const MyDarkTheme = {
   ...DarkTheme,
   colors: {
@@ -51,12 +56,26 @@ const MyDarkTheme = {
   },
 };
 
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: true,
+    shouldSetBadge: false,
+    shouldShowBanner: true,
+    shouldShowList: true,
+  }),
+});
+
 const AppNavigator = () => (
   <Stack.Navigator
     initialRouteName="Onboarding"
     screenOptions={{ headerShown: false, animation: "slide_from_right" }}
   >
-    <Stack.Screen name="Onboarding" component={OnboardingScreen} options={{ animation: "fade" }}/>
+    <Stack.Screen
+      name="Onboarding"
+      component={OnboardingScreen}
+      options={{ animation: "fade" }}
+    />
     <Stack.Screen name="Home" component={HomeScreen} />
     <Stack.Screen name="Camera" component={CameraScreen} />
     <Stack.Screen name="Scan" component={ScanScreen} />
@@ -71,11 +90,6 @@ const AppNavigator = () => (
     />
     <Stack.Screen name="About" component={AboutScreen} />
     <Stack.Screen
-      name="VideoCall"
-      component={AgoraVideoCallScreen}
-      options={{ animation: "fade_from_bottom" }}
-    />
-    <Stack.Screen
       name="ScanResult"
       component={ScanResultScreen}
       options={{ animation: "fade_from_bottom" }}
@@ -83,6 +97,18 @@ const AppNavigator = () => (
     <Stack.Screen
       name="VoiceResult"
       component={VoiceResultScreen}
+      options={{ animation: "fade_from_bottom" }}
+    />
+    <Stack.Screen name="Dial" component={DialScreen} />
+    <Stack.Screen name="OutgoingCall" component={OutgoingCallScreen} />
+    <Stack.Screen
+      name="IncomingCall"
+      component={IncomingCallScreen}
+      options={{ animation: "fade_from_bottom" }}
+    />
+    <Stack.Screen
+      name="VideoCall"
+      component={AgoraVideoCallScreen}
       options={{ animation: "fade_from_bottom" }}
     />
   </Stack.Navigator>
@@ -93,6 +119,38 @@ const RootNavigator = () => {
   const [isSplashAnimationComplete, setSplashAnimationComplete] =
     useState(false);
   const theme = useAppStore((state) => state.theme);
+  const { setIncomingCall } = useCallStore();
+  const navigationRef =
+    useRef<NavigationContainerRef<RootStackParamList>>(null);
+
+  useEffect(() => {
+    const handleIncomingCallNotification = (
+      notification: Notifications.Notification
+    ) => {
+      const data = notification.request.content.data;
+      if (data?.callId && data?.channelName) {
+        setIncomingCall({
+          callId: data.callId as string,
+          channelName: data.channelName as string,
+          callerName: (data.callerName as string) || "Panggilan Masuk",
+        });
+        navigationRef.current?.navigate("IncomingCall");
+      }
+    };
+
+    const notificationListener = Notifications.addNotificationReceivedListener(
+      handleIncomingCallNotification
+    );
+    const responseListener =
+      Notifications.addNotificationResponseReceivedListener((response) =>
+        handleIncomingCallNotification(response.notification)
+      );
+
+    return () => {
+      notificationListener.remove();
+      responseListener.remove();
+    };
+  }, [setIncomingCall]);
 
   useEffect(() => {
     async function prepare() {
@@ -113,6 +171,7 @@ const RootNavigator = () => {
 
   return (
     <NavigationContainer
+      ref={navigationRef}
       onReady={onLayoutRootView}
       theme={theme === "dark" ? MyDarkTheme : MyLightTheme}
     >

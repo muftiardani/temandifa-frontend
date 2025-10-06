@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "420872743247",
+    "project_id": "temandifa-app",
+    "storage_bucket": "temandifa-app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:420872743247:android:2c8526498292fd1f6cfd3a",
+        "android_client_info": {
+          "package_name": "com.temandifa.temandifaapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCLqLO4AllixEEW1QbLud4-2kiCIDFqPVs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
