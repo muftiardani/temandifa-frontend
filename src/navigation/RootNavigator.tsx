@@ -139,7 +139,7 @@ const RootNavigator = () => {
   const navigationRef =
     useRef<NavigationContainerRef<RootStackParamList>>(null);
 
-  const { isAuthenticated, isLoading, loadToken } = useAuthStore();
+  const { isAuthenticated, isGuest, isLoading, loadToken } = useAuthStore();
 
   useEffect(() => {
     async function prepare() {
@@ -188,7 +188,7 @@ const RootNavigator = () => {
       theme={theme === "dark" ? MyDarkTheme : MyLightTheme}
     >
       {isSplashAnimationComplete ? (
-        isAuthenticated ? (
+        isAuthenticated || isGuest ? (
           <AppNavigator />
         ) : (
           <AuthNavigator />

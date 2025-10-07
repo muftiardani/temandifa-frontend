@@ -14,7 +14,6 @@ import { authService } from "../services/authService";
 import { useAuthStore } from "../store/authStore";
 import { AuthStackParamList } from "../types/navigation";
 import { Ionicons } from "@expo/vector-icons";
-
 import * as Google from "expo-auth-session/providers/google";
 import * as WebBrowser from "expo-web-browser";
 
@@ -27,7 +26,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const { colors } = useAppTheme();
-  const { setAuthToken } = useAuthStore();
+  const { setAuthToken, loginAsGuest } = useAuthStore();
 
   const [request, response, promptAsync] = Google.useAuthRequest({
     clientId: process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID,
@@ -82,9 +81,11 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
-      <Text style={[styles.title, { color: colors.text }]}>
-        Selamat Datang Kembali
-      </Text>
+      <TouchableOpacity style={styles.skipButton} onPress={loginAsGuest}>
+        <Text style={[styles.skipText, { color: colors.primary }]}>Lewati</Text>
+      </TouchableOpacity>
+
+      <Text style={[styles.title, { color: colors.text }]}>Selamat Datang</Text>
 
       <TextInput
         style={[
@@ -160,6 +161,17 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
+  skipButton: {
+    position: "absolute",
+    top: 60,
+    right: 20,
+    padding: 10,
+    zIndex: 1,
+  },
+  skipText: {
+    fontSize: 16,
+    fontWeight: "600",
+  },
   container: { flex: 1, justifyContent: "center", padding: 20 },
   title: {
     fontSize: 28,

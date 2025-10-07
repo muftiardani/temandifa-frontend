@@ -5,6 +5,7 @@ import {
   View,
   StyleSheet,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import Animated, {
@@ -17,11 +18,13 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import HomeButton from "../components/common/HomeButton";
 import { RootStackParamList } from "../types/navigation";
 import { useAppTheme } from "../hooks/useAppTheme";
+import { useAuthStore } from "../store/authStore";
 
 type Props = NativeStackScreenProps<RootStackParamList, "Home">;
 
 const HomeScreen: React.FC<Props> = ({ navigation }) => {
   const { t, colors } = useAppTheme();
+  const { isAuthenticated } = useAuthStore();
 
   const getGreeting = () => {
     const currentHour = new Date().getHours();
@@ -48,7 +51,24 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
   const handleScanPress = () => navigation.navigate("Scan");
   const handleVoicePress = () => navigation.navigate("Voice");
   const handleSettingsPress = () => navigation.navigate("Settings");
-  const handleVideoCallPress = () => navigation.navigate("Dial");
+
+  const handleVideoCallPress = () => {
+    if (isAuthenticated) {
+      navigation.navigate("Dial");
+    } else {
+      Alert.alert(
+        "Fitur Khusus Pengguna",
+        "Anda harus mendaftar atau login untuk menggunakan fitur Panggilan.",
+        [
+          { text: "Nanti Saja", style: "cancel" },
+          {
+            text: "Login Sekarang",
+            onPress: () => useAuthStore.getState().logout(),
+          },
+        ]
+      );
+    }
+  };
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
@@ -117,10 +137,17 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
             </TouchableOpacity>
           </View>
           <TouchableOpacity
-            style={styles.emergencyButton}
+            style={[
+              styles.emergencyButton,
+              !isAuthenticated && { backgroundColor: colors.darkGrey },
+            ]}
             onPress={handleVideoCallPress}
             accessibilityLabel="Panggilan Video"
-            accessibilityHint="Membuka layar untuk memulai panggilan video"
+            accessibilityHint={
+              isAuthenticated
+                ? "Membuka layar untuk memulai panggilan video"
+                : "Login diperlukan untuk fitur ini"
+            }
             accessibilityRole="button"
           >
             <Ionicons name="call" size={34} color={colors.white} />
