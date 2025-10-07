@@ -49,7 +49,7 @@ Selamat datang di repositori *frontend* untuk aplikasi seluler TemanDifa. Aplika
 
     ```env
     # URL base dari backend TemanDifa
-    API_BASE_URL=http://localhost:3000/api/v1
+    API_BASE_URL=http://localhost:3000/api
 
     # Kredensial dari Agora untuk fitur panggilan video
     AGORA_APP_ID=AGORA_APP_ID_ANDA

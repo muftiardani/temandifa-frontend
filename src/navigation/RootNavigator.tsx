@@ -134,7 +134,6 @@ const AppNavigator = () => (
 const RootNavigator = () => {
   const [isFirstLaunch, setIsFirstLaunch] = useState<boolean | null>(null);
   const theme = useAppStore((state) => state.theme);
-  const { setIncomingCall } = useCallStore();
   const navigationRef = useRef<NavigationContainerRef<any>>(null);
   const {
     isAuthenticated,
@@ -142,6 +141,7 @@ const RootNavigator = () => {
     isLoading: isAuthLoading,
     loadToken,
   } = useAuthStore();
+  const { setIncomingCall } = useCallStore();
 
   useEffect(() => {
     async function prepare() {
