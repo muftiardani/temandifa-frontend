@@ -1,7 +1,7 @@
 import { create } from "zustand";
-import { Appearance } from "react-native";
 import { persist, createJSONStorage } from "zustand/middleware";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Appearance } from "react-native";
 
 type Theme = "light" | "dark";
 type Language = "id" | "en";
@@ -15,8 +15,13 @@ interface AppState {
   completeOnboarding: () => void;
 }
 
+type PersistedState = {
+  theme: Theme;
+  language: Language;
+};
+
 export const useAppStore = create(
-  persist<AppState>(
+  persist<AppState, [], [], PersistedState>(
     (set) => ({
       theme: Appearance.getColorScheme() ?? "light",
       language: "id",
@@ -31,7 +36,10 @@ export const useAppStore = create(
     {
       name: "app-storage",
       storage: createJSONStorage(() => AsyncStorage),
-      partialize: (state) => ({ theme: state.theme, language: state.language }),
+      partialize: (state) => ({
+        theme: state.theme,
+        language: state.language,
+      }),
     }
   )
 );

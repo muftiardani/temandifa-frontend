@@ -131,9 +131,10 @@ const AppNavigator = () => (
 );
 
 const RootNavigator = () => {
-  const [isFirstLaunch, setIsFirstLaunch] = useState<boolean | null>(null);
+  const { hasCompletedOnboarding, completeOnboarding } = useAppStore();
   const [isSplashAnimationComplete, setSplashAnimationComplete] =
     useState(false);
+
   const theme = useAppStore((state) => state.theme);
   const navigationRef = useRef<NavigationContainerRef<any>>(null);
   const {
@@ -148,14 +149,15 @@ const RootNavigator = () => {
     async function prepare() {
       await SplashScreen.preventAutoHideAsync();
       try {
-        const hasCompletedOnboarding = await AsyncStorage.getItem(
+        const hasCompleted = await AsyncStorage.getItem(
           "@hasCompletedOnboarding"
         );
-        setIsFirstLaunch(hasCompletedOnboarding !== "true");
+        if (hasCompleted === "true") {
+          completeOnboarding();
+        }
         await loadToken();
       } catch (e) {
         console.warn("Gagal menyiapkan aplikasi:", e);
-        setIsFirstLaunch(false);
       }
     }
     prepare();
@@ -191,15 +193,13 @@ const RootNavigator = () => {
       notificationListener.remove();
       responseListener.remove();
     };
-  }, [loadToken, setIncomingCall]);
+  }, [loadToken, setIncomingCall, completeOnboarding]);
 
   const onLayoutRootView = useCallback(async () => {
     await SplashScreen.hideAsync();
   }, []);
 
-  const isAppReady = !isAuthLoading && isFirstLaunch !== null;
-
-  if (!isAppReady || !isSplashAnimationComplete) {
+  if (isAuthLoading || !isSplashAnimationComplete) {
     return (
       <AnimatedSplashScreen
         onReady={onLayoutRootView}
@@ -216,7 +216,7 @@ const RootNavigator = () => {
       theme={theme === "dark" ? MyDarkTheme : MyLightTheme}
     >
       <RootStack.Navigator screenOptions={{ headerShown: false }}>
-        {isFirstLaunch ? (
+        {!hasCompletedOnboarding ? (
           <RootStack.Screen name="Onboarding" component={OnboardingScreen} />
         ) : isAuthenticated || isGuest ? (
           <RootStack.Screen name="App" component={AppNavigator} />
