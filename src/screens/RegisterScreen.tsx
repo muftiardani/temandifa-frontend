@@ -5,10 +5,10 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
-  Alert,
   ActivityIndicator,
 } from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import Toast from "react-native-toast-message";
 import { useAppTheme } from "../hooks/useAppTheme";
 import { authService } from "../services/authService";
 import { useAuthStore } from "../store/authStore";
@@ -30,7 +30,11 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
 
   const handleRegister = async () => {
     if (!username.trim() || !email.trim() || !password.trim()) {
-      Alert.alert("Gagal", "Username, email, dan password harus diisi.");
+      Toast.show({
+        type: "error",
+        text1: "Gagal",
+        text2: "Username, email, dan password harus diisi.",
+      });
       return;
     }
     setIsLoading(true);
@@ -43,7 +47,11 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
       });
       await setAuthToken(token);
     } catch (error: any) {
-      Alert.alert("Registrasi Gagal", error.message);
+      Toast.show({
+        type: "error",
+        text1: "Registrasi Gagal",
+        text2: error.message,
+      });
     } finally {
       setIsLoading(false);
     }

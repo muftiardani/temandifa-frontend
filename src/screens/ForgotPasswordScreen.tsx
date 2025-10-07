@@ -5,10 +5,10 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
-  Alert,
   ActivityIndicator,
 } from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import Toast from "react-native-toast-message";
 import { useAppTheme } from "../hooks/useAppTheme";
 import { authService } from "../services/authService";
 import { AuthStackParamList } from "../types/navigation";
@@ -27,19 +27,28 @@ const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({
 
   const handleForgotPassword = async () => {
     if (!email.trim()) {
-      Alert.alert("Gagal", "Email harus diisi.");
+      Toast.show({
+        type: "error",
+        text1: "Gagal",
+        text2: "Email harus diisi.",
+      });
       return;
     }
     setIsLoading(true);
     try {
       await authService.forgotPassword(email);
-      Alert.alert(
-        "Berhasil",
-        "Instruksi untuk mereset password telah dikirim ke email Anda."
-      );
+      Toast.show({
+        type: "success",
+        text1: "Berhasil",
+        text2: "Instruksi untuk mereset password telah dikirim ke email Anda.",
+      });
       navigation.goBack();
     } catch (error: any) {
-      Alert.alert("Gagal", error.message);
+      Toast.show({
+        type: "error",
+        text1: "Gagal",
+        text2: error.message,
+      });
     } finally {
       setIsLoading(false);
     }

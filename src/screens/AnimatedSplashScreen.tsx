@@ -13,9 +13,13 @@ const SPLASH_ICON = require("../../assets/splash-icon.png");
 
 interface Props {
   onAnimationComplete: () => void;
+  onReady: () => void;
 }
 
-const AnimatedSplashScreen: React.FC<Props> = ({ onAnimationComplete }) => {
+const AnimatedSplashScreen: React.FC<Props> = ({
+  onAnimationComplete,
+  onReady,
+}) => {
   const scale = useSharedValue(1);
   const opacity = useSharedValue(1);
 
@@ -33,6 +37,7 @@ const AnimatedSplashScreen: React.FC<Props> = ({ onAnimationComplete }) => {
       duration: AnimationDurations.splashScreenScale,
       easing: Easing.inOut(Easing.ease),
     });
+
     opacity.value = withTiming(
       0,
       {
@@ -48,7 +53,7 @@ const AnimatedSplashScreen: React.FC<Props> = ({ onAnimationComplete }) => {
   }, [onAnimationComplete, scale, opacity]);
 
   return (
-    <View style={styles.container}>
+    <View style={styles.container} onLayout={onReady}>
       <Animated.Image
         source={SPLASH_ICON}
         style={[styles.image, animatedStyle]}

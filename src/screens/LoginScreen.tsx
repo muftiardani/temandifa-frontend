@@ -5,10 +5,10 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
-  Alert,
   ActivityIndicator,
 } from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import Toast from "react-native-toast-message";
 import { useAppTheme } from "../hooks/useAppTheme";
 import { authService } from "../services/authService";
 import { useAuthStore } from "../store/authStore";
@@ -41,10 +41,11 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
         handleGoogleLogin(authentication.accessToken);
       }
     } else if (response?.type === "error") {
-      Alert.alert(
-        "Login Google Gagal",
-        "Terjadi kesalahan saat mencoba login dengan Google."
-      );
+      Toast.show({
+        type: "error",
+        text1: "Login Google Gagal",
+        text2: "Terjadi kesalahan saat mencoba login dengan Google.",
+      });
     }
   }, [response]);
 
@@ -54,10 +55,11 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
       const { token } = await authService.loginWithGoogle(accessToken);
       await setAuthToken(token);
     } catch (error: any) {
-      Alert.alert(
-        "Login Gagal",
-        error.message || "Gagal mengautentikasi dengan server."
-      );
+      Toast.show({
+        type: "error",
+        text1: "Login Gagal",
+        text2: error.message || "Gagal mengautentikasi dengan server.",
+      });
     } finally {
       setIsLoading(false);
     }
@@ -65,7 +67,11 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
 
   const handleLogin = async () => {
     if (!login.trim() || !password.trim()) {
-      Alert.alert("Gagal", "Semua kolom harus diisi.");
+      Toast.show({
+        type: "error",
+        text1: "Gagal",
+        text2: "Semua kolom harus diisi.",
+      });
       return;
     }
     setIsLoading(true);
@@ -73,7 +79,11 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
       const { token } = await authService.login(login, password);
       await setAuthToken(token);
     } catch (error: any) {
-      Alert.alert("Login Gagal", error.message);
+      Toast.show({
+        type: "error",
+        text1: "Login Gagal",
+        text2: error.message,
+      });
     } finally {
       setIsLoading(false);
     }

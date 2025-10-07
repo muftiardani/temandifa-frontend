@@ -111,4 +111,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default HomeButton;
+export default React.memo(HomeButton);

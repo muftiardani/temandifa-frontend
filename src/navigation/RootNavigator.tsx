@@ -1,5 +1,4 @@
 import React, { useState, useCallback, useEffect, useRef } from "react";
-import { View } from "react-native";
 import {
   NavigationContainer,
   DefaultTheme,
@@ -11,7 +10,7 @@ import * as SplashScreen from "expo-splash-screen";
 import * as Notifications from "expo-notifications";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-import LoadingIndicator from "../components/common/LoadingIndicator";
+import AnimatedSplashScreen from "../screens/AnimatedSplashScreen";
 import OnboardingScreen from "../screens/OnboardingScreen";
 import HomeScreen from "../screens/HomeScreen";
 import CameraScreen from "../screens/CameraScreen";
@@ -133,6 +132,8 @@ const AppNavigator = () => (
 
 const RootNavigator = () => {
   const [isFirstLaunch, setIsFirstLaunch] = useState<boolean | null>(null);
+  const [isSplashAnimationComplete, setSplashAnimationComplete] =
+    useState(false);
   const theme = useAppStore((state) => state.theme);
   const navigationRef = useRef<NavigationContainerRef<any>>(null);
   const {
@@ -193,30 +194,25 @@ const RootNavigator = () => {
   }, [loadToken, setIncomingCall]);
 
   const onLayoutRootView = useCallback(async () => {
-    if (!isAuthLoading && isFirstLaunch !== null) {
-      await SplashScreen.hideAsync();
-    }
-  }, [isAuthLoading, isFirstLaunch]);
+    await SplashScreen.hideAsync();
+  }, []);
 
-  if (isAuthLoading || isFirstLaunch === null) {
+  const isAppReady = !isAuthLoading && isFirstLaunch !== null;
+
+  if (!isAppReady || !isSplashAnimationComplete) {
     return (
-      <View
-        style={{
-          flex: 1,
-          justifyContent: "center",
-          alignItems: "center",
-          backgroundColor: lightColors.background,
+      <AnimatedSplashScreen
+        onReady={onLayoutRootView}
+        onAnimationComplete={() => {
+          setSplashAnimationComplete(true);
         }}
-      >
-        <LoadingIndicator />
-      </View>
+      />
     );
   }
 
   return (
     <NavigationContainer
       ref={navigationRef}
-      onReady={onLayoutRootView}
       theme={theme === "dark" ? MyDarkTheme : MyLightTheme}
     >
       <RootStack.Navigator screenOptions={{ headerShown: false }}>

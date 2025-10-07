@@ -18,7 +18,7 @@ import Animated, {
 } from "react-native-reanimated";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
+import { useAppStore } from "../store/appStore";
 import { RootNavigatorParamList } from "../types/navigation";
 import { useAppTheme } from "../hooks/useAppTheme";
 
@@ -32,6 +32,9 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ navigation }) => {
   const { t, colors } = useAppTheme();
   const flatListRef = useRef<FlatList>(null);
   const scrollX = useSharedValue(0);
+  const completeOnboardingAction = useAppStore(
+    (state) => state.completeOnboarding
+  );
 
   const onboardingData = t.onboarding.slides;
 
@@ -41,13 +44,13 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ navigation }) => {
     },
   });
 
-  const completeOnboarding = async () => {
+  const handleFinishOnboarding = async () => {
     try {
       await AsyncStorage.setItem("@hasCompletedOnboarding", "true");
-      navigation.replace("Auth", { screen: "Login" });
+      completeOnboardingAction();
     } catch (e) {
       console.error("Gagal menyimpan status onboarding", e);
-      navigation.replace("Auth", { screen: "Login" });
+      completeOnboardingAction();
     }
   };
 
@@ -58,7 +61,7 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ navigation }) => {
         animated: true,
       });
     } else {
-      completeOnboarding();
+      handleFinishOnboarding();
     }
   };
 
@@ -82,7 +85,7 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ navigation }) => {
         <TouchableOpacity
           style={[styles.button, { backgroundColor: colors.primary }]}
           onPress={() =>
-            isLastItem ? completeOnboarding() : handleNext(index)
+            isLastItem ? handleFinishOnboarding() : handleNext(index)
           }
         >
           <Text style={styles.buttonText}>
@@ -97,7 +100,10 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ navigation }) => {
     <SafeAreaView
       style={[styles.container, { backgroundColor: colors.background }]}
     >
-      <TouchableOpacity style={styles.skipButton} onPress={completeOnboarding}>
+      <TouchableOpacity
+        style={styles.skipButton}
+        onPress={handleFinishOnboarding}
+      >
         <Text style={[styles.skipText, { color: colors.grey }]}>
           {t.onboarding.skip}
         </Text>

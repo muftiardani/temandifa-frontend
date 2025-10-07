@@ -19,7 +19,7 @@ import { AppNavigationProp } from "../types/navigation";
 const DialScreen = () => {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const { colors, t } = useAppTheme();
+  const { colors } = useAppTheme();
   const navigation = useNavigation<AppNavigationProp>();
   const { setOutgoingCall } = useCallStore();
 

@@ -9,6 +9,7 @@ import {
 } from "react-native-agora";
 import { useCallStore } from "../store/callStore";
 import { socketService } from "../services/socketService";
+import { Config } from "../config";
 
 export const useAgoraCall = () => {
   const navigation = useNavigation();
@@ -78,7 +79,7 @@ export const useAgoraCall = () => {
         });
 
         engine.initialize({
-          appId: process.env.EXPO_PUBLIC_AGORA_APP_ID!,
+          appId: Config.agora.appId!,
           channelProfile: ChannelProfileType.ChannelProfileLiveBroadcasting,
         });
 

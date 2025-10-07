@@ -70,8 +70,10 @@ export const useCameraDetection = () => {
             setDetections(result);
             speakTopObject(result);
           }
-        } catch (error) {
-          // Error handling can be improved here
+        } catch (error: any) {
+          if (error.name !== "AbortError") {
+            console.error("Gagal mendeteksi objek:", error);
+          }
         } finally {
           setIsProcessing(false);
         }
