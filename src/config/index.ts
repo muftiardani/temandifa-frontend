@@ -10,7 +10,5 @@ export const Config = {
   },
   agora: {
     appId: process.env.EXPO_PUBLIC_AGORA_APP_ID,
-    channelName: process.env.EXPO_PUBLIC_AGORA_CHANNEL_NAME,
-    token: process.env.EXPO_PUBLIC_AGORA_TOKEN,
   },
 };

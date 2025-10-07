@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   View,
   Text,
@@ -10,19 +10,25 @@ import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 import { useAppTheme } from "../hooks/useAppTheme";
 import { useCallStore } from "../store/callStore";
-import { callService } from "../services/callService";
-
+import { socketService } from "../services/socketService";
 const OutgoingCallScreen = () => {
   const { colors } = useAppTheme();
   const navigation = useNavigation();
   const { callId, clearCall } = useCallStore();
 
+  const isActive = useCallStore((state) => state.isActive);
+
+  useEffect(() => {
+    if (!isActive) {
+      navigation.goBack();
+    }
+  }, [isActive, navigation]);
+
   const handleCancelCall = () => {
     if (callId) {
-      callService.end(callId);
+      socketService.emit("cancel-call", { callId });
     }
     clearCall();
-    navigation.goBack();
   };
 
   return (

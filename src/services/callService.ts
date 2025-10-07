@@ -1,14 +1,19 @@
 import { Config } from "../config";
+import { useAuthStore } from "../store/authStore";
 
 const API_URL = `${Config.api.baseUrl}/v1/call`;
+const getToken = () => useAuthStore.getState().authToken;
+
+const getHeaders = () => ({
+  "Content-Type": "application/json",
+  Authorization: `Bearer ${getToken()}`,
+});
 
 export const callService = {
   initiate: async (calleePhoneNumber: string) => {
     const response = await fetch(`${API_URL}/initiate`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: getHeaders(),
       body: JSON.stringify({ calleePhoneNumber }),
     });
     if (!response.ok) {
@@ -21,9 +26,7 @@ export const callService = {
   answer: async (callId: string) => {
     const response = await fetch(`${API_URL}/answer`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: getHeaders(),
       body: JSON.stringify({ callId }),
     });
     if (!response.ok) {
@@ -36,9 +39,7 @@ export const callService = {
   end: async (callId: string) => {
     return fetch(`${API_URL}/end`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: getHeaders(),
       body: JSON.stringify({ callId }),
     }).then((res) => res.json());
   },

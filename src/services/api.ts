@@ -1,4 +1,7 @@
 import { Config } from "../config";
+import { useAuthStore } from "../store/authStore";
+
+const getToken = () => useAuthStore.getState().authToken;
 
 export class NetworkError extends Error {
   constructor(message: string) {
@@ -17,6 +20,7 @@ const postFormData = async (
   options?: { signal?: AbortSignal }
 ) => {
   try {
+    const token = getToken();
     const formData = new FormData();
     const file = {
       uri,
@@ -26,22 +30,27 @@ const postFormData = async (
 
     formData.append(fieldName, file);
 
+    const headers: HeadersInit = {};
+    if (token) {
+      headers["Authorization"] = `Bearer ${token}`;
+    }
+
     const response = await fetch(url, {
       method: "POST",
       body: formData,
-      headers: { "Content-Type": "multipart/form-data" },
+      headers,
       signal: options?.signal,
     });
 
     const data = await response.json();
 
     if (!response.ok) {
-      throw new Error(data.error || "A server error occurred.");
+      throw new Error(data.error || "Terjadi kesalahan pada server.");
     }
     return data;
   } catch (error: any) {
     if (error.name === "AbortError") {
-      console.log("API request was canceled:", url);
+      console.log("Permintaan API dibatalkan:", url);
       return;
     }
 
@@ -54,7 +63,7 @@ const postFormData = async (
       );
     }
 
-    console.error(`Error calling ${url}:`, error);
+    console.error(`Error saat memanggil ${url}:`, error);
     throw error;
   }
 };

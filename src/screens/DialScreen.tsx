@@ -14,13 +14,13 @@ import { Ionicons } from "@expo/vector-icons";
 import { useAppTheme } from "../hooks/useAppTheme";
 import { callService } from "../services/callService";
 import { useCallStore } from "../store/callStore";
-import { ScreenNavigationProp } from "../types/navigation";
+import { AppNavigationProp } from "../types/navigation";
 
 const DialScreen = () => {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const { colors, t } = useAppTheme();
-  const navigation = useNavigation<ScreenNavigationProp>();
+  const navigation = useNavigation<AppNavigationProp>();
   const { setOutgoingCall } = useCallStore();
 
   const handleInitiateCall = async () => {

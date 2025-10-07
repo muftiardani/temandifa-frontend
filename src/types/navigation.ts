@@ -1,5 +1,11 @@
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
+export type AuthStackParamList = {
+  Login: undefined;
+  Register: undefined;
+  ForgotPassword: undefined;
+};
+
 export type RootStackParamList = {
   Onboarding: undefined;
   Home: undefined;
@@ -20,5 +26,6 @@ export type RootStackParamList = {
   OutgoingCall: undefined;
 };
 
-export type ScreenNavigationProp =
-  NativeStackNavigationProp<RootStackParamList>;
+export type AppNavigationProp = NativeStackNavigationProp<
+  RootStackParamList & AuthStackParamList
+>;

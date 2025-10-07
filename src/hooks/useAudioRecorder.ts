@@ -3,7 +3,7 @@ import { Audio } from "expo-av";
 import Toast from "react-native-toast-message";
 import * as Speech from "expo-speech";
 import { useNavigation } from "@react-navigation/native";
-import { ScreenNavigationProp } from "../types/navigation";
+import { AppNavigationProp } from "../types/navigation";
 import { apiService } from "../services/api";
 import { useAppTheme } from "./useAppTheme";
 
@@ -12,7 +12,7 @@ export const useAudioRecorder = () => {
   const [isRecording, setIsRecording] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [permissionResponse, requestPermission] = Audio.usePermissions();
-  const navigation = useNavigation<ScreenNavigationProp>();
+  const navigation = useNavigation<AppNavigationProp>();
   const { t } = useAppTheme();
 
   const startRecording = useCallback(async () => {

@@ -28,12 +28,19 @@ import DialScreen from "../screens/DialScreen";
 import IncomingCallScreen from "../screens/IncomingCallScreen";
 import OutgoingCallScreen from "../screens/OutgoingCallScreen";
 
-import { RootStackParamList } from "../types/navigation";
+import LoginScreen from "../screens/LoginScreen";
+import RegisterScreen from "../screens/RegisterScreen";
+import ForgotPasswordScreen from "../screens/ForgotPasswordScreen";
+
+import { useAuthStore } from "../store/authStore";
 import { useAppStore } from "../store/appStore";
 import { useCallStore } from "../store/callStore";
+
+import { RootStackParamList, AuthStackParamList } from "../types/navigation";
 import { lightColors, darkColors } from "../constants/Colors";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
+const AuthStack = createNativeStackNavigator<AuthStackParamList>();
 
 const MyLightTheme = {
   ...DefaultTheme,
@@ -65,6 +72,16 @@ Notifications.setNotificationHandler({
     shouldShowList: true,
   }),
 });
+
+const AuthNavigator = () => (
+  <AuthStack.Navigator
+    screenOptions={{ headerShown: false, animation: "slide_from_right" }}
+  >
+    <AuthStack.Screen name="Login" component={LoginScreen} />
+    <AuthStack.Screen name="Register" component={RegisterScreen} />
+    <AuthStack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
+  </AuthStack.Navigator>
+);
 
 const AppNavigator = () => (
   <Stack.Navigator
@@ -115,7 +132,6 @@ const AppNavigator = () => (
 );
 
 const RootNavigator = () => {
-  const [isAppReady, setAppReady] = useState(false);
   const [isSplashAnimationComplete, setSplashAnimationComplete] =
     useState(false);
   const theme = useAppStore((state) => state.theme);
@@ -123,51 +139,47 @@ const RootNavigator = () => {
   const navigationRef =
     useRef<NavigationContainerRef<RootStackParamList>>(null);
 
+  const { isAuthenticated, isLoading, loadToken } = useAuthStore();
+
   useEffect(() => {
-    const handleIncomingCallNotification = (
-      notification: Notifications.Notification
-    ) => {
-      const data = notification.request.content.data;
-      if (data?.callId && data?.channelName) {
-        setIncomingCall({
-          callId: data.callId as string,
-          channelName: data.channelName as string,
-          callerName: (data.callerName as string) || "Panggilan Masuk",
-        });
-        navigationRef.current?.navigate("IncomingCall");
-      }
-    };
+    async function prepare() {
+      await SplashScreen.preventAutoHideAsync();
+      await loadToken();
+    }
+    prepare();
 
     const notificationListener = Notifications.addNotificationReceivedListener(
-      handleIncomingCallNotification
+      (notification) => {
+        const data = notification.request.content.data;
+        if (data?.callId && data?.channelName) {
+          setIncomingCall({
+            callId: data.callId as string,
+            channelName: data.channelName as string,
+            callerName: (data.callerName as string) || "Panggilan Masuk",
+          });
+          navigationRef.current?.navigate("IncomingCall");
+        }
+      }
     );
+
     const responseListener =
-      Notifications.addNotificationResponseReceivedListener((response) =>
-        handleIncomingCallNotification(response.notification)
-      );
+      Notifications.addNotificationResponseReceivedListener((response) => {});
 
     return () => {
       notificationListener.remove();
       responseListener.remove();
     };
-  }, [setIncomingCall]);
-
-  useEffect(() => {
-    async function prepare() {
-      try {
-        await SplashScreen.preventAutoHideAsync();
-      } finally {
-        setAppReady(true);
-      }
-    }
-    prepare();
-  }, []);
+  }, [loadToken, setIncomingCall]);
 
   const onLayoutRootView = useCallback(async () => {
-    if (isAppReady) await SplashScreen.hideAsync();
-  }, [isAppReady]);
+    if (!isLoading) {
+      await SplashScreen.hideAsync();
+    }
+  }, [isLoading]);
 
-  if (!isAppReady) return null;
+  if (isLoading) {
+    return <AnimatedSplashScreen onAnimationComplete={() => {}} />;
+  }
 
   return (
     <NavigationContainer
@@ -176,7 +188,11 @@ const RootNavigator = () => {
       theme={theme === "dark" ? MyDarkTheme : MyLightTheme}
     >
       {isSplashAnimationComplete ? (
-        <AppNavigator />
+        isAuthenticated ? (
+          <AppNavigator />
+        ) : (
+          <AuthNavigator />
+        )
       ) : (
         <AnimatedSplashScreen
           onAnimationComplete={() => setSplashAnimationComplete(true)}

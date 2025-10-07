@@ -1,5 +1,5 @@
 import { useRef, useState, useEffect, useCallback } from "react";
-import { Platform, PermissionsAndroid } from "react-native";
+import { Platform, PermissionsAndroid, Alert } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import {
   ClientRoleType,
@@ -8,12 +8,13 @@ import {
   ChannelProfileType,
 } from "react-native-agora";
 import { useCallStore } from "../store/callStore";
+import { socketService } from "../services/socketService";
 
 export const useAgoraCall = () => {
   const navigation = useNavigation();
   const agoraEngineRef = useRef<IRtcEngine | null>(null);
 
-  const { channelName, token, uid, clearCall } = useCallStore();
+  const { channelName, token, uid, callId, clearCall } = useCallStore();
 
   const [isJoined, setIsJoined] = useState(false);
   const [remoteUid, setRemoteUid] = useState(0);
@@ -38,13 +39,17 @@ export const useAgoraCall = () => {
       }
       setRemoteUid(0);
       setIsJoined(false);
+      console.log("Berhasil meninggalkan channel Agora.");
     } catch (e) {
-      console.log("Leave Error:", e);
+      console.error("Error saat meninggalkan channel:", e);
     }
   }, []);
 
   useEffect(() => {
     if (!channelName || !token || !uid) {
+      console.warn(
+        "Kredensial Agora tidak lengkap, panggilan tidak dapat dimulai."
+      );
       return;
     }
 
@@ -55,9 +60,21 @@ export const useAgoraCall = () => {
         const engine = agoraEngineRef.current;
 
         engine.registerEventHandler({
-          onJoinChannelSuccess: () => setIsJoined(true),
-          onUserJoined: (_connection, Uid) => setRemoteUid(Uid),
-          onUserOffline: () => setRemoteUid(0),
+          onJoinChannelSuccess: () => {
+            console.log("Berhasil bergabung ke channel.");
+            setIsJoined(true);
+          },
+          onUserJoined: (_connection, Uid) => {
+            console.log("Pengguna lain bergabung:", Uid);
+            setRemoteUid(Uid);
+          },
+          onUserOffline: () => {
+            console.log("Pengguna lain meninggalkan channel.");
+            setRemoteUid(0);
+          },
+          onError: (err) => {
+            console.error("Agora RTC Error:", err);
+          },
         });
 
         engine.initialize({
@@ -71,7 +88,12 @@ export const useAgoraCall = () => {
           clientRoleType: ClientRoleType.ClientRoleBroadcaster,
         });
       } catch (e) {
-        console.log("Setup & Join Error:", e);
+        console.error("Gagal melakukan setup & join channel Agora:", e);
+        Alert.alert(
+          "Gagal Terhubung",
+          "Tidak dapat terhubung ke server panggilan video."
+        );
+        handleLeave();
       }
     };
 
@@ -84,6 +106,9 @@ export const useAgoraCall = () => {
 
   const handleLeave = () => {
     leave();
+    if (callId) {
+      socketService.emit("end-call", { callId });
+    }
     clearCall();
     if (navigation.canGoBack()) {
       navigation.goBack();
@@ -91,18 +116,30 @@ export const useAgoraCall = () => {
   };
 
   const toggleMute = async () => {
-    await agoraEngineRef.current?.muteLocalAudioStream(!isMuted);
-    setIsMuted(!isMuted);
+    try {
+      await agoraEngineRef.current?.muteLocalAudioStream(!isMuted);
+      setIsMuted(!isMuted);
+    } catch (e) {
+      console.error("Gagal mengubah status mute:", e);
+    }
   };
 
   const toggleCamera = async () => {
-    const newCameraState = !isCameraOff;
-    await agoraEngineRef.current?.muteLocalVideoStream(newCameraState);
-    setIsCameraOff(newCameraState);
+    try {
+      const newCameraState = !isCameraOff;
+      await agoraEngineRef.current?.muteLocalVideoStream(newCameraState);
+      setIsCameraOff(newCameraState);
+    } catch (e) {
+      console.error("Gagal mengubah status kamera:", e);
+    }
   };
 
   const switchCamera = async () => {
-    await agoraEngineRef.current?.switchCamera();
+    try {
+      await agoraEngineRef.current?.switchCamera();
+    } catch (e) {
+      console.error("Gagal mengganti kamera:", e);
+    }
   };
 
   return {

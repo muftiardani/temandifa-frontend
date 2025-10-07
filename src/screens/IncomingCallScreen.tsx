@@ -1,16 +1,25 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 import { useAppTheme } from "../hooks/useAppTheme";
 import { useCallStore } from "../store/callStore";
 import { callService } from "../services/callService";
-import { ScreenNavigationProp } from "../types/navigation";
+import { AppNavigationProp } from "../types/navigation";
+import { socketService } from "../services/socketService";
 
 const IncomingCallScreen = () => {
   const { colors } = useAppTheme();
-  const navigation = useNavigation<ScreenNavigationProp>();
+  const navigation = useNavigation<AppNavigationProp>();
   const { callId, callerName, setCallCredentials, clearCall } = useCallStore();
+
+  const isReceivingCall = useCallStore((state) => state.isReceivingCall);
+
+  useEffect(() => {
+    if (!isReceivingCall) {
+      navigation.goBack();
+    }
+  }, [isReceivingCall, navigation]);
 
   const handleAccept = async () => {
     if (!callId) return;
@@ -22,21 +31,18 @@ const IncomingCallScreen = () => {
       } else {
         alert("Gagal menjawab, panggilan mungkin sudah berakhir.");
         clearCall();
-        navigation.goBack();
       }
     } catch (error) {
       alert("Gagal terhubung ke server.");
       clearCall();
-      navigation.goBack();
     }
   };
 
   const handleDecline = () => {
     if (callId) {
-      callService.end(callId);
+      socketService.emit("decline-call", { callId });
     }
     clearCall();
-    navigation.goBack();
   };
 
   return (
