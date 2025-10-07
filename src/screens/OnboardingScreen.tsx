@@ -17,12 +17,13 @@ import Animated, {
   Extrapolate,
 } from "react-native-reanimated";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-import { RootStackParamList } from "../types/navigation";
+import { RootNavigatorParamList } from "../types/navigation";
 import { useAppTheme } from "../hooks/useAppTheme";
 
 type OnboardingScreenProps = NativeStackScreenProps<
-  RootStackParamList,
+  RootNavigatorParamList,
   "Onboarding"
 >;
 
@@ -40,8 +41,14 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ navigation }) => {
     },
   });
 
-  const handleSkip = () => {
-    navigation.replace("Home");
+  const completeOnboarding = async () => {
+    try {
+      await AsyncStorage.setItem("@hasCompletedOnboarding", "true");
+      navigation.replace("Auth", { screen: "Login" });
+    } catch (e) {
+      console.error("Gagal menyimpan status onboarding", e);
+      navigation.replace("Auth", { screen: "Login" });
+    }
   };
 
   const handleNext = (currentIndex: number) => {
@@ -51,7 +58,7 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ navigation }) => {
         animated: true,
       });
     } else {
-      handleSkip();
+      completeOnboarding();
     }
   };
 
@@ -74,7 +81,9 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ navigation }) => {
 
         <TouchableOpacity
           style={[styles.button, { backgroundColor: colors.primary }]}
-          onPress={() => (isLastItem ? handleSkip() : handleNext(index))}
+          onPress={() =>
+            isLastItem ? completeOnboarding() : handleNext(index)
+          }
         >
           <Text style={styles.buttonText}>
             {isLastItem ? t.onboarding.getStarted : t.onboarding.next}
@@ -88,7 +97,7 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ navigation }) => {
     <SafeAreaView
       style={[styles.container, { backgroundColor: colors.background }]}
     >
-      <TouchableOpacity style={styles.skipButton} onPress={handleSkip}>
+      <TouchableOpacity style={styles.skipButton} onPress={completeOnboarding}>
         <Text style={[styles.skipText, { color: colors.grey }]}>
           {t.onboarding.skip}
         </Text>

@@ -1,4 +1,11 @@
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { NavigatorScreenParams } from "@react-navigation/native";
+
+export type RootNavigatorParamList = {
+  Onboarding: undefined;
+  Auth: NavigatorScreenParams<AuthStackParamList>;
+  App: NavigatorScreenParams<RootStackParamList>;
+};
 
 export type AuthStackParamList = {
   Login: undefined;
@@ -27,5 +34,5 @@ export type RootStackParamList = {
 };
 
 export type AppNavigationProp = NativeStackNavigationProp<
-  RootStackParamList & AuthStackParamList
+  RootStackParamList & AuthStackParamList & RootNavigatorParamList
 >;

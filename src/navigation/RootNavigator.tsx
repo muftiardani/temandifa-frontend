@@ -1,4 +1,5 @@
 import React, { useState, useCallback, useEffect, useRef } from "react";
+import { View } from "react-native";
 import {
   NavigationContainer,
   DefaultTheme,
@@ -8,8 +9,9 @@ import {
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import * as SplashScreen from "expo-splash-screen";
 import * as Notifications from "expo-notifications";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-import AnimatedSplashScreen from "../screens/AnimatedSplashScreen";
+import LoadingIndicator from "../components/common/LoadingIndicator";
 import OnboardingScreen from "../screens/OnboardingScreen";
 import HomeScreen from "../screens/HomeScreen";
 import CameraScreen from "../screens/CameraScreen";
@@ -27,7 +29,6 @@ import AboutScreen from "../screens/AboutScreen";
 import DialScreen from "../screens/DialScreen";
 import IncomingCallScreen from "../screens/IncomingCallScreen";
 import OutgoingCallScreen from "../screens/OutgoingCallScreen";
-
 import LoginScreen from "../screens/LoginScreen";
 import RegisterScreen from "../screens/RegisterScreen";
 import ForgotPasswordScreen from "../screens/ForgotPasswordScreen";
@@ -35,11 +36,15 @@ import ForgotPasswordScreen from "../screens/ForgotPasswordScreen";
 import { useAuthStore } from "../store/authStore";
 import { useAppStore } from "../store/appStore";
 import { useCallStore } from "../store/callStore";
-
-import { RootStackParamList, AuthStackParamList } from "../types/navigation";
+import {
+  RootStackParamList,
+  AuthStackParamList,
+  RootNavigatorParamList,
+} from "../types/navigation";
 import { lightColors, darkColors } from "../constants/Colors";
 
-const Stack = createNativeStackNavigator<RootStackParamList>();
+const RootStack = createNativeStackNavigator<RootNavigatorParamList>();
+const AppStack = createNativeStackNavigator<RootStackParamList>();
 const AuthStack = createNativeStackNavigator<AuthStackParamList>();
 
 const MyLightTheme = {
@@ -84,67 +89,73 @@ const AuthNavigator = () => (
 );
 
 const AppNavigator = () => (
-  <Stack.Navigator
-    initialRouteName="Onboarding"
+  <AppStack.Navigator
+    initialRouteName="Home"
     screenOptions={{ headerShown: false, animation: "slide_from_right" }}
   >
-    <Stack.Screen
-      name="Onboarding"
-      component={OnboardingScreen}
-      options={{ animation: "fade" }}
-    />
-    <Stack.Screen name="Home" component={HomeScreen} />
-    <Stack.Screen name="Camera" component={CameraScreen} />
-    <Stack.Screen name="Scan" component={ScanScreen} />
-    <Stack.Screen name="Voice" component={VoiceScreen} />
-    <Stack.Screen name="Settings" component={SettingsScreen} />
-    <Stack.Screen name="DocumentScanner" component={DocumentScannerScreen} />
-    <Stack.Screen name="Language" component={LanguageScreen} />
-    <Stack.Screen name="HelpAndGuide" component={HelpAndGuideScreen} />
-    <Stack.Screen
+    <AppStack.Screen name="Home" component={HomeScreen} />
+    <AppStack.Screen name="Camera" component={CameraScreen} />
+    <AppStack.Screen name="Scan" component={ScanScreen} />
+    <AppStack.Screen name="Voice" component={VoiceScreen} />
+    <AppStack.Screen name="Settings" component={SettingsScreen} />
+    <AppStack.Screen name="DocumentScanner" component={DocumentScannerScreen} />
+    <AppStack.Screen name="Language" component={LanguageScreen} />
+    <AppStack.Screen name="HelpAndGuide" component={HelpAndGuideScreen} />
+    <AppStack.Screen
       name="PrivacyAndSecurity"
       component={PrivacyAndSecurityScreen}
     />
-    <Stack.Screen name="About" component={AboutScreen} />
-    <Stack.Screen
+    <AppStack.Screen name="About" component={AboutScreen} />
+    <AppStack.Screen
       name="ScanResult"
       component={ScanResultScreen}
       options={{ animation: "fade_from_bottom" }}
     />
-    <Stack.Screen
+    <AppStack.Screen
       name="VoiceResult"
       component={VoiceResultScreen}
       options={{ animation: "fade_from_bottom" }}
     />
-    <Stack.Screen name="Dial" component={DialScreen} />
-    <Stack.Screen name="OutgoingCall" component={OutgoingCallScreen} />
-    <Stack.Screen
+    <AppStack.Screen name="Dial" component={DialScreen} />
+    <AppStack.Screen name="OutgoingCall" component={OutgoingCallScreen} />
+    <AppStack.Screen
       name="IncomingCall"
       component={IncomingCallScreen}
       options={{ animation: "fade_from_bottom" }}
     />
-    <Stack.Screen
+    <AppStack.Screen
       name="VideoCall"
       component={AgoraVideoCallScreen}
       options={{ animation: "fade_from_bottom" }}
     />
-  </Stack.Navigator>
+  </AppStack.Navigator>
 );
 
 const RootNavigator = () => {
-  const [isSplashAnimationComplete, setSplashAnimationComplete] =
-    useState(false);
+  const [isFirstLaunch, setIsFirstLaunch] = useState<boolean | null>(null);
   const theme = useAppStore((state) => state.theme);
   const { setIncomingCall } = useCallStore();
-  const navigationRef =
-    useRef<NavigationContainerRef<RootStackParamList>>(null);
-
-  const { isAuthenticated, isGuest, isLoading, loadToken } = useAuthStore();
+  const navigationRef = useRef<NavigationContainerRef<any>>(null);
+  const {
+    isAuthenticated,
+    isGuest,
+    isLoading: isAuthLoading,
+    loadToken,
+  } = useAuthStore();
 
   useEffect(() => {
     async function prepare() {
       await SplashScreen.preventAutoHideAsync();
-      await loadToken();
+      try {
+        const hasCompletedOnboarding = await AsyncStorage.getItem(
+          "@hasCompletedOnboarding"
+        );
+        setIsFirstLaunch(hasCompletedOnboarding !== "true");
+        await loadToken();
+      } catch (e) {
+        console.warn("Gagal menyiapkan aplikasi:", e);
+        setIsFirstLaunch(false);
+      }
     }
     prepare();
 
@@ -163,7 +174,17 @@ const RootNavigator = () => {
     );
 
     const responseListener =
-      Notifications.addNotificationResponseReceivedListener((response) => {});
+      Notifications.addNotificationResponseReceivedListener((response) => {
+        const data = response.notification.request.content.data;
+        if (data?.callId && data?.channelName) {
+          setIncomingCall({
+            callId: data.callId as string,
+            channelName: data.channelName as string,
+            callerName: (data.callerName as string) || "Panggilan Masuk",
+          });
+          navigationRef.current?.navigate("IncomingCall");
+        }
+      });
 
     return () => {
       notificationListener.remove();
@@ -172,13 +193,24 @@ const RootNavigator = () => {
   }, [loadToken, setIncomingCall]);
 
   const onLayoutRootView = useCallback(async () => {
-    if (!isLoading) {
+    if (!isAuthLoading && isFirstLaunch !== null) {
       await SplashScreen.hideAsync();
     }
-  }, [isLoading]);
+  }, [isAuthLoading, isFirstLaunch]);
 
-  if (isLoading) {
-    return <AnimatedSplashScreen onAnimationComplete={() => {}} />;
+  if (isAuthLoading || isFirstLaunch === null) {
+    return (
+      <View
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+          backgroundColor: lightColors.background,
+        }}
+      >
+        <LoadingIndicator />
+      </View>
+    );
   }
 
   return (
@@ -187,17 +219,15 @@ const RootNavigator = () => {
       onReady={onLayoutRootView}
       theme={theme === "dark" ? MyDarkTheme : MyLightTheme}
     >
-      {isSplashAnimationComplete ? (
-        isAuthenticated || isGuest ? (
-          <AppNavigator />
+      <RootStack.Navigator screenOptions={{ headerShown: false }}>
+        {isFirstLaunch ? (
+          <RootStack.Screen name="Onboarding" component={OnboardingScreen} />
+        ) : isAuthenticated || isGuest ? (
+          <RootStack.Screen name="App" component={AppNavigator} />
         ) : (
-          <AuthNavigator />
-        )
-      ) : (
-        <AnimatedSplashScreen
-          onAnimationComplete={() => setSplashAnimationComplete(true)}
-        />
-      )}
+          <RootStack.Screen name="Auth" component={AuthNavigator} />
+        )}
+      </RootStack.Navigator>
     </NavigationContainer>
   );
 };
