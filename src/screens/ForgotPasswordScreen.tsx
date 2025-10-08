@@ -13,6 +13,7 @@ import {
 } from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import Toast from "react-native-toast-message";
+import { useTranslation } from "react-i18next";
 import { useAppTheme } from "../hooks/useAppTheme";
 import { authService } from "../services/authService";
 import { AuthStackParamList } from "../types/navigation";
@@ -31,13 +32,14 @@ const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const { colors } = useAppTheme();
+  const { t } = useTranslation();
 
   const handleForgotPassword = async () => {
     if (!email.trim()) {
       Toast.show({
         type: "error",
-        text1: "Gagal",
-        text2: "Email harus diisi.",
+        text1: t("general.failure"),
+        text2: t("auth.allFieldsRequired"),
       });
       return;
     }
@@ -46,14 +48,14 @@ const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({
       await authService.forgotPassword(email);
       Toast.show({
         type: "success",
-        text1: "Berhasil",
-        text2: "Instruksi untuk mereset password telah dikirim ke email Anda.",
+        text1: t("general.success"), // Anda mungkin perlu menambahkan ini ke file i18n
+        text2: t("auth.sendInstructionsSuccess"), // Dan ini juga
       });
       navigation.goBack();
     } catch (error: any) {
       Toast.show({
         type: "error",
-        text1: "Gagal",
+        text1: t("general.failure"),
         text2: error.message,
       });
     } finally {
@@ -70,11 +72,10 @@ const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({
         <View style={styles.header}>
           <Image source={LOGO} style={styles.logo} />
           <Text style={[styles.title, { color: colors.text }]}>
-            Lupa Password?
+            {t("auth.forgotPasswordTitle")}
           </Text>
           <Text style={[styles.subtitle, { color: colors.grey }]}>
-            Jangan khawatir! Masukkan email Anda untuk menerima instruksi reset
-            password.
+            {t("auth.forgotPasswordSubtitle")}
           </Text>
         </View>
 
@@ -110,9 +111,9 @@ const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({
           disabled={isLoading}
         >
           {isLoading ? (
-            <ActivityIndicator color="#fff" />
+            <ActivityIndicator color={colors.white} />
           ) : (
-            <Text style={styles.buttonText}>Kirim Instruksi</Text>
+            <Text style={styles.buttonText}>{t("auth.sendInstructions")}</Text>
           )}
         </TouchableOpacity>
 
@@ -121,7 +122,7 @@ const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({
           style={styles.footer}
         >
           <Text style={[styles.footerText, { color: colors.primary }]}>
-            Kembali ke Login
+            {t("auth.backToLogin")}
           </Text>
         </TouchableOpacity>
       </ScrollView>

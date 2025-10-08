@@ -12,6 +12,7 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 import Toast from "react-native-toast-message";
+import { useTranslation } from "react-i18next";
 import { useAppTheme } from "../hooks/useAppTheme";
 import { callService } from "../services/callService";
 import { useCallStore } from "../store/callStore";
@@ -25,13 +26,14 @@ const DialScreen = () => {
   const navigation = useNavigation<AppNavigationProp>();
   const { setOutgoingCall } = useCallStore();
   const { contacts } = useContactStore();
+  const { t } = useTranslation();
 
   const handleInitiateCall = async (numberToCall: string) => {
     if (!numberToCall.trim()) {
       Toast.show({
         type: "error",
-        text1: "Gagal",
-        text2: "Nomor telepon tidak valid.",
+        text1: t("general.failure"),
+        text2: t("auth.invalidPhoneNumber"),
       });
       return;
     }
@@ -44,15 +46,15 @@ const DialScreen = () => {
       } else {
         Toast.show({
           type: "error",
-          text1: "Gagal Memanggil",
-          text2: data.message || "Terjadi kesalahan yang tidak diketahui.",
+          text1: t("general.failure"),
+          text2: data.message || t("general.genericError"),
         });
       }
     } catch (error: any) {
       Toast.show({
         type: "error",
-        text1: "Error Jaringan",
-        text2: error.message || "Gagal terhubung ke server.",
+        text1: t("general.error"),
+        text2: error.message || t("general.networkError"),
       });
     } finally {
       setIsLoading(false);
@@ -89,7 +91,7 @@ const DialScreen = () => {
           <Ionicons name="chevron-back" size={24} color={colors.text} />
         </TouchableOpacity>
         <Text style={[styles.headerTitle, { color: colors.headerText }]}>
-          Panggilan Video
+          {t("call.videoCall")}
         </Text>
       </View>
 
@@ -100,7 +102,7 @@ const DialScreen = () => {
         ListHeaderComponent={
           <View style={styles.manualDialContainer}>
             <Text style={[styles.title, { color: colors.text }]}>
-              Kontak Cepat
+              {t("call.quickContacts")}
             </Text>
             <TextInput
               style={[
@@ -111,7 +113,7 @@ const DialScreen = () => {
                   backgroundColor: colors.card,
                 },
               ]}
-              placeholder="Atau masukkan Nomor Telepon"
+              placeholder={t("call.orEnterPhoneNumber")}
               placeholderTextColor={colors.grey}
               keyboardType="phone-pad"
               value={phoneNumber}
@@ -127,11 +129,11 @@ const DialScreen = () => {
               disabled={isLoading}
             >
               {isLoading ? (
-                <ActivityIndicator color="#fff" />
+                <ActivityIndicator color={colors.white} />
               ) : (
                 <>
-                  <Ionicons name="call" size={20} color="#fff" />
-                  <Text style={styles.buttonText}>Panggil</Text>
+                  <Ionicons name="call" size={20} color={colors.white} />
+                  <Text style={styles.buttonText}>{t("call.call")}</Text>
                 </>
               )}
             </TouchableOpacity>
@@ -139,8 +141,8 @@ const DialScreen = () => {
         }
         ListEmptyComponent={
           contacts.length === 0 ? (
-            <Text style={styles.emptyText}>
-              Belum ada kontak darurat disimpan.
+            <Text style={[styles.emptyText, { color: colors.grey }]}>
+              {t("call.noEmergencyContacts")}
             </Text>
           ) : null
         }
@@ -206,7 +208,6 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginTop: 40,
     fontSize: 16,
-    color: "grey",
   },
 });
 

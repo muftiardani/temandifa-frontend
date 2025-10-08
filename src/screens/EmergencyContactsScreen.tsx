@@ -31,18 +31,18 @@ const EmergencyContactsScreen: React.FC<Props> = ({ navigation }) => {
       setName("");
       setPhoneNumber("");
     } else {
-      Alert.alert("Gagal", "Nama dan Nomor Telepon harus diisi.");
+      Alert.alert(t("dialogs.failed"), t("auth.allFieldsRequired"));
     }
   };
 
   const confirmRemove = (id: string) => {
     Alert.alert(
-      "Hapus Kontak",
-      "Apakah Anda yakin ingin menghapus kontak ini?",
+      t("dialogs.deleteContactTitle"),
+      t("dialogs.deleteContactMessage"),
       [
-        { text: "Batal", style: "cancel" },
+        { text: t("dialogs.cancel"), style: "cancel" },
         {
-          text: "Hapus",
+          text: t("dialogs.delete"),
           style: "destructive",
           onPress: () => removeContact(id),
         },
@@ -76,7 +76,7 @@ const EmergencyContactsScreen: React.FC<Props> = ({ navigation }) => {
           <Ionicons name="chevron-back" size={24} color={colors.text} />
         </TouchableOpacity>
         <Text style={[styles.headerTitle, { color: colors.headerText }]}>
-          Kontak Darurat
+          {t("settings.emergencyContacts")}
         </Text>
       </View>
 
@@ -86,7 +86,7 @@ const EmergencyContactsScreen: React.FC<Props> = ({ navigation }) => {
             styles.input,
             { color: colors.text, borderColor: colors.border },
           ]}
-          placeholder="Nama Kontak"
+          placeholder={t("contacts.contactName")}
           value={name}
           onChangeText={setName}
           placeholderTextColor={colors.grey}
@@ -96,7 +96,7 @@ const EmergencyContactsScreen: React.FC<Props> = ({ navigation }) => {
             styles.input,
             { color: colors.text, borderColor: colors.border },
           ]}
-          placeholder="Nomor Telepon"
+          placeholder={t("contacts.phoneNumber")}
           value={phoneNumber}
           onChangeText={setPhoneNumber}
           keyboardType="phone-pad"
@@ -106,7 +106,7 @@ const EmergencyContactsScreen: React.FC<Props> = ({ navigation }) => {
           style={[styles.addButton, { backgroundColor: colors.primary }]}
           onPress={handleAddContact}
         >
-          <Text style={styles.addButtonText}>Tambah Kontak</Text>
+          <Text style={styles.addButtonText}>{t("contacts.addContact")}</Text>
         </TouchableOpacity>
       </View>
 
@@ -117,7 +117,7 @@ const EmergencyContactsScreen: React.FC<Props> = ({ navigation }) => {
         contentContainerStyle={styles.listContainer}
         ListEmptyComponent={
           <Text style={{ textAlign: "center", color: colors.grey }}>
-            Belum ada kontak darurat.
+            {t("call.noEmergencyContacts")}
           </Text>
         }
       />

@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
+import { useTranslation } from "react-i18next";
 import { useAppTheme } from "../hooks/useAppTheme";
 import { useCallStore } from "../store/callStore";
 import { callService } from "../services/callService";
@@ -12,6 +13,7 @@ const IncomingCallScreen = () => {
   const { colors } = useAppTheme();
   const navigation = useNavigation<AppNavigationProp>();
   const { callId, callerName, setCallCredentials, clearCall } = useCallStore();
+  const { t } = useTranslation();
 
   const isReceivingCall = useCallStore((state) => state.isReceivingCall);
 
@@ -29,11 +31,11 @@ const IncomingCallScreen = () => {
         setCallCredentials(data);
         navigation.replace("VideoCall");
       } else {
-        alert("Gagal menjawab, panggilan mungkin sudah berakhir.");
+        alert(t("call.answerFailed"));
         clearCall();
       }
     } catch (error) {
-      alert("Gagal terhubung ke server.");
+      alert(t("call.connectionFailed"));
       clearCall();
     }
   };
@@ -46,10 +48,19 @@ const IncomingCallScreen = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <View
+      style={[
+        styles.container,
+        { backgroundColor: colors.incomingCallBackground },
+      ]}
+    >
       <View style={styles.infoContainer}>
-        <Text style={styles.callerName}>{callerName || "Panggilan Masuk"}</Text>
-        <Text style={styles.callType}>Panggilan Video TemanDifa</Text>
+        <Text style={[styles.callerName, { color: colors.white }]}>
+          {callerName || t("call.incomingCall")}
+        </Text>
+        <Text style={[styles.callType, { color: "rgba(255, 255, 255, 0.7)" }]}>
+          {t("call.temandifaVideoCall")}
+        </Text>
       </View>
       <View style={styles.buttonContainer}>
         <View style={styles.buttonWrapper}>
@@ -57,18 +68,22 @@ const IncomingCallScreen = () => {
             onPress={handleDecline}
             style={[styles.button, { backgroundColor: colors.danger }]}
           >
-            <Ionicons name="close" size={40} color="#fff" />
+            <Ionicons name="close" size={40} color={colors.white} />
           </TouchableOpacity>
-          <Text style={styles.buttonLabel}>Tolak</Text>
+          <Text style={[styles.buttonLabel, { color: colors.white }]}>
+            {t("call.decline")}
+          </Text>
         </View>
         <View style={styles.buttonWrapper}>
           <TouchableOpacity
             onPress={handleAccept}
             style={[styles.button, { backgroundColor: colors.success }]}
           >
-            <Ionicons name="call" size={32} color="#fff" />
+            <Ionicons name="call" size={32} color={colors.white} />
           </TouchableOpacity>
-          <Text style={styles.buttonLabel}>Terima</Text>
+          <Text style={[styles.buttonLabel, { color: colors.white }]}>
+            {t("call.accept")}
+          </Text>
         </View>
       </View>
     </View>
@@ -80,14 +95,13 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "space-between",
     alignItems: "center",
-    backgroundColor: "#1a2533",
     paddingVertical: 100,
   },
   infoContainer: {
     alignItems: "center",
   },
-  callerName: { fontSize: 32, color: "white", fontWeight: "bold" },
-  callType: { fontSize: 18, color: "rgba(255, 255, 255, 0.7)", marginTop: 10 },
+  callerName: { fontSize: 32, fontWeight: "bold" },
+  callType: { fontSize: 18, marginTop: 10 },
   buttonContainer: {
     flexDirection: "row",
     justifyContent: "space-around",
@@ -105,7 +119,6 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   buttonLabel: {
-    color: "white",
     fontSize: 16,
   },
 });

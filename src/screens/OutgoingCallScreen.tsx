@@ -8,13 +8,16 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
+import { useTranslation } from "react-i18next";
 import { useAppTheme } from "../hooks/useAppTheme";
 import { useCallStore } from "../store/callStore";
 import { socketService } from "../services/socketService";
+
 const OutgoingCallScreen = () => {
   const { colors } = useAppTheme();
   const navigation = useNavigation();
   const { callId, clearCall } = useCallStore();
+  const { t } = useTranslation();
 
   const isActive = useCallStore((state) => state.isActive);
 
@@ -32,17 +35,28 @@ const OutgoingCallScreen = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <View
+      style={[
+        styles.container,
+        { backgroundColor: colors.incomingCallBackground },
+      ]}
+    >
       <View style={styles.infoContainer}>
-        <ActivityIndicator size="large" color="#fff" />
-        <Text style={styles.statusText}>Memanggil...</Text>
-        <Text style={styles.calleeText}>Menunggu jawaban</Text>
+        <ActivityIndicator size="large" color={colors.white} />
+        <Text style={[styles.statusText, { color: colors.white }]}>
+          {t("call.calling")}
+        </Text>
+        <Text
+          style={[styles.calleeText, { color: "rgba(255, 255, 255, 0.7)" }]}
+        >
+          {t("call.waitingForAnswer")}
+        </Text>
       </View>
       <TouchableOpacity
         onPress={handleCancelCall}
         style={[styles.button, { backgroundColor: colors.danger }]}
       >
-        <Ionicons name="close" size={32} color="#fff" />
+        <Ionicons name="close" size={32} color={colors.white} />
       </TouchableOpacity>
     </View>
   );
@@ -53,7 +67,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "space-between",
     alignItems: "center",
-    backgroundColor: "#2c3e50",
     paddingVertical: 100,
   },
   infoContainer: {
@@ -61,13 +74,11 @@ const styles = StyleSheet.create({
   },
   statusText: {
     fontSize: 28,
-    color: "white",
     marginTop: 20,
     fontWeight: "bold",
   },
   calleeText: {
     fontSize: 18,
-    color: "rgba(255, 255, 255, 0.7)",
     marginTop: 10,
   },
   button: {

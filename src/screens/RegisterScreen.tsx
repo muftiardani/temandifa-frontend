@@ -12,6 +12,7 @@ import {
 } from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import Toast from "react-native-toast-message";
+import { useTranslation } from "react-i18next";
 import { useAppTheme } from "../hooks/useAppTheme";
 import { authService } from "../services/authService";
 import { useAuthStore } from "../store/authStore";
@@ -55,6 +56,7 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
 
   const { colors } = useAppTheme();
   const { setTokens } = useAuthStore();
+  const { t } = useTranslation();
 
   useEffect(() => {
     const isUsernameValid = username.length >= 3;
@@ -95,8 +97,8 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
     if (!isFormValid) {
       Toast.show({
         type: "error",
-        text1: "Gagal",
-        text2: "Harap periksa kembali semua kolom.",
+        text1: t("general.failure"),
+        text2: t("auth.pleaseCheckFields"),
       });
       return;
     }
@@ -113,7 +115,7 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
     } catch (error: any) {
       Toast.show({
         type: "error",
-        text1: "Registrasi Gagal",
+        text1: t("auth.registrationFailed"),
         text2: error.message,
       });
     } finally {
@@ -185,7 +187,7 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
           disabled={!isFormValid || isLoading}
         >
           {isLoading ? (
-            <ActivityIndicator color="#fff" />
+            <ActivityIndicator color={colors.white} />
           ) : (
             <Text style={styles.buttonText}>Daftar</Text>
           )}

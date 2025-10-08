@@ -88,7 +88,8 @@
     "helpAndGuide": "Panduan & Bantuan",
     "privacyAndSecurity": "Privasi & Keamanan",
     "about": "Tentang Aplikasi",
-    "appName": "TemanDifa"
+    "appName": "TemanDifa",
+    "emergencyContacts": "Kontak Darurat"
   },
   "general": {
     "back": "Kembali",
@@ -105,7 +106,14 @@
     "registrationFailed": "Registrasi Gagal",
     "pleaseCheckFields": "Harap periksa kembali semua kolom.",
     "invalidPhoneNumber": "Nomor telepon tidak valid.",
-    "loginFailed": "Login Gagal"
+    "loginFailed": "Login Gagal",
+    "sessionExpired": "Sesi Anda telah berakhir. Silakan login kembali secara manual.",
+    "biometricAuthFailed": "Autentikasi biometrik gagal.",
+    "forgotPasswordTitle": "Lupa Password?",
+    "forgotPasswordSubtitle": "Jangan khawatir! Masukkan email Anda untuk menerima instruksi reset password.",
+    "sendInstructions": "Kirim Instruksi",
+    "backToLogin": "Kembali ke Login",
+    "loginWithBiometrics": "Login dengan Biometrik"
   },
   "dialogs": {
     "deleteContactTitle": "Hapus Kontak",
@@ -113,5 +121,25 @@
     "cancel": "Batal",
     "delete": "Hapus",
     "failed": "Gagal"
+  },
+  "call": {
+    "videoCall": "Panggilan Video",
+    "incomingCall": "Panggilan Masuk",
+    "temandifaVideoCall": "Panggilan Video TemanDifa",
+    "calling": "Memanggil...",
+    "waitingForAnswer": "Menunggu jawaban",
+    "accept": "Terima",
+    "decline": "Tolak",
+    "answerFailed": "Gagal menjawab, panggilan mungkin sudah berakhir.",
+    "connectionFailed": "Gagal terhubung ke server.",
+    "quickContacts": "Kontak Cepat",
+    "orEnterPhoneNumber": "Atau masukkan Nomor Telepon",
+    "call": "Panggil",
+    "noEmergencyContacts": "Belum ada kontak darurat disimpan."
+  },
+  "contacts": {
+    "addContact": "Tambah Kontak",
+    "contactName": "Nama Kontak",
+    "phoneNumber": "Nomor Telepon"
   }
 }

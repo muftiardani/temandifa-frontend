@@ -14,6 +14,7 @@ import {
 } from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import Toast from "react-native-toast-message";
+import { useTranslation } from "react-i18next";
 import { useAppTheme } from "../hooks/useAppTheme";
 import { authService } from "../services/authService";
 import { useAuthStore } from "../store/authStore";
@@ -36,6 +37,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
   const { colors } = useAppTheme();
   const { setTokens, loginAsGuest, refreshAccessToken } = useAuthStore();
   const [isBiometricSupported, setIsBiometricSupported] = useState(false);
+  const { t } = useTranslation();
 
   const [request, response, promptAsync] = Google.useAuthRequest({
     clientId: process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID,
@@ -62,17 +64,17 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
     } else if (response?.type === "error") {
       Toast.show({
         type: "error",
-        text1: "Login Google Gagal",
-        text2: "Terjadi kesalahan saat mencoba login dengan Google.",
+        text1: t("auth.googleLoginFailed"),
+        text2: t("auth.googleLoginError"),
       });
     }
-  }, [response]);
+  }, [response, t]);
 
   const handleBiometricLogin = async () => {
     try {
       const biometricAuth = await LocalAuthentication.authenticateAsync({
-        promptMessage: "Login dengan Biometrik",
-        cancelLabel: "Batal",
+        promptMessage: t("auth.loginWithBiometrics"),
+        cancelLabel: t("dialogs.cancel"),
         disableDeviceFallback: true,
       });
 
@@ -80,17 +82,14 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
         setIsLoading(true);
         const newAccessToken = await refreshAccessToken();
         if (!newAccessToken) {
-          Alert.alert(
-            "Login Gagal",
-            "Sesi Anda telah berakhir. Silakan login kembali secara manual."
-          );
+          Alert.alert(t("auth.loginFailed"), t("auth.sessionExpired"));
         }
       }
     } catch (error) {
       Toast.show({
         type: "error",
         text1: "Error",
-        text2: "Autentikasi biometrik gagal.",
+        text2: t("auth.biometricAuthFailed"),
       });
     } finally {
       setIsLoading(false);
@@ -107,8 +106,8 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
     } catch (error: any) {
       Toast.show({
         type: "error",
-        text1: "Login Gagal",
-        text2: error.message || "Gagal mengautentikasi dengan server.",
+        text1: t("auth.loginFailed"),
+        text2: error.message || t("general.serverError"),
       });
     } finally {
       setIsLoading(false);
@@ -119,8 +118,8 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
     if (!login.trim() || !password.trim()) {
       Toast.show({
         type: "error",
-        text1: "Gagal",
-        text2: "Semua kolom harus diisi.",
+        text1: t("general.failure"),
+        text2: t("auth.allFieldsRequired"),
       });
       return;
     }
@@ -134,7 +133,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
     } catch (error: any) {
       Toast.show({
         type: "error",
-        text1: "Login Gagal",
+        text1: t("auth.loginFailed"),
         text2: error.message,
       });
     } finally {
@@ -150,7 +149,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
       <ScrollView contentContainerStyle={styles.container}>
         <TouchableOpacity style={styles.skipButton} onPress={loginAsGuest}>
           <Text style={[styles.skipText, { color: colors.primary }]}>
-            Lewati
+            {t("onboarding.skip")}
           </Text>
         </TouchableOpacity>
 
@@ -236,7 +235,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
           disabled={isLoading}
         >
           {isLoading ? (
-            <ActivityIndicator color="#fff" />
+            <ActivityIndicator color={colors.white} />
           ) : (
             <Text style={styles.buttonText}>Login</Text>
           )}

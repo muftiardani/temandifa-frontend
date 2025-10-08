@@ -88,7 +88,8 @@
     "helpAndGuide": "Help & Guide",
     "privacyAndSecurity": "Privacy & Security",
     "about": "About App",
-    "appName": "TemanDifa"
+    "appName": "TemanDifa",
+    "emergencyContacts": "Emergency Contacts"
   },
   "general": {
     "back": "Back",
@@ -105,7 +106,14 @@
     "registrationFailed": "Registration Failed",
     "pleaseCheckFields": "Please check all fields again.",
     "invalidPhoneNumber": "Invalid phone number.",
-    "loginFailed": "Login Failed"
+    "loginFailed": "Login Failed",
+    "sessionExpired": "Your session has expired. Please log in again manually.",
+    "biometricAuthFailed": "Biometric authentication failed.",
+    "forgotPasswordTitle": "Forgot Password?",
+    "forgotPasswordSubtitle": "Don't worry! Enter your email to receive password reset instructions.",
+    "sendInstructions": "Send Instructions",
+    "backToLogin": "Back to Login",
+    "loginWithBiometrics": "Login with Biometrics"
   },
   "dialogs": {
     "deleteContactTitle": "Delete Contact",
@@ -113,5 +121,25 @@
     "cancel": "Cancel",
     "delete": "Delete",
     "failed": "Failed"
+  },
+  "call": {
+    "videoCall": "Video Call",
+    "incomingCall": "Incoming Call",
+    "temandifaVideoCall": "TemanDifa Video Call",
+    "calling": "Calling...",
+    "waitingForAnswer": "Waiting for answer",
+    "accept": "Accept",
+    "decline": "Decline",
+    "answerFailed": "Failed to answer, the call may have ended.",
+    "connectionFailed": "Failed to connect to the server.",
+    "quickContacts": "Quick Contacts",
+    "orEnterPhoneNumber": "Or enter a Phone Number",
+    "call": "Call",
+    "noEmergencyContacts": "No emergency contacts saved yet."
+  },
+  "contacts": {
+    "addContact": "Add Contact",
+    "contactName": "Contact Name",
+    "phoneNumber": "Phone Number"
   }
 }

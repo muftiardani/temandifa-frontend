@@ -76,7 +76,10 @@ const SettingsScreen: React.FC<SettingsScreenProps> = ({ navigation }) => {
               {t("settings.darkMode")}
             </Text>
             <Switch
-              trackColor={{ false: "#767577", true: colors.primary }}
+              trackColor={{
+                false: colors.switchInactive,
+                true: colors.primary,
+              }}
               thumbColor={isDarkMode ? colors.white : "#f4f3f4"}
               ios_backgroundColor="#3e3e3e"
               onValueChange={toggleTheme}
@@ -125,7 +128,9 @@ const SettingsScreen: React.FC<SettingsScreenProps> = ({ navigation }) => {
             accessibilityHint={`Navigasi ke halaman ${t("settings.about")}`}
           />
         </View>
-        <Text style={styles.footerText}>{t("settings.appName")}</Text>
+        <Text style={[styles.footerText, { color: colors.footerText }]}>
+          {t("settings.appName")}
+        </Text>
       </View>
     </SafeAreaView>
   );
@@ -153,7 +158,6 @@ const styles = StyleSheet.create({
   itemLabel: { fontSize: 17 },
   footerText: {
     textAlign: "center",
-    color: "#8A8A8E",
     fontSize: 16,
     paddingBottom: 60,
   },
