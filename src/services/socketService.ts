@@ -7,7 +7,7 @@ let socket: Socket;
 
 export const socketService = {
   connect: () => {
-    const token = useAuthStore.getState().authToken;
+    const token = useAuthStore.getState().accessToken;
     if (socket || !token) return;
 
     if (!Config.api.baseUrl) {

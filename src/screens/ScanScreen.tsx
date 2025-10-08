@@ -21,7 +21,7 @@ import Animated, {
 import { useTranslation } from "react-i18next";
 
 import { RootStackParamList } from "../types/navigation";
-import { apiService } from "../services/api";
+import { apiService } from "../services/apiService";
 import LoadingIndicator from "../components/common/LoadingIndicator";
 import { useAppTheme } from "../hooks/useAppTheme";
 import { AnimationDurations } from "../constants/animations";

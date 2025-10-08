@@ -5,7 +5,7 @@ import * as Speech from "expo-speech";
 import { useNavigation } from "@react-navigation/native";
 import { useTranslation } from "react-i18next";
 import { AppNavigationProp } from "../types/navigation";
-import { apiService } from "../services/api";
+import { apiService } from "../services/apiService";
 
 export const useAudioRecorder = () => {
   const [recording, setRecording] = useState<Audio.Recording | null>(null);

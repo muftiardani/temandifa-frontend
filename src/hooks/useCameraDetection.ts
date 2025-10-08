@@ -6,7 +6,7 @@ import { useIsFocused } from "@react-navigation/native";
 import { useTranslation } from "react-i18next";
 
 import { useCameraStore } from "../store/cameraStore";
-import { apiService } from "../services/api";
+import { apiService } from "../services/apiService";
 import { useAppStore } from "../store/appStore";
 
 export const useCameraDetection = () => {

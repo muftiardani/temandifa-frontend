@@ -6,7 +6,7 @@ import { useNavigation, useIsFocused } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useTranslation } from "react-i18next";
 import { RootStackParamList } from "../types/navigation";
-import { apiService } from "../services/api";
+import { apiService } from "../services/apiService";
 import { useAppTheme } from "../hooks/useAppTheme";
 import { useAppStore } from "../store/appStore";
 
