@@ -97,5 +97,21 @@
     "networkError": "Gagal terhubung ke server. Periksa koneksi internet Anda.",
     "genericError": "Terjadi kesalahan. Silakan coba lagi nanti.",
     "serverError": "Terjadi kesalahan pada server."
+  },
+  "auth": {
+    "googleLoginFailed": "Login Google Gagal",
+    "googleLoginError": "Terjadi kesalahan saat mencoba login dengan Google.",
+    "allFieldsRequired": "Semua kolom harus diisi.",
+    "registrationFailed": "Registrasi Gagal",
+    "pleaseCheckFields": "Harap periksa kembali semua kolom.",
+    "invalidPhoneNumber": "Nomor telepon tidak valid.",
+    "loginFailed": "Login Gagal"
+  },
+  "dialogs": {
+    "deleteContactTitle": "Hapus Kontak",
+    "deleteContactMessage": "Apakah Anda yakin ingin menghapus kontak ini?",
+    "cancel": "Batal",
+    "delete": "Hapus",
+    "failed": "Gagal"
   }
 }

@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
-  TextInput,
   TouchableOpacity,
   StyleSheet,
   ActivityIndicator,
@@ -17,7 +16,7 @@ import { useAppTheme } from "../hooks/useAppTheme";
 import { authService } from "../services/authService";
 import { useAuthStore } from "../store/authStore";
 import { AuthStackParamList } from "../types/navigation";
-import { Ionicons } from "@expo/vector-icons";
+import ValidatedInput from "../components/common/ValidatedInput";
 
 type RegisterScreenProps = NativeStackScreenProps<
   AuthStackParamList,
@@ -138,70 +137,41 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
           </Text>
         </View>
 
-        <TextInput
-          style={[
-            styles.input,
-            {
-              color: colors.text,
-              borderColor: usernameError ? colors.danger : colors.border,
-            },
-          ]}
+        <ValidatedInput
+          icon="person-outline"
           placeholder="Username"
-          placeholderTextColor={colors.grey}
           value={username}
           onChangeText={handleUsernameChange}
           autoCapitalize="none"
+          error={usernameError}
         />
-        {usernameError ? (
-          <Text style={styles.errorText}>{usernameError}</Text>
-        ) : null}
 
-        <TextInput
-          style={[
-            styles.input,
-            {
-              color: colors.text,
-              borderColor: emailError ? colors.danger : colors.border,
-            },
-          ]}
+        <ValidatedInput
+          icon="mail-outline"
           placeholder="Email"
-          placeholderTextColor={colors.grey}
           value={email}
           onChangeText={handleEmailChange}
           keyboardType="email-address"
           autoCapitalize="none"
+          error={emailError}
         />
-        {emailError ? <Text style={styles.errorText}>{emailError}</Text> : null}
 
-        <TextInput
-          style={[
-            styles.input,
-            { color: colors.text, borderColor: colors.border },
-          ]}
+        <ValidatedInput
+          icon="call-outline"
           placeholder="Nomor Telepon (Opsional)"
-          placeholderTextColor={colors.grey}
           value={phoneNumber}
           onChangeText={setPhoneNumber}
           keyboardType="phone-pad"
         />
 
-        <TextInput
-          style={[
-            styles.input,
-            {
-              color: colors.text,
-              borderColor: passwordError ? colors.danger : colors.border,
-            },
-          ]}
+        <ValidatedInput
+          icon="lock-closed-outline"
           placeholder="Password"
-          placeholderTextColor={colors.grey}
           value={password}
           onChangeText={handlePasswordChange}
           secureTextEntry
+          error={passwordError}
         />
-        {passwordError ? (
-          <Text style={styles.errorText}>{passwordError}</Text>
-        ) : null}
 
         <TouchableOpacity
           style={[
@@ -257,21 +227,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     textAlign: "center",
     marginTop: 8,
-  },
-  input: {
-    width: "100%",
-    borderWidth: 1,
-    padding: 15,
-    borderRadius: 12,
-    fontSize: 16,
-    marginBottom: 5,
-    backgroundColor: "#fafafa",
-  },
-  errorText: {
-    color: "red",
-    alignSelf: "flex-start",
-    marginLeft: 5,
-    marginBottom: 10,
   },
   button: {
     width: "100%",

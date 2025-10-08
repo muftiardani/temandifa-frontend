@@ -29,10 +29,6 @@ const AnimatedSplashScreen: React.FC<Props> = ({
   }));
 
   useEffect(() => {
-    const onComplete = () => {
-      onAnimationComplete();
-    };
-
     scale.value = withTiming(1.5, {
       duration: AnimationDurations.splashScreenScale,
       easing: Easing.inOut(Easing.ease),
@@ -46,11 +42,11 @@ const AnimatedSplashScreen: React.FC<Props> = ({
       },
       (isFinished) => {
         if (isFinished) {
-          runOnJS(onComplete)();
+          runOnJS(onAnimationComplete)();
         }
       }
     );
-  }, [onAnimationComplete, scale, opacity]);
+  }, [onAnimationComplete]);
 
   return (
     <View style={styles.container} onLayout={onReady}>

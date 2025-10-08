@@ -51,47 +51,35 @@ export const useCameraDetection = () => {
     [t, language]
   );
 
-  const takePictureAndDetect = useCallback(
-    async (abortController: AbortController) => {
-      if (cameraRef.current && !useCameraStore.getState().isProcessing) {
-        setIsProcessing(true);
-        try {
-          const photo = await cameraRef.current.takePictureAsync({
-            quality: 0.2,
-            skipProcessing: true,
-          });
-          if (!photo?.uri) return;
+  const takePictureAndDetect = useCallback(async () => {
+    if (cameraRef.current && !useCameraStore.getState().isProcessing) {
+      setIsProcessing(true);
+      try {
+        const photo = await cameraRef.current.takePictureAsync({
+          quality: 0.2,
+          skipProcessing: true,
+        });
+        if (!photo?.uri) return;
 
-          const result = await apiService.detectObject(
-            photo.uri,
-            abortController.signal
-          );
-          if (result) {
-            setDetections(result);
-            speakTopObject(result);
-          }
-        } catch (error: any) {
-          if (error.name !== "AbortError") {
-            console.error("Gagal mendeteksi objek:", error);
-          }
-        } finally {
-          setIsProcessing(false);
+        const result = await apiService.detectObject(photo.uri);
+        if (result) {
+          setDetections(result);
+          speakTopObject(result);
         }
+      } catch (error: any) {
+        console.error("Gagal mendeteksi objek:", error);
+      } finally {
+        setIsProcessing(false);
       }
-    },
-    [setIsProcessing, setDetections, speakTopObject]
-  );
+    }
+  }, [setIsProcessing, setDetections, speakTopObject]);
 
   useEffect(() => {
-    const abortController = new AbortController();
     let intervalId: NodeJS.Timeout | null = null;
 
     const startInterval = () => {
       if (!intervalId)
-        intervalId = setInterval(
-          () => takePictureAndDetect(abortController),
-          2500
-        );
+        intervalId = setInterval(() => takePictureAndDetect(), 2500);
     };
     const stopInterval = () => {
       if (intervalId) {
@@ -114,7 +102,6 @@ export const useCameraDetection = () => {
 
     return () => {
       stopInterval();
-      abortController.abort();
       appStateSubscription.remove();
       clearDetections();
     };

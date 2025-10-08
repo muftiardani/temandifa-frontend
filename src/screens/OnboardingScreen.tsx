@@ -91,9 +91,7 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = () => {
 
         <TouchableOpacity
           style={[styles.button, { backgroundColor: colors.primary }]}
-          onPress={() =>
-            isLastItem ? handleFinishOnboarding() : handleNext(index)
-          }
+          onPress={() => handleNext(index)}
         >
           <Text style={styles.buttonText}>
             {isLastItem ? t("onboarding.getStarted") : t("onboarding.next")}

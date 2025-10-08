@@ -5,13 +5,13 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
-  Alert,
   SafeAreaView,
   ActivityIndicator,
   FlatList,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
+import Toast from "react-native-toast-message";
 import { useAppTheme } from "../hooks/useAppTheme";
 import { callService } from "../services/callService";
 import { useCallStore } from "../store/callStore";
@@ -28,7 +28,11 @@ const DialScreen = () => {
 
   const handleInitiateCall = async (numberToCall: string) => {
     if (!numberToCall.trim()) {
-      Alert.alert("Gagal", "Nomor telepon tidak valid.");
+      Toast.show({
+        type: "error",
+        text1: "Gagal",
+        text2: "Nomor telepon tidak valid.",
+      });
       return;
     }
     setIsLoading(true);
@@ -38,16 +42,18 @@ const DialScreen = () => {
         setOutgoingCall(data);
         navigation.replace("OutgoingCall");
       } else {
-        Alert.alert(
-          "Gagal Memanggil",
-          data.message || "Terjadi kesalahan yang tidak diketahui."
-        );
+        Toast.show({
+          type: "error",
+          text1: "Gagal Memanggil",
+          text2: data.message || "Terjadi kesalahan yang tidak diketahui.",
+        });
       }
     } catch (error: any) {
-      Alert.alert(
-        "Error Jaringan",
-        error.message || "Gagal terhubung ke server."
-      );
+      Toast.show({
+        type: "error",
+        text1: "Error Jaringan",
+        text2: error.message || "Gagal terhubung ke server.",
+      });
     } finally {
       setIsLoading(false);
     }

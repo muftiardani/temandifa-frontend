@@ -22,6 +22,9 @@ export const lightColors = {
   switchInactive: "#767577",
   white: "#FFFFFF",
   black: "#000000",
+  error: "red",
+  footerText: "#8A8A8E",
+  incomingCallBackground: "#1a2533",
 };
 
 export const darkColors = {
@@ -39,4 +42,7 @@ export const darkColors = {
   switchInactive: "#767577",
   white: "#FFFFFF",
   black: "#000000",
+  error: "#ff4d4d",
+  footerText: "#8A8A8E",
+  incomingCallBackground: "#1a2533",
 };
