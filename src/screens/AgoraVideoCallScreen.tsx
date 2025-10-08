@@ -86,21 +86,39 @@ const AgoraVideoCallScreen = () => {
       )}
 
       <Animated.View style={[styles.controls, animatedControlsStyle]}>
-        <TouchableOpacity style={styles.iconButton} onPress={toggleCamera}>
+        <TouchableOpacity
+          style={[
+            styles.iconButton,
+            { backgroundColor: colors.controlBackground },
+          ]}
+          onPress={toggleCamera}
+        >
           <Ionicons
             name={isCameraOff ? "videocam-off" : "videocam"}
             size={28}
             color={colors.white}
           />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.iconButton} onPress={toggleMute}>
+        <TouchableOpacity
+          style={[
+            styles.iconButton,
+            { backgroundColor: colors.controlBackground },
+          ]}
+          onPress={toggleMute}
+        >
           <Ionicons
             name={isMuted ? "mic-off" : "mic"}
             size={28}
             color={colors.white}
           />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.iconButton} onPress={switchCamera}>
+        <TouchableOpacity
+          style={[
+            styles.iconButton,
+            { backgroundColor: colors.controlBackground },
+          ]}
+          onPress={switchCamera}
+        >
           <Ionicons name="camera-reverse" size={28} color={colors.white} />
         </TouchableOpacity>
         <TouchableOpacity
@@ -144,7 +162,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   iconButton: {
-    backgroundColor: "rgba(0, 0, 0, 0.4)",
     width: 60,
     height: 60,
     borderRadius: 30,

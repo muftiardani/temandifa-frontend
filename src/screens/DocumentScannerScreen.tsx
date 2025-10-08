@@ -69,9 +69,9 @@ export default function DocumentScannerScreen() {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: colors.overlay }]}>
       <ActivityIndicator size="large" color={colors.primary} />
-      <Text style={styles.statusText}>
+      <Text style={[styles.statusText, { color: colors.white }]}>
         {isProcessing
           ? t("scanResult.imageProcessing")
           : t("scanResult.scannerOpening")}
@@ -85,11 +85,9 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "rgba(0,0,0,0.5)",
   },
   statusText: {
     marginTop: 20,
     fontSize: 16,
-    color: "#FFFFFF",
   },
 });

@@ -32,17 +32,8 @@ const validateEmail = (email: string) => {
   return re.test(String(email).toLowerCase());
 };
 
-const validatePassword = (password: string) => {
-  if (password.length < 8) return "Password minimal 8 karakter.";
-  if (!/\d/.test(password)) return "Password harus mengandung angka.";
-  if (!/[a-z]/.test(password)) return "Password harus mengandung huruf kecil.";
-  if (!/[A-Z]/.test(password)) return "Password harus mengandung huruf besar.";
-  if (!/[!@#$%^&*(),.?":{}|<>]/.test(password))
-    return "Password harus mengandung simbol.";
-  return "";
-};
-
 const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
+  const { t } = useTranslation();
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -56,7 +47,16 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
 
   const { colors } = useAppTheme();
   const { setTokens } = useAuthStore();
-  const { t } = useTranslation();
+
+  const validatePassword = (password: string) => {
+    if (password.length < 8) return t("auth.passwordMin8Chars");
+    if (!/\d/.test(password)) return t("auth.passwordNeedsNumber");
+    if (!/[a-z]/.test(password)) return t("auth.passwordNeedsLowercase");
+    if (!/[A-Z]/.test(password)) return t("auth.passwordNeedsUppercase");
+    if (!/[!@#$%^&*(),.?":{}|<>]/.test(password))
+      return t("auth.passwordNeedsSymbol");
+    return "";
+  };
 
   useEffect(() => {
     const isUsernameValid = username.length >= 3;
@@ -69,7 +69,7 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
   const handleUsernameChange = (text: string) => {
     setUsername(text);
     if (text.length > 0 && text.length < 3) {
-      setUsernameError("Username minimal 3 karakter.");
+      setUsernameError(t("auth.usernameMinChars"));
     } else {
       setUsernameError("");
     }
@@ -78,7 +78,7 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
   const handleEmailChange = (text: string) => {
     setEmail(text);
     if (text.length > 0 && !validateEmail(text)) {
-      setEmailError("Format email tidak valid.");
+      setEmailError(t("auth.invalidEmail"));
     } else {
       setEmailError("");
     }
@@ -132,16 +132,16 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
         <View style={styles.header}>
           <Image source={LOGO} style={styles.logo} />
           <Text style={[styles.title, { color: colors.text }]}>
-            Buat Akun Baru
+            {t("auth.createAccount")}
           </Text>
           <Text style={[styles.subtitle, { color: colors.grey }]}>
-            Isi data diri untuk memulai
+            {t("auth.fillData")}
           </Text>
         </View>
 
         <ValidatedInput
           icon="person-outline"
-          placeholder="Username"
+          placeholder={t("auth.username")}
           value={username}
           onChangeText={handleUsernameChange}
           autoCapitalize="none"
@@ -150,7 +150,7 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
 
         <ValidatedInput
           icon="mail-outline"
-          placeholder="Email"
+          placeholder={t("auth.email")}
           value={email}
           onChangeText={handleEmailChange}
           keyboardType="email-address"
@@ -160,7 +160,10 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
 
         <ValidatedInput
           icon="call-outline"
-          placeholder="Nomor Telepon (Opsional)"
+          placeholder={`${t("contacts.phoneNumber")} (${t(
+            "general.optional",
+            "Opsional"
+          )})`}
           value={phoneNumber}
           onChangeText={setPhoneNumber}
           keyboardType="phone-pad"
@@ -168,7 +171,7 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
 
         <ValidatedInput
           icon="lock-closed-outline"
-          placeholder="Password"
+          placeholder={t("auth.password")}
           value={password}
           onChangeText={handlePasswordChange}
           secureTextEntry
@@ -189,7 +192,7 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
           {isLoading ? (
             <ActivityIndicator color={colors.white} />
           ) : (
-            <Text style={styles.buttonText}>Daftar</Text>
+            <Text style={styles.buttonText}>{t("auth.register")}</Text>
           )}
         </TouchableOpacity>
 
@@ -198,9 +201,9 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
           style={styles.footer}
         >
           <Text style={[styles.footerText, { color: colors.grey }]}>
-            Sudah punya akun?{" "}
+            {t("auth.haveAccount")}
             <Text style={{ color: colors.primary, fontWeight: "bold" }}>
-              Login
+              {t("auth.login")}
             </Text>
           </Text>
         </TouchableOpacity>

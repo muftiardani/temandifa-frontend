@@ -8,6 +8,7 @@ import Animated, {
   runOnJS,
 } from "react-native-reanimated";
 import { AnimationDurations } from "../constants/animations";
+import { useAppTheme } from "../hooks/useAppTheme";
 
 const SPLASH_ICON = require("../../assets/splash-icon.png");
 
@@ -20,6 +21,7 @@ const AnimatedSplashScreen: React.FC<Props> = ({
   onAnimationComplete,
   onReady,
 }) => {
+  const { colors } = useAppTheme();
   const scale = useSharedValue(1);
   const opacity = useSharedValue(1);
 
@@ -49,7 +51,10 @@ const AnimatedSplashScreen: React.FC<Props> = ({
   }, [onAnimationComplete]);
 
   return (
-    <View style={styles.container} onLayout={onReady}>
+    <View
+      style={[styles.container, { backgroundColor: colors.background }]}
+      onLayout={onReady}
+    >
       <Animated.Image
         source={SPLASH_ICON}
         style={[styles.image, animatedStyle]}
@@ -62,7 +67,6 @@ const AnimatedSplashScreen: React.FC<Props> = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#ffffff",
     justifyContent: "center",
     alignItems: "center",
   },

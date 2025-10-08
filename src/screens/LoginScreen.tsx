@@ -31,13 +31,13 @@ const LOGO = require("../../assets/icon.png");
 type LoginScreenProps = NativeStackScreenProps<AuthStackParamList, "Login">;
 
 const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
+  const { t } = useTranslation();
   const [login, setLogin] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const { colors } = useAppTheme();
   const { setTokens, loginAsGuest, refreshAccessToken } = useAuthStore();
   const [isBiometricSupported, setIsBiometricSupported] = useState(false);
-  const { t } = useTranslation();
 
   const [request, response, promptAsync] = Google.useAuthRequest({
     clientId: process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID,
@@ -88,7 +88,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
     } catch (error) {
       Toast.show({
         type: "error",
-        text1: "Error",
+        text1: t("general.error"),
         text2: t("auth.biometricAuthFailed"),
       });
     } finally {
@@ -156,10 +156,10 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
         <View style={styles.header}>
           <Image source={LOGO} style={styles.logo} />
           <Text style={[styles.title, { color: colors.text }]}>
-            Selamat Datang Kembali
+            {t("auth.welcomeBack")}
           </Text>
           <Text style={[styles.subtitle, { color: colors.grey }]}>
-            Login untuk melanjutkan
+            {t("auth.loginToContinue")}
           </Text>
         </View>
 
@@ -177,7 +177,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
           />
           <TextInput
             style={[styles.input, { color: colors.text }]}
-            placeholder="Username atau Email"
+            placeholder={t("auth.usernameOrEmail")}
             placeholderTextColor={colors.grey}
             value={login}
             onChangeText={setLogin}
@@ -207,7 +207,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
           />
           <TextInput
             style={[styles.input, { color: colors.text }]}
-            placeholder="Password"
+            placeholder={t("auth.password")}
             placeholderTextColor={colors.grey}
             value={password}
             onChangeText={setPassword}
@@ -222,7 +222,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
               { color: colors.primary, textAlign: "right", marginBottom: 20 },
             ]}
           >
-            Lupa Password?
+            {t("auth.forgotPassword")}
           </Text>
         </TouchableOpacity>
 
@@ -237,13 +237,15 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
           {isLoading ? (
             <ActivityIndicator color={colors.white} />
           ) : (
-            <Text style={styles.buttonText}>Login</Text>
+            <Text style={styles.buttonText}>{t("auth.login")}</Text>
           )}
         </TouchableOpacity>
 
         <View style={styles.dividerContainer}>
           <View style={[styles.divider, { backgroundColor: colors.border }]} />
-          <Text style={[styles.dividerText, { color: colors.grey }]}>ATAU</Text>
+          <Text style={[styles.dividerText, { color: colors.grey }]}>
+            {t("auth.or")}
+          </Text>
           <View style={[styles.divider, { backgroundColor: colors.border }]} />
         </View>
 
@@ -254,7 +256,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
         >
           <Ionicons name="logo-google" size={24} color={colors.text} />
           <Text style={[styles.socialButtonText, { color: colors.text }]}>
-            Lanjutkan dengan Google
+            {t("auth.continueWithGoogle")}
           </Text>
         </TouchableOpacity>
 
@@ -263,9 +265,9 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
           style={styles.footer}
         >
           <Text style={[styles.footerText, { color: colors.grey }]}>
-            Belum punya akun?{" "}
+            {t("auth.noAccount")}
             <Text style={{ color: colors.primary, fontWeight: "bold" }}>
-              Daftar
+              {t("auth.register")}
             </Text>
           </Text>
         </TouchableOpacity>

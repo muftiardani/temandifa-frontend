@@ -58,17 +58,13 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
     if (isAuthenticated) {
       navigation.navigate("Dial");
     } else {
-      Alert.alert(
-        "Fitur Khusus Pengguna",
-        "Anda harus mendaftar atau login untuk menggunakan fitur Panggilan.",
-        [
-          { text: "Nanti Saja", style: "cancel" },
-          {
-            text: "Login Sekarang",
-            onPress: () => useAuthStore.getState().logout(),
-          },
-        ]
-      );
+      Alert.alert(t("auth.premiumFeature"), t("auth.premiumFeatureMessage"), [
+        { text: t("auth.later"), style: "cancel" },
+        {
+          text: t("auth.loginNow"),
+          onPress: () => useAuthStore.getState().logout(),
+        },
+      ]);
     }
   };
 
@@ -112,7 +108,12 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
         </View>
 
         <View style={styles.bottomBar}>
-          <View style={styles.helpSettingsContainer}>
+          <View
+            style={[
+              styles.helpSettingsContainer,
+              { backgroundColor: colors.darkGrey },
+            ]}
+          >
             <TouchableOpacity
               onPress={() => navigation.navigate("HelpAndGuide")}
               accessibilityLabel={t("home.helpButton")}
@@ -141,10 +142,11 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
           <TouchableOpacity
             style={[
               styles.emergencyButton,
+              { backgroundColor: colors.danger },
               !isAuthenticated && { backgroundColor: colors.darkGrey },
             ]}
             onPress={handleVideoCallPress}
-            accessibilityLabel="Panggilan Video"
+            accessibilityLabel={t("home.emergencyButton")}
             accessibilityHint={
               isAuthenticated
                 ? "Membuka layar untuk memulai panggilan video"
@@ -179,14 +181,12 @@ const styles = StyleSheet.create({
   helpSettingsContainer: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#383D3B",
     borderRadius: 50,
     height: 75,
     paddingHorizontal: 30,
     gap: 25,
   },
   emergencyButton: {
-    backgroundColor: "#CC444B",
     width: 75,
     height: 75,
     borderRadius: 37.5,

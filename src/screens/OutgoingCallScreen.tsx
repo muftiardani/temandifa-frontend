@@ -38,7 +38,7 @@ const OutgoingCallScreen = () => {
     <View
       style={[
         styles.container,
-        { backgroundColor: colors.incomingCallBackground },
+        { backgroundColor: colors.outgoingCallBackground },
       ]}
     >
       <View style={styles.infoContainer}>

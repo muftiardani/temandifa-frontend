@@ -43,7 +43,12 @@ export default function CameraScreen() {
           },
         ]}
       >
-        <Text style={[styles.bboxLabel, { backgroundColor: colors.primary }]}>
+        <Text
+          style={[
+            styles.bboxLabel,
+            { backgroundColor: colors.primary, color: colors.white },
+          ]}
+        >
           {`${detection.class} (${(detection.confidence * 100).toFixed(0)}%)`}
         </Text>
       </View>
@@ -88,7 +93,7 @@ export default function CameraScreen() {
           accessibilityLabel={`${t("permissions.grantPermission")}. Tombol`}
           accessibilityRole="button"
         >
-          <Text style={styles.buttonText}>
+          <Text style={[styles.buttonText, { color: colors.white }]}>
             {t("permissions.grantPermission")}
           </Text>
         </TouchableOpacity>
@@ -97,7 +102,7 @@ export default function CameraScreen() {
   }
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: colors.black }]}>
       {isFocused && (
         <CameraView style={styles.camera} facing="back" ref={cameraRef} />
       )}
@@ -109,7 +114,10 @@ export default function CameraScreen() {
             { backgroundColor: isProcessing ? colors.warning : colors.success },
           ]}
         />
-        <Text style={styles.statusText} accessibilityLiveRegion="polite">
+        <Text
+          style={[styles.statusText, { color: colors.white }]}
+          accessibilityLiveRegion="polite"
+        >
           {isProcessing
             ? t("cameraScreen.processing")
             : t("cameraScreen.ready")}
@@ -133,7 +141,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#000",
   },
   camera: { width: CAM_PREVIEW_WIDTH, height: CAM_PREVIEW_HEIGHT },
   permissionContainer: {
@@ -158,7 +165,6 @@ const styles = StyleSheet.create({
   },
   bbox: { position: "absolute", borderWidth: 2, borderRadius: 5 },
   bboxLabel: {
-    color: "#fff",
     fontSize: 12,
     padding: 2,
     position: "absolute",
@@ -187,5 +193,5 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
   statusDot: { width: 10, height: 10, borderRadius: 5, marginRight: 8 },
-  statusText: { color: "#fff", fontSize: 12 },
+  statusText: { fontSize: 12 },
 });
