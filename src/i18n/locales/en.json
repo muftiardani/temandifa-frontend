@@ -1,0 +1,101 @@
+{
+  "greetings": {
+    "morning": "Good Morning",
+    "afternoon": "Good Afternoon",
+    "evening": "Good Evening",
+    "night": "Good Night"
+  },
+  "home": {
+    "subtitle": "How can I help you today?",
+    "cameraButton": "Camera",
+    "scanButton": "Scan",
+    "voiceButton": "Voice",
+    "helpButton": "Help",
+    "settingsButton": "Settings",
+    "emergencyButton": "Emergency Call"
+  },
+  "onboarding": {
+    "slides": [
+      {
+        "key": "1",
+        "icon": "camera-outline",
+        "title": "Object Detection",
+        "description": "Point your camera to identify objects around you in real-time."
+      },
+      {
+        "key": "2",
+        "icon": "scan-outline",
+        "title": "Scan Text & Voice",
+        "description": "Convert text from images or voice recordings into a format you can listen to."
+      },
+      {
+        "key": "3",
+        "icon": "call-outline",
+        "title": "Emergency Call",
+        "description": "Quickly contact your emergency contacts through an integrated video call."
+      }
+    ],
+    "skip": "Skip",
+    "next": "Next",
+    "getStarted": "Get Started"
+  },
+  "permissions": {
+    "camera": "We need your permission to use the camera",
+    "microphone": "We need your permission to use the microphone",
+    "gallery": "You need to grant gallery permissions to use this feature.",
+    "grantPermission": "Grant Permission",
+    "cameraDenied": "Camera permission is disabled. Please enable it in the phone settings.",
+    "microphoneDenied": "Microphone permission is disabled. Please enable it in the phone settings."
+  },
+  "cameraScreen": {
+    "processing": "Processing...",
+    "ready": "Ready",
+    "done": "Done",
+    "objectInFront": "In front is {{objectName}}"
+  },
+  "scanScreen": {
+    "title": "Scan Document",
+    "placeholder": "Select a scanning method",
+    "camera": "Camera",
+    "upload": "Upload",
+    "processing": "Processing..."
+  },
+  "scanResult": {
+    "title": "Scan Result",
+    "noTextDetected": "No text detected.",
+    "listen": "Listen",
+    "stop": "Stop",
+    "imageProcessing": "Processing image...",
+    "scannerOpening": "Opening scanner...",
+    "imageProcessingFailed": "Failed to process image, please try again.",
+    "imageTakenProcessing": "Image taken, processing"
+  },
+  "voiceScreen": {
+    "title": "Voice",
+    "infoProcessing": "Converting voice to text...",
+    "infoListening": "Listening...",
+    "infoDefault": "Press the button to speak",
+    "recordingFailed": "Failed to start recording. Make sure microphone permission is granted."
+  },
+  "voiceResult": {
+    "title": "Voice Result"
+  },
+  "settings": {
+    "title": "Settings",
+    "theme": "Theme",
+    "darkMode": "Dark Mode",
+    "language": "Language",
+    "helpAndGuide": "Help & Guide",
+    "privacyAndSecurity": "Privacy & Security",
+    "about": "About App",
+    "appName": "TemanDifa"
+  },
+  "general": {
+    "back": "Back",
+    "error": "Error",
+    "failure": "Failed",
+    "networkError": "Failed to connect to the server. Check your internet connection.",
+    "genericError": "An error occurred. Please try again later.",
+    "serverError": "An error occurred on the server."
+  }
+}

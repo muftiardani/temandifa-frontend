@@ -8,6 +8,7 @@ import {
 } from "react-native";
 import { CameraView } from "expo-camera";
 import { useNavigation } from "@react-navigation/native";
+import { useTranslation } from "react-i18next";
 import { useCameraDetection } from "../hooks/useCameraDetection";
 import { useAppTheme } from "../hooks/useAppTheme";
 
@@ -16,7 +17,8 @@ const CAM_PREVIEW_HEIGHT = Dimensions.get("window").height;
 
 export default function CameraScreen() {
   const navigation = useNavigation();
-  const { t, colors } = useAppTheme();
+  const { t } = useTranslation();
+  const { colors } = useAppTheme();
   const {
     permission,
     requestPermission,
@@ -64,7 +66,7 @@ export default function CameraScreen() {
           ]}
         >
           <Text style={[styles.permissionText, { color: colors.text }]}>
-            {t.permissions.cameraDenied}
+            {t("permissions.cameraDenied")}
           </Text>
         </View>
       );
@@ -78,15 +80,17 @@ export default function CameraScreen() {
         ]}
       >
         <Text style={[styles.permissionText, { color: colors.text }]}>
-          {t.permissions.camera}
+          {t("permissions.camera")}
         </Text>
         <TouchableOpacity
           onPress={requestPermission}
           style={[styles.permissionButton, { backgroundColor: colors.primary }]}
-          accessibilityLabel={`${t.permissions.grantPermission}. Tombol`}
+          accessibilityLabel={`${t("permissions.grantPermission")}. Tombol`}
           accessibilityRole="button"
         >
-          <Text style={styles.buttonText}>{t.permissions.grantPermission}</Text>
+          <Text style={styles.buttonText}>
+            {t("permissions.grantPermission")}
+          </Text>
         </TouchableOpacity>
       </View>
     );
@@ -106,17 +110,19 @@ export default function CameraScreen() {
           ]}
         />
         <Text style={styles.statusText} accessibilityLiveRegion="polite">
-          {isProcessing ? t.cameraScreen.processing : t.cameraScreen.ready}
+          {isProcessing
+            ? t("cameraScreen.processing")
+            : t("cameraScreen.ready")}
         </Text>
       </View>
       <TouchableOpacity
         style={styles.doneButton}
         onPress={() => navigation.goBack()}
-        accessibilityLabel={`${t.cameraScreen.done}. Tombol`}
+        accessibilityLabel={`${t("cameraScreen.done")}. Tombol`}
         accessibilityHint="Kembali ke layar utama"
         accessibilityRole="button"
       >
-        <Text style={styles.doneButtonText}>{t.cameraScreen.done}</Text>
+        <Text style={styles.doneButtonText}>{t("cameraScreen.done")}</Text>
       </TouchableOpacity>
     </View>
   );

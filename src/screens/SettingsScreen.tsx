@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { useTranslation } from "react-i18next";
 import { RootStackParamList } from "../types/navigation";
 import { useAppStore } from "../store/appStore";
 import { useAppTheme } from "../hooks/useAppTheme";
@@ -47,7 +48,8 @@ const SettingsItem = React.memo(
 
 const SettingsScreen: React.FC<SettingsScreenProps> = ({ navigation }) => {
   const { toggleTheme } = useAppStore();
-  const { t, colors, theme } = useAppTheme();
+  const { t } = useTranslation();
+  const { colors, theme } = useAppTheme();
   const isDarkMode = theme === "dark";
 
   return (
@@ -57,13 +59,13 @@ const SettingsScreen: React.FC<SettingsScreenProps> = ({ navigation }) => {
           <TouchableOpacity
             onPress={() => navigation.goBack()}
             style={styles.backButton}
-            accessibilityLabel={t.general.back}
+            accessibilityLabel={t("general.back")}
             accessibilityRole="button"
           >
             <Ionicons name="chevron-back" size={24} color={colors.text} />
           </TouchableOpacity>
           <Text style={[styles.headerTitle, { color: colors.headerText }]}>
-            {t.settings.title}
+            {t("settings.title")}
           </Text>
         </View>
         <View style={styles.listContainer}>
@@ -71,7 +73,7 @@ const SettingsScreen: React.FC<SettingsScreenProps> = ({ navigation }) => {
             style={[styles.itemContainer, { borderBottomColor: colors.border }]}
           >
             <Text style={[styles.itemLabel, { color: colors.text }]}>
-              {t.settings.darkMode}
+              {t("settings.darkMode")}
             </Text>
             <Switch
               trackColor={{ false: "#767577", true: colors.primary }}
@@ -79,40 +81,44 @@ const SettingsScreen: React.FC<SettingsScreenProps> = ({ navigation }) => {
               ios_backgroundColor="#3e3e3e"
               onValueChange={toggleTheme}
               value={isDarkMode}
-              accessibilityLabel={t.settings.darkMode}
+              accessibilityLabel={t("settings.darkMode")}
               accessibilityRole="switch"
             />
           </View>
           <SettingsItem
-            label={t.settings.language}
+            label={t("settings.language")}
             onPress={() => navigation.navigate("Language")}
             textColor={colors.text}
             borderColor={colors.border}
-            accessibilityHint={`Navigasi ke halaman ${t.settings.language}`}
+            accessibilityHint={`Navigasi ke halaman ${t("settings.language")}`}
           />
           <SettingsItem
-            label={t.settings.helpAndGuide}
+            label={t("settings.helpAndGuide")}
             onPress={() => navigation.navigate("HelpAndGuide")}
             textColor={colors.text}
             borderColor={colors.border}
-            accessibilityHint={`Navigasi ke halaman ${t.settings.helpAndGuide}`}
+            accessibilityHint={`Navigasi ke halaman ${t(
+              "settings.helpAndGuide"
+            )}`}
           />
           <SettingsItem
-            label={t.settings.privacyAndSecurity}
+            label={t("settings.privacyAndSecurity")}
             onPress={() => navigation.navigate("PrivacyAndSecurity")}
             textColor={colors.text}
             borderColor={colors.border}
-            accessibilityHint={`Navigasi ke halaman ${t.settings.privacyAndSecurity}`}
+            accessibilityHint={`Navigasi ke halaman ${t(
+              "settings.privacyAndSecurity"
+            )}`}
           />
           <SettingsItem
-            label={t.settings.about}
+            label={t("settings.about")}
             onPress={() => navigation.navigate("About")}
             textColor={colors.text}
             borderColor={colors.border}
-            accessibilityHint={`Navigasi ke halaman ${t.settings.about}`}
+            accessibilityHint={`Navigasi ke halaman ${t("settings.about")}`}
           />
         </View>
-        <Text style={styles.footerText}>{t.settings.appName}</Text>
+        <Text style={styles.footerText}>{t("settings.appName")}</Text>
       </View>
     </SafeAreaView>
   );

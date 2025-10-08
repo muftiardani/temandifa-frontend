@@ -11,9 +11,9 @@ import { Ionicons } from "@expo/vector-icons";
 import * as Speech from "expo-speech";
 import * as Haptics from "expo-haptics";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { useTranslation } from "react-i18next";
 import { RootStackParamList } from "../types/navigation";
 import { useAppTheme } from "../hooks/useAppTheme";
-import { useAppStore } from "../store/appStore";
 
 type ScanResultScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -28,11 +28,12 @@ const ScanResultScreen: React.FC<ScanResultScreenProps> = ({
   const [displayedText, setDisplayedText] = useState("");
   const [isSpeaking, setIsSpeaking] = useState(false);
   const isMounted = useRef(true);
-  const { t, colors } = useAppTheme();
-  const language = useAppStore((state) => state.language);
+  const { t, i18n } = useTranslation();
+  const { colors } = useAppTheme();
+  const language = i18n.language;
 
   useEffect(() => {
-    const words = (scannedText || t.scanResult.noTextDetected).split(" ");
+    const words = (scannedText || t("scanResult.noTextDetected")).split(" ");
     let currentWords: string[] = [];
     let wordIndex = 0;
 
@@ -102,13 +103,13 @@ const ScanResultScreen: React.FC<ScanResultScreenProps> = ({
           <TouchableOpacity
             onPress={() => navigation.goBack()}
             style={styles.backButton}
-            accessibilityLabel={`${t.general.back}. Tombol`}
+            accessibilityLabel={`${t("general.back")}. Tombol`}
             accessibilityRole="button"
           >
             <Ionicons name="chevron-back" size={24} color={colors.text} />
           </TouchableOpacity>
           <Text style={[styles.headerTitle, { color: colors.headerText }]}>
-            {t.scanResult.title}
+            {t("scanResult.title")}
           </Text>
         </View>
 
@@ -127,8 +128,8 @@ const ScanResultScreen: React.FC<ScanResultScreenProps> = ({
             onPress={handleSpeakButton}
             accessibilityLabel={
               isSpeaking
-                ? `${t.scanResult.stop}. Tombol`
-                : `${t.scanResult.listen} hasil scan. Tombol`
+                ? `${t("scanResult.stop")}. Tombol`
+                : `${t("scanResult.listen")} hasil scan. Tombol`
             }
             accessibilityHint="Ketuk dua kali untuk memutar atau menghentikan suara"
             accessibilityRole="button"
@@ -139,7 +140,7 @@ const ScanResultScreen: React.FC<ScanResultScreenProps> = ({
               color={colors.white}
             />
             <Text style={styles.actionButtonText}>
-              {isSpeaking ? t.scanResult.stop : t.scanResult.listen}
+              {isSpeaking ? t("scanResult.stop") : t("scanResult.listen")}
             </Text>
           </TouchableOpacity>
         </View>

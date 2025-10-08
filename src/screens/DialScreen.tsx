@@ -11,6 +11,7 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
+import { useTranslation } from "react-i18next";
 import { useAppTheme } from "../hooks/useAppTheme";
 import { callService } from "../services/callService";
 import { useCallStore } from "../store/callStore";
@@ -19,6 +20,7 @@ import { AppNavigationProp } from "../types/navigation";
 const DialScreen = () => {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const { t } = useTranslation();
   const { colors } = useAppTheme();
   const navigation = useNavigation<AppNavigationProp>();
   const { setOutgoingCall } = useCallStore();

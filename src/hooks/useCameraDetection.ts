@@ -3,10 +3,10 @@ import { AppState, AppStateStatus } from "react-native";
 import { CameraView, useCameraPermissions } from "expo-camera";
 import * as Speech from "expo-speech";
 import { useIsFocused } from "@react-navigation/native";
+import { useTranslation } from "react-i18next";
 
 import { useCameraStore } from "../store/cameraStore";
 import { apiService } from "../services/api";
-import { useAppTheme } from "./useAppTheme";
 import { useAppStore } from "../store/appStore";
 
 export const useCameraDetection = () => {
@@ -24,7 +24,7 @@ export const useCameraDetection = () => {
     time: 0,
   });
   const isFocused = useIsFocused();
-  const { t } = useAppTheme();
+  const { t } = useTranslation();
   const language = useAppStore((state) => state.language);
 
   const speakTopObject = useCallback(
@@ -41,7 +41,7 @@ export const useCameraDetection = () => {
           now - lastSpokenRef.current.time > 5000
         ) {
           Speech.stop();
-          Speech.speak(t.cameraScreen.objectInFront(objectName), {
+          Speech.speak(t("cameraScreen.objectInFront", { objectName }), {
             language: language === "id" ? "id-ID" : "en-US",
           });
           lastSpokenRef.current = { name: objectName, time: now };

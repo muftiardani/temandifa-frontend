@@ -18,6 +18,7 @@ import Animated, {
 } from "react-native-reanimated";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useTranslation } from "react-i18next";
 import { useAppStore } from "../store/appStore";
 import { RootNavigatorParamList } from "../types/navigation";
 import { useAppTheme } from "../hooks/useAppTheme";
@@ -27,16 +28,22 @@ type OnboardingScreenProps = NativeStackScreenProps<
   "Onboarding"
 >;
 
-const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ navigation }) => {
+const OnboardingScreen: React.FC<OnboardingScreenProps> = () => {
   const { width } = useWindowDimensions();
-  const { t, colors } = useAppTheme();
+  const { t } = useTranslation();
+  const { colors } = useAppTheme();
   const flatListRef = useRef<FlatList>(null);
   const scrollX = useSharedValue(0);
   const completeOnboardingAction = useAppStore(
     (state) => state.completeOnboarding
   );
 
-  const onboardingData = t.onboarding.slides;
+  const onboardingData = t("onboarding.slides", { returnObjects: true }) as {
+    key: string;
+    icon: keyof typeof Ionicons.glyphMap;
+    title: string;
+    description: string;
+  }[];
 
   const scrollHandler = useAnimatedScrollHandler({
     onScroll: (event) => {
@@ -89,7 +96,7 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ navigation }) => {
           }
         >
           <Text style={styles.buttonText}>
-            {isLastItem ? t.onboarding.getStarted : t.onboarding.next}
+            {isLastItem ? t("onboarding.getStarted") : t("onboarding.next")}
           </Text>
         </TouchableOpacity>
       </View>
@@ -105,7 +112,7 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ navigation }) => {
         onPress={handleFinishOnboarding}
       >
         <Text style={[styles.skipText, { color: colors.grey }]}>
-          {t.onboarding.skip}
+          {t("onboarding.skip")}
         </Text>
       </TouchableOpacity>
 

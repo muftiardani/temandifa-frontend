@@ -9,6 +9,7 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import Constants from "expo-constants";
+import { useTranslation } from "react-i18next";
 
 import { RootStackParamList } from "../types/navigation";
 import { useAppTheme } from "../hooks/useAppTheme";
@@ -16,7 +17,8 @@ import { useAppTheme } from "../hooks/useAppTheme";
 type AboutScreenProps = NativeStackScreenProps<RootStackParamList, "About">;
 
 const AboutScreen: React.FC<AboutScreenProps> = ({ navigation }) => {
-  const { t, colors } = useAppTheme();
+  const { t } = useTranslation();
+  const { colors } = useAppTheme();
 
   const appVersion = Constants.expoConfig?.version;
 
@@ -27,19 +29,19 @@ const AboutScreen: React.FC<AboutScreenProps> = ({ navigation }) => {
           <TouchableOpacity
             onPress={() => navigation.goBack()}
             style={styles.backButton}
-            accessibilityLabel={`${t.general.back}. Tombol`}
+            accessibilityLabel={`${t("general.back")}. Tombol`}
             accessibilityRole="button"
           >
             <Ionicons name="chevron-back" size={24} color={colors.text} />
           </TouchableOpacity>
           <Text style={[styles.headerTitle, { color: colors.headerText }]}>
-            {t.settings.about}
+            {t("settings.about")}
           </Text>
         </View>
 
         <View style={styles.content}>
           <Text style={[styles.appName, { color: colors.primary }]}>
-            {t.settings.appName}
+            {t("settings.appName")}
           </Text>
           <Text style={[styles.version, { color: colors.grey }]}>
             Versi {appVersion}

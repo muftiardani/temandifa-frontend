@@ -17,6 +17,7 @@ import Animated, {
   withTiming,
   Easing,
 } from "react-native-reanimated";
+import { useTranslation } from "react-i18next";
 import { RootStackParamList } from "../types/navigation";
 import { useAppTheme } from "../hooks/useAppTheme";
 import { useAudioRecorder } from "../hooks/useAudioRecorder";
@@ -25,7 +26,8 @@ import LoadingIndicator from "../components/common/LoadingIndicator";
 type VoiceScreenProps = NativeStackScreenProps<RootStackParamList, "Voice">;
 
 const VoiceScreen: React.FC<VoiceScreenProps> = ({ navigation }) => {
-  const { t, colors } = useAppTheme();
+  const { t } = useTranslation();
+  const { colors } = useAppTheme();
   const {
     isRecording,
     isProcessing,
@@ -72,13 +74,13 @@ const VoiceScreen: React.FC<VoiceScreenProps> = ({ navigation }) => {
         <TouchableOpacity
           onPress={() => navigation.goBack()}
           style={styles.backButton}
-          accessibilityLabel={`${t.general.back}. Tombol`}
+          accessibilityLabel={`${t("general.back")}. Tombol`}
           accessibilityRole="button"
         >
           <Ionicons name="chevron-back" size={24} color={colors.text} />
         </TouchableOpacity>
         <Text style={[styles.headerTitle, { color: colors.headerText }]}>
-          {t.voiceScreen.title}
+          {t("voiceScreen.title")}
         </Text>
       </View>
       <View style={styles.content}>
@@ -87,10 +89,10 @@ const VoiceScreen: React.FC<VoiceScreenProps> = ({ navigation }) => {
           accessibilityLiveRegion="polite"
         >
           {isProcessing
-            ? t.voiceScreen.infoProcessing
+            ? t("voiceScreen.infoProcessing")
             : isRecording
-            ? t.voiceScreen.infoListening
-            : t.voiceScreen.infoDefault}
+            ? t("voiceScreen.infoListening")
+            : t("voiceScreen.infoDefault")}
         </Text>
         {isProcessing ? (
           <LoadingIndicator />

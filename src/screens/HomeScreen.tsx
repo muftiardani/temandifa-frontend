@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Alert,
 } from "react-native";
+import { useTranslation } from "react-i18next";
 import { Ionicons } from "@expo/vector-icons";
 import Animated, {
   useSharedValue,
@@ -23,15 +24,16 @@ import { useAuthStore } from "../store/authStore";
 type Props = NativeStackScreenProps<RootStackParamList, "Home">;
 
 const HomeScreen: React.FC<Props> = ({ navigation }) => {
-  const { t, colors } = useAppTheme();
+  const { t } = useTranslation();
+  const { colors } = useAppTheme();
   const { isAuthenticated } = useAuthStore();
 
   const getGreeting = () => {
     const currentHour = new Date().getHours();
-    if (currentHour < 12) return t.greetings.morning;
-    if (currentHour < 15) return t.greetings.afternoon;
-    if (currentHour < 19) return t.greetings.evening;
-    return t.greetings.night;
+    if (currentHour < 12) return t("greetings.morning");
+    if (currentHour < 15) return t("greetings.afternoon");
+    if (currentHour < 19) return t("greetings.evening");
+    return t("greetings.night");
   };
 
   const opacity = useSharedValue(0);
@@ -78,13 +80,13 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
             {getGreeting()}
           </Text>
           <Text style={[styles.headerSubtitle, { color: colors.grey }]}>
-            {t.home.subtitle}
+            {t("home.subtitle")}
           </Text>
         </View>
 
         <View style={styles.buttonGrid}>
           <HomeButton
-            title={t.home.cameraButton}
+            title={t("home.cameraButton")}
             icon="camera"
             backgroundColor={colors.primary}
             layout="horizontal"
@@ -93,14 +95,14 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
           />
           <View style={styles.row}>
             <HomeButton
-              title={t.home.scanButton}
+              title={t("home.scanButton")}
               icon="scan"
               backgroundColor={colors.accent}
               style={{ flex: 1, height: 140 }}
               onPress={handleScanPress}
             />
             <HomeButton
-              title={t.home.voiceButton}
+              title={t("home.voiceButton")}
               icon="mic"
               backgroundColor={colors.secondary}
               style={{ flex: 1, height: 140 }}
@@ -113,7 +115,7 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
           <View style={styles.helpSettingsContainer}>
             <TouchableOpacity
               onPress={() => navigation.navigate("HelpAndGuide")}
-              accessibilityLabel={t.home.helpButton}
+              accessibilityLabel={t("home.helpButton")}
               accessibilityHint="Membuka panduan aplikasi"
               accessibilityRole="button"
             >
@@ -125,8 +127,8 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
             </TouchableOpacity>
             <TouchableOpacity
               onPress={handleSettingsPress}
-              accessibilityLabel={t.home.settingsButton}
-              accessibilityHint={`Membuka ${t.settings.title}`}
+              accessibilityLabel={t("home.settingsButton")}
+              accessibilityHint={`Membuka ${t("settings.title")}`}
               accessibilityRole="button"
             >
               <Ionicons

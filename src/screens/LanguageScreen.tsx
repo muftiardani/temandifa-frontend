@@ -8,8 +8,8 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { useTranslation } from "react-i18next";
 import { RootStackParamList } from "../types/navigation";
-import { useAppStore } from "../store/appStore";
 import { useAppTheme } from "../hooks/useAppTheme";
 
 type LanguageScreenProps = NativeStackScreenProps<
@@ -18,13 +18,18 @@ type LanguageScreenProps = NativeStackScreenProps<
 >;
 
 const LanguageScreen: React.FC<LanguageScreenProps> = ({ navigation }) => {
-  const { language, setLanguage } = useAppStore();
-  const { t, colors } = useAppTheme();
+  const { t, i18n } = useTranslation();
+  const { colors } = useAppTheme();
+  const currentLanguage = i18n.language;
 
   const languages = [
     { code: "id", name: "Bahasa Indonesia" },
     { code: "en", name: "English" },
   ];
+
+  const changeLanguage = (langCode: "id" | "en") => {
+    i18n.changeLanguage(langCode);
+  };
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
@@ -33,13 +38,13 @@ const LanguageScreen: React.FC<LanguageScreenProps> = ({ navigation }) => {
           <TouchableOpacity
             onPress={() => navigation.goBack()}
             style={styles.backButton}
-            accessibilityLabel={`${t.general.back}. Tombol`}
+            accessibilityLabel={`${t("general.back")}. Tombol`}
             accessibilityRole="button"
           >
             <Ionicons name="chevron-back" size={24} color={colors.text} />
           </TouchableOpacity>
           <Text style={[styles.headerTitle, { color: colors.headerText }]}>
-            {t.settings.language}
+            {t("settings.language")}
           </Text>
         </View>
 
@@ -51,15 +56,15 @@ const LanguageScreen: React.FC<LanguageScreenProps> = ({ navigation }) => {
                 styles.itemContainer,
                 { borderBottomColor: colors.border },
               ]}
-              onPress={() => setLanguage(lang.code as "id" | "en")}
+              onPress={() => changeLanguage(lang.code as "id" | "en")}
               accessibilityRole="button"
-              accessibilityState={{ checked: language === lang.code }}
+              accessibilityState={{ checked: currentLanguage === lang.code }}
               accessibilityLabel={`Pilih bahasa ${lang.name}.`}
             >
               <Text style={[styles.itemLabel, { color: colors.text }]}>
                 {lang.name}
               </Text>
-              {language === lang.code && (
+              {currentLanguage === lang.code && (
                 <Ionicons
                   name="checkmark-circle"
                   size={24}

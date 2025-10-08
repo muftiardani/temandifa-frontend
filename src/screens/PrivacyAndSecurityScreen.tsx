@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { useTranslation } from "react-i18next";
 import { RootStackParamList } from "../types/navigation";
 import { useAppTheme } from "../hooks/useAppTheme";
 
@@ -20,7 +21,8 @@ type PrivacyAndSecurityScreenProps = NativeStackScreenProps<
 const PrivacyAndSecurityScreen: React.FC<PrivacyAndSecurityScreenProps> = ({
   navigation,
 }) => {
-  const { t, colors } = useAppTheme();
+  const { t } = useTranslation();
+  const { colors } = useAppTheme();
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
@@ -29,13 +31,13 @@ const PrivacyAndSecurityScreen: React.FC<PrivacyAndSecurityScreenProps> = ({
           <TouchableOpacity
             onPress={() => navigation.goBack()}
             style={styles.backButton}
-            accessibilityLabel={`${t.general.back}. Tombol`}
+            accessibilityLabel={`${t("general.back")}. Tombol`}
             accessibilityRole="button"
           >
             <Ionicons name="chevron-back" size={24} color={colors.text} />
           </TouchableOpacity>
           <Text style={[styles.headerTitle, { color: colors.headerText }]}>
-            {t.settings.privacyAndSecurity}
+            {t("settings.privacyAndSecurity")}
           </Text>
         </View>
 

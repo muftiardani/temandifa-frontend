@@ -1,0 +1,101 @@
+{
+  "greetings": {
+    "morning": "Selamat Pagi",
+    "afternoon": "Selamat Siang",
+    "evening": "Selamat Sore",
+    "night": "Selamat Malam"
+  },
+  "home": {
+    "subtitle": "Bagaimana saya dapat membantu anda hari ini?",
+    "cameraButton": "Kamera",
+    "scanButton": "Pindai",
+    "voiceButton": "Suara",
+    "helpButton": "Bantuan",
+    "settingsButton": "Pengaturan",
+    "emergencyButton": "Panggilan Darurat"
+  },
+  "onboarding": {
+    "slides": [
+      {
+        "key": "1",
+        "icon": "camera-outline",
+        "title": "Deteksi Objek",
+        "description": "Arahkan kamera untuk mengidentifikasi objek di sekitar Anda secara real-time."
+      },
+      {
+        "key": "2",
+        "icon": "scan-outline",
+        "title": "Pindai Teks & Suara",
+        "description": "Ubah teks dari gambar atau rekaman suara menjadi format yang dapat Anda dengarkan."
+      },
+      {
+        "key": "3",
+        "icon": "call-outline",
+        "title": "Panggilan Darurat",
+        "description": "Hubungi kontak darurat dengan cepat melalui panggilan video terintegrasi."
+      }
+    ],
+    "skip": "Lewati",
+    "next": "Lanjutkan",
+    "getStarted": "Mulai Sekarang"
+  },
+  "permissions": {
+    "camera": "Kami butuh izin Anda untuk menggunakan kamera",
+    "microphone": "Kami butuh izin Anda untuk menggunakan mikrofon",
+    "gallery": "Anda perlu memberikan izin galeri untuk menggunakan fitur ini.",
+    "grantPermission": "Berikan Izin",
+    "cameraDenied": "Izin kamera dinonaktifkan. Aktifkan melalui pengaturan ponsel.",
+    "microphoneDenied": "Izin mikrofon dinonaktifkan. Aktifkan melalui pengaturan ponsel."
+  },
+  "cameraScreen": {
+    "processing": "Memproses...",
+    "ready": "Siap",
+    "done": "Selesai",
+    "objectInFront": "Di depan ada {{objectName}}"
+  },
+  "scanScreen": {
+    "title": "Pindai Dokumen",
+    "placeholder": "Pilih metode pemindaian",
+    "camera": "Kamera",
+    "upload": "Unggah",
+    "processing": "Sedang memproses..."
+  },
+  "scanResult": {
+    "title": "Hasil Pindai",
+    "noTextDetected": "Tidak ada teks yang terdeteksi.",
+    "listen": "Dengarkan",
+    "stop": "Berhenti",
+    "imageProcessing": "Memproses gambar...",
+    "scannerOpening": "Membuka pemindai...",
+    "imageProcessingFailed": "Gagal memproses gambar, silakan coba lagi.",
+    "imageTakenProcessing": "Gambar diambil, sedang memproses"
+  },
+  "voiceScreen": {
+    "title": "Suara",
+    "infoProcessing": "Mengubah suara menjadi teks...",
+    "infoListening": "Sedang mendengarkan...",
+    "infoDefault": "Tekan tombol untuk berbicara",
+    "recordingFailed": "Gagal memulai rekaman. Pastikan izin mikrofon telah diberikan."
+  },
+  "voiceResult": {
+    "title": "Hasil Suara"
+  },
+  "settings": {
+    "title": "Pengaturan",
+    "theme": "Tema",
+    "darkMode": "Mode Gelap",
+    "language": "Bahasa",
+    "helpAndGuide": "Panduan & Bantuan",
+    "privacyAndSecurity": "Privasi & Keamanan",
+    "about": "Tentang Aplikasi",
+    "appName": "TemanDifa"
+  },
+  "general": {
+    "back": "Kembali",
+    "error": "Error",
+    "failure": "Gagal",
+    "networkError": "Gagal terhubung ke server. Periksa koneksi internet Anda.",
+    "genericError": "Terjadi kesalahan. Silakan coba lagi nanti.",
+    "serverError": "Terjadi kesalahan pada server."
+  }
+}

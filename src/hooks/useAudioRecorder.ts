@@ -3,9 +3,9 @@ import { Audio } from "expo-av";
 import Toast from "react-native-toast-message";
 import * as Speech from "expo-speech";
 import { useNavigation } from "@react-navigation/native";
+import { useTranslation } from "react-i18next";
 import { AppNavigationProp } from "../types/navigation";
 import { apiService } from "../services/api";
-import { useAppTheme } from "./useAppTheme";
 
 export const useAudioRecorder = () => {
   const [recording, setRecording] = useState<Audio.Recording | null>(null);
@@ -13,7 +13,7 @@ export const useAudioRecorder = () => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [permissionResponse, requestPermission] = Audio.usePermissions();
   const navigation = useNavigation<AppNavigationProp>();
-  const { t } = useAppTheme();
+  const { t } = useTranslation();
 
   const startRecording = useCallback(async () => {
     try {
@@ -24,8 +24,8 @@ export const useAudioRecorder = () => {
           if (!permission.canAskAgain) {
             Toast.show({
               type: "info",
-              text1: t.general.error,
-              text2: t.permissions.microphoneDenied,
+              text1: t("general.error"),
+              text2: t("permissions.microphoneDenied"),
             });
           }
           return;
@@ -44,8 +44,8 @@ export const useAudioRecorder = () => {
       console.error("Gagal memulai rekaman", err);
       Toast.show({
         type: "error",
-        text1: t.general.error,
-        text2: t.voiceScreen.recordingFailed,
+        text1: t("general.error"),
+        text2: t("voiceScreen.recordingFailed"),
       });
     }
   }, [permissionResponse, requestPermission, t]);
@@ -68,8 +68,8 @@ export const useAudioRecorder = () => {
     } catch (error: any) {
       Toast.show({
         type: "error",
-        text1: t.general.failure,
-        text2: error.message || t.general.genericError,
+        text1: t("general.failure"),
+        text2: error.message || t("general.genericError"),
       });
     } finally {
       setIsProcessing(false);

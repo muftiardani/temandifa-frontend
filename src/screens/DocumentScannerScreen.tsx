@@ -4,6 +4,7 @@ import DocumentScanner from "react-native-document-scanner-plugin";
 import * as Speech from "expo-speech";
 import { useNavigation, useIsFocused } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { useTranslation } from "react-i18next";
 import { RootStackParamList } from "../types/navigation";
 import { apiService } from "../services/api";
 import { useAppTheme } from "../hooks/useAppTheme";
@@ -18,7 +19,8 @@ export default function DocumentScannerScreen() {
   const navigation = useNavigation<DocScannerNavigationProp>();
   const isFocused = useIsFocused();
   const [isProcessing, setIsProcessing] = useState(false);
-  const { t, colors } = useAppTheme();
+  const { t } = useTranslation();
+  const { colors } = useAppTheme();
   const language = useAppStore((state) => state.language);
 
   useEffect(() => {
@@ -48,7 +50,7 @@ export default function DocumentScannerScreen() {
 
   const handlePictureTaken = async (imageUri: string) => {
     setIsProcessing(true);
-    Speech.speak(t.scanResult.imageTakenProcessing, {
+    Speech.speak(t("scanResult.imageTakenProcessing"), {
       language: language === "id" ? "id-ID" : "en-US",
     });
     try {
@@ -57,7 +59,7 @@ export default function DocumentScannerScreen() {
         navigation.replace("ScanResult", { scannedText: result.scannedText });
       }
     } catch (error) {
-      Speech.speak(t.scanResult.imageProcessingFailed, {
+      Speech.speak(t("scanResult.imageProcessingFailed"), {
         language: language === "id" ? "id-ID" : "en-US",
       });
       navigation.goBack();
@@ -71,8 +73,8 @@ export default function DocumentScannerScreen() {
       <ActivityIndicator size="large" color={colors.primary} />
       <Text style={styles.statusText}>
         {isProcessing
-          ? t.scanResult.imageProcessing
-          : t.scanResult.scannerOpening}
+          ? t("scanResult.imageProcessing")
+          : t("scanResult.scannerOpening")}
       </Text>
     </View>
   );
