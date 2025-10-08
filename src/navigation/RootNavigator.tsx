@@ -31,6 +31,7 @@ import OutgoingCallScreen from "../screens/OutgoingCallScreen";
 import LoginScreen from "../screens/LoginScreen";
 import RegisterScreen from "../screens/RegisterScreen";
 import ForgotPasswordScreen from "../screens/ForgotPasswordScreen";
+import EmergencyContactsScreen from "../screens/EmergencyContactsScreen";
 
 import { useAuthStore } from "../store/authStore";
 import { useAppStore } from "../store/appStore";
@@ -117,6 +118,10 @@ const AppNavigator = () => (
     />
     <AppStack.Screen name="Dial" component={DialScreen} />
     <AppStack.Screen name="OutgoingCall" component={OutgoingCallScreen} />
+    <AppStack.Screen
+      name="EmergencyContacts"
+      component={EmergencyContactsScreen}
+    />
     <AppStack.Screen
       name="IncomingCall"
       component={IncomingCallScreen}

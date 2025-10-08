@@ -6,6 +6,7 @@ import {
   createAgoraRtcEngine,
   IRtcEngine,
   ChannelProfileType,
+  StreamFallbackOptions,
 } from "react-native-agora";
 import { useCallStore } from "../store/callStore";
 import { socketService } from "../services/socketService";
@@ -82,6 +83,12 @@ export const useAgoraCall = () => {
           appId: Config.agora.appId!,
           channelProfile: ChannelProfileType.ChannelProfileLiveBroadcasting,
         });
+
+        engine.enableDualStreamMode(true);
+
+        engine.setRemoteSubscribeFallbackOption(
+          StreamFallbackOptions.StreamFallbackOptionVideoStreamLow
+        );
 
         engine.enableVideo();
         await engine.startPreview();

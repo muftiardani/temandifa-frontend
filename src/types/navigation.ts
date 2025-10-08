@@ -31,6 +31,7 @@ export type RootStackParamList = {
   Dial: undefined;
   IncomingCall: undefined;
   OutgoingCall: undefined;
+  EmergencyContacts: undefined;
 };
 
 export type AppNavigationProp = NativeStackNavigationProp<

@@ -93,6 +93,13 @@ const SettingsScreen: React.FC<SettingsScreenProps> = ({ navigation }) => {
             accessibilityHint={`Navigasi ke halaman ${t("settings.language")}`}
           />
           <SettingsItem
+            label="Kontak Darurat"
+            onPress={() => navigation.navigate("EmergencyContacts")}
+            textColor={colors.text}
+            borderColor={colors.border}
+            accessibilityHint="Navigasi ke halaman Kontak Darurat"
+          />
+          <SettingsItem
             label={t("settings.helpAndGuide")}
             onPress={() => navigation.navigate("HelpAndGuide")}
             textColor={colors.text}
