@@ -164,7 +164,13 @@
     "quickContacts": "Kontak Cepat",
     "orEnterPhoneNumber": "Atau masukkan Nomor Telepon",
     "call": "Panggil",
-    "noEmergencyContacts": "Belum ada kontak darurat disimpan."
+    "noEmergencyContacts": "Belum ada kontak darurat disimpan.",
+    "turnCameraOn": "Nyalakan kamera",
+    "turnCameraOff": "Matikan kamera",
+    "unmute": "Nyalakan suara",
+    "mute": "Matikan suara",
+    "switchCamera": "Ganti kamera",
+    "endCall": "Akhiri panggilan"
   },
   "contacts": {
     "addContact": "Tambah Kontak",

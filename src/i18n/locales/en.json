@@ -164,7 +164,13 @@
     "quickContacts": "Quick Contacts",
     "orEnterPhoneNumber": "Or enter a Phone Number",
     "call": "Call",
-    "noEmergencyContacts": "No emergency contacts saved yet."
+    "noEmergencyContacts": "No emergency contacts saved yet.",
+    "turnCameraOn": "Turn camera on",
+    "turnCameraOff": "Turn camera off",
+    "unmute": "Unmute",
+    "mute": "Mute",
+    "switchCamera": "Switch camera",
+    "endCall": "End call"
   },
   "contacts": {
     "addContact": "Add Contact",

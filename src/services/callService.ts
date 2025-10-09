@@ -27,12 +27,4 @@ export const callService = {
     }
     return response.json();
   },
-
-  end: async (callId: string) => {
-    const response = await fetchWithAuth(`${API_URL}/end`, {
-      method: "POST",
-      body: JSON.stringify({ callId }),
-    });
-    return response.json();
-  },
 };
