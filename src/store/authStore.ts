@@ -8,7 +8,11 @@ interface AuthState {
   isAuthenticated: boolean;
   isGuest: boolean;
   isLoading: boolean;
-  setTokens: (accessToken: string, refreshToken: string) => Promise<void>;
+  setTokens: (
+    accessToken: string,
+    refreshToken: string,
+    rememberMe?: boolean
+  ) => Promise<void>;
   loginAsGuest: () => void;
   logout: () => Promise<void>;
   loadToken: () => Promise<void>;
@@ -21,8 +25,12 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   isGuest: false,
   isLoading: true,
 
-  setTokens: async (accessToken, refreshToken) => {
-    await SecureStore.setItemAsync("refreshToken", refreshToken);
+  setTokens: async (accessToken, refreshToken, rememberMe = false) => {
+    if (rememberMe) {
+      await SecureStore.setItemAsync("refreshToken", refreshToken);
+    } else {
+      await SecureStore.deleteItemAsync("refreshToken");
+    }
     set({ accessToken, isAuthenticated: true, isGuest: false });
     socketService.connect();
   },

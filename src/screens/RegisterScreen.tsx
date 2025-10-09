@@ -35,17 +35,14 @@ const validateEmail = (email: string) => {
 
 const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
   const { t } = useTranslation();
-  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
   const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState(""); // State baru
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  const [usernameError, setUsernameError] = useState("");
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
-  const [confirmPasswordError, setConfirmPasswordError] = useState(""); // State error baru
+  const [confirmPasswordError, setConfirmPasswordError] = useState("");
   const [isFormValid, setIsFormValid] = useState(false);
 
   const { colors } = useAppTheme();
@@ -62,24 +59,12 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
   };
 
   useEffect(() => {
-    const isUsernameValid = username.length >= 3;
     const isEmailValid = validateEmail(email);
     const isPasswordValid = validatePassword(password) === "";
-    const doPasswordsMatch = password === confirmPassword; // Validasi baru
+    const doPasswordsMatch = password === confirmPassword && password !== "";
 
-    setIsFormValid(
-      isUsernameValid && isEmailValid && isPasswordValid && doPasswordsMatch
-    );
-  }, [username, email, password, confirmPassword]);
-
-  const handleUsernameChange = (text: string) => {
-    setUsername(text);
-    if (text.length > 0 && text.length < 3) {
-      setUsernameError(t("auth.usernameMinChars"));
-    } else {
-      setUsernameError("");
-    }
-  };
+    setIsFormValid(isEmailValid && isPasswordValid && doPasswordsMatch);
+  }, [email, password, confirmPassword]);
 
   const handleEmailChange = (text: string) => {
     setEmail(text);
@@ -96,6 +81,11 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
       setPasswordError(validatePassword(text));
     } else {
       setPasswordError("");
+    }
+    if (confirmPassword.length > 0 && text !== confirmPassword) {
+      setConfirmPasswordError(t("auth.passwordsDoNotMatch"));
+    } else {
+      setConfirmPasswordError("");
     }
   };
 
@@ -121,10 +111,8 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
     setIsLoading(true);
     try {
       const { accessToken, refreshToken } = await authService.register({
-        username,
         email,
         password,
-        phoneNumber,
       });
       await setTokens(accessToken, refreshToken);
     } catch (error: any) {
@@ -155,16 +143,6 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
         </View>
 
         <ValidatedInput
-          icon="person-outline"
-          placeholder={t("auth.username")}
-          value={username}
-          onChangeText={handleUsernameChange}
-          autoCapitalize="none"
-          error={usernameError}
-          accessibilityLabel={t("auth.username")}
-        />
-
-        <ValidatedInput
           icon="mail-outline"
           placeholder={t("auth.email")}
           value={email}
@@ -173,21 +151,6 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
           autoCapitalize="none"
           error={emailError}
           accessibilityLabel={t("auth.email")}
-        />
-
-        <ValidatedInput
-          icon="call-outline"
-          placeholder={`${t("contacts.phoneNumber")} (${t(
-            "general.optional",
-            "Opsional"
-          )})`}
-          value={phoneNumber}
-          onChangeText={setPhoneNumber}
-          keyboardType="phone-pad"
-          accessibilityLabel={`${t("contacts.phoneNumber")} (${t(
-            "general.optional",
-            "Opsional"
-          )})`}
         />
 
         <ValidatedInput

@@ -35,6 +35,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
   const { t } = useTranslation();
   const [login, setLogin] = useState("");
   const [password, setPassword] = useState("");
+  const [rememberMe, setRememberMe] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { colors } = useAppTheme();
   const { setTokens, loginAsGuest, refreshAccessToken } = useAuthStore();
@@ -103,7 +104,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
       const { accessToken, refreshToken } = await authService.loginWithGoogle(
         googleAccessToken
       );
-      await setTokens(accessToken, refreshToken);
+      await setTokens(accessToken, refreshToken, true);
     } catch (error: any) {
       Toast.show({
         type: "error",
@@ -130,7 +131,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
         login,
         password
       );
-      await setTokens(accessToken, refreshToken);
+      await setTokens(accessToken, refreshToken, rememberMe);
     } catch (error: any) {
       Toast.show({
         type: "error",
@@ -148,17 +149,6 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
       style={{ flex: 1, backgroundColor: colors.background }}
     >
       <ScrollView contentContainerStyle={styles.container}>
-        <TouchableOpacity
-          style={styles.skipButton}
-          onPress={loginAsGuest}
-          accessibilityLabel={t("onboarding.skip")}
-          accessibilityRole="button"
-        >
-          <Text style={[styles.skipText, { color: colors.primary }]}>
-            {t("onboarding.skip")}
-          </Text>
-        </TouchableOpacity>
-
         <View style={styles.header}>
           <Image source={LOGO} style={styles.logo} />
           <Text style={[styles.title, { color: colors.text }]}>
@@ -199,20 +189,35 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
           accessibilityLabel={t("auth.password")}
         />
 
-        <TouchableOpacity
-          onPress={() => navigation.navigate("ForgotPassword")}
-          accessibilityRole="link"
-          accessibilityLabel={t("auth.forgotPassword")}
-        >
-          <Text
-            style={[
-              styles.linkText,
-              { color: colors.primary, textAlign: "right", marginBottom: 20 },
-            ]}
+        <View style={styles.optionsContainer}>
+          <TouchableOpacity
+            style={styles.rememberMeContainer}
+            onPress={() => setRememberMe(!rememberMe)}
+            accessibilityLabel={t("auth.rememberMe")}
+            accessibilityState={{ checked: rememberMe }}
           >
-            {t("auth.forgotPassword")}
-          </Text>
-        </TouchableOpacity>
+            <Ionicons
+              name={rememberMe ? "checkbox" : "square-outline"}
+              size={24}
+              color={colors.primary}
+            />
+            <Text
+              style={[styles.linkText, { color: colors.text, marginLeft: 8 }]}
+            >
+              {t("auth.rememberMe")}
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() => navigation.navigate("ForgotPassword")}
+            accessibilityRole="link"
+            accessibilityLabel={t("auth.forgotPassword")}
+          >
+            <Text style={[styles.linkText, { color: colors.primary }]}>
+              {t("auth.forgotPassword")}
+            </Text>
+          </TouchableOpacity>
+        </View>
 
         <AnimatedPressable
           style={[
@@ -251,6 +256,17 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
             {t("auth.continueWithGoogle")}
           </Text>
         </AnimatedPressable>
+
+        <TouchableOpacity
+          style={styles.skipButton}
+          onPress={loginAsGuest}
+          accessibilityLabel={t("onboarding.skip")}
+          accessibilityRole="button"
+        >
+          <Text style={[styles.skipText, { color: colors.grey }]}>
+            {t("onboarding.skip")}
+          </Text>
+        </TouchableOpacity>
 
         <TouchableOpacity
           onPress={() => navigation.navigate("Register")}
@@ -298,6 +314,16 @@ const styles = StyleSheet.create({
   biometricButton: {
     padding: 10,
   },
+  optionsContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 20,
+  },
+  rememberMeContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
   button: {
     width: "100%",
     padding: 15,
@@ -318,7 +344,7 @@ const styles = StyleSheet.create({
   dividerContainer: {
     flexDirection: "row",
     alignItems: "center",
-    marginVertical: 30,
+    marginVertical: 20,
   },
   divider: { flex: 1, height: 1 },
   dividerText: { marginHorizontal: 10, fontSize: 12 },
@@ -330,21 +356,19 @@ const styles = StyleSheet.create({
     padding: 15,
     borderRadius: 12,
     borderWidth: 1,
+    marginBottom: 20,
   },
   socialButtonText: { marginLeft: 10, fontSize: 16, fontWeight: "600" },
   footer: {
-    marginTop: 30,
+    marginTop: 20,
   },
   footerText: {
     textAlign: "center",
     fontSize: 14,
   },
   skipButton: {
-    position: "absolute",
-    top: 20,
-    right: 20,
+    alignSelf: "center",
     padding: 10,
-    zIndex: 1,
   },
   skipText: {
     fontSize: 16,

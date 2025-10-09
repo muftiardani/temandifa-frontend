@@ -109,7 +109,6 @@
     "loginToContinue": "Login to continue",
     "createAccount": "Create New Account",
     "fillData": "Fill in your data to get started",
-    "username": "Username",
     "usernameOrEmail": "Username or Email",
     "email": "Email",
     "password": "Password",
@@ -120,7 +119,6 @@
     "continueWithGoogle": "Continue with Google",
     "noAccount": "Don't have an account? ",
     "haveAccount": "Already have an account? ",
-    "usernameMinChars": "Username must be at least 3 characters.",
     "invalidEmail": "Invalid email format.",
     "passwordMin8Chars": "Password must be at least 8 characters.",
     "passwordNeedsNumber": "Password must contain a number.",
@@ -145,7 +143,8 @@
     "forgotPasswordSubtitle": "Don't worry! Enter your email to receive password reset instructions.",
     "sendInstructions": "Send Instructions",
     "backToLogin": "Back to Login",
-    "loginWithBiometrics": "Login with Biometrics"
+    "loginWithBiometrics": "Login with Biometrics",
+    "rememberMe": "Remember Me"
   },
   "dialogs": {
     "deleteContactTitle": "Delete Contact",
