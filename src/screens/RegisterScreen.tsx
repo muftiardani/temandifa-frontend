@@ -18,6 +18,7 @@ import { authService } from "../services/authService";
 import { useAuthStore } from "../store/authStore";
 import { AuthStackParamList } from "../types/navigation";
 import ValidatedInput from "../components/common/ValidatedInput";
+import AnimatedPressable from "../components/common/AnimatedPressable";
 
 type RegisterScreenProps = NativeStackScreenProps<
   AuthStackParamList,
@@ -185,7 +186,7 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
           accessibilityLabel={t("auth.password")}
         />
 
-        <TouchableOpacity
+        <AnimatedPressable
           style={[
             styles.button,
             {
@@ -203,7 +204,7 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
           ) : (
             <Text style={styles.buttonText}>{t("auth.register")}</Text>
           )}
-        </TouchableOpacity>
+        </AnimatedPressable>
 
         <TouchableOpacity
           onPress={() => navigation.goBack()}

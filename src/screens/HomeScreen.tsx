@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, ReactNode } from "react";
 import {
   SafeAreaView,
   Text,
@@ -6,6 +6,8 @@ import {
   StyleSheet,
   TouchableOpacity,
   Alert,
+  StyleProp,
+  ViewStyle,
 } from "react-native";
 import { useTranslation } from "react-i18next";
 import { Ionicons } from "@expo/vector-icons";
@@ -14,6 +16,7 @@ import Animated, {
   useAnimatedStyle,
   withTiming,
   Easing,
+  withDelay,
 } from "react-native-reanimated";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import HomeButton from "../components/common/HomeButton";
@@ -22,6 +25,36 @@ import { useAppTheme } from "../hooks/useAppTheme";
 import { useAuthStore } from "../store/authStore";
 
 type Props = NativeStackScreenProps<RootStackParamList, "Home">;
+
+interface AnimatedViewProps {
+  children: ReactNode;
+  style?: StyleProp<ViewStyle>;
+  delay?: number;
+}
+
+const AnimatedView: React.FC<AnimatedViewProps> = ({
+  children,
+  style,
+  delay = 0,
+}) => {
+  const opacity = useSharedValue(0);
+  const translateY = useSharedValue(20);
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    opacity: opacity.value,
+    transform: [{ translateY: translateY.value }],
+  }));
+
+  useEffect(() => {
+    const animationConfig = { duration: 600, easing: Easing.out(Easing.ease) };
+    opacity.value = withDelay(delay, withTiming(1, animationConfig));
+    translateY.value = withDelay(delay, withTiming(0, animationConfig));
+  }, [opacity, translateY, delay]);
+
+  return (
+    <Animated.View style={[style, animatedStyle]}>{children}</Animated.View>
+  );
+};
 
 const HomeScreen: React.FC<Props> = ({ navigation }) => {
   const { t } = useTranslation();
@@ -35,19 +68,6 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
     if (currentHour < 19) return t("greetings.evening");
     return t("greetings.night");
   };
-
-  const opacity = useSharedValue(0);
-  const translateY = useSharedValue(20);
-  const animatedContainerStyle = useAnimatedStyle(() => ({
-    opacity: opacity.value,
-    transform: [{ translateY: translateY.value }],
-  }));
-
-  useEffect(() => {
-    const animationConfig = { duration: 600, easing: Easing.out(Easing.ease) };
-    opacity.value = withTiming(1, animationConfig);
-    translateY.value = withTiming(0, animationConfig);
-  }, [opacity, translateY]);
 
   const handleCameraPress = () => navigation.navigate("Camera");
   const handleScanPress = () => navigation.navigate("Scan");
@@ -70,44 +90,50 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
-      <Animated.View style={[styles.container, animatedContainerStyle]}>
-        <View style={styles.header}>
-          <Text style={[styles.headerTitle, { color: colors.headerText }]}>
-            {getGreeting()}
-          </Text>
-          <Text style={[styles.headerSubtitle, { color: colors.grey }]}>
-            {t("home.subtitle")}
-          </Text>
-        </View>
+      <View style={styles.container}>
+        <AnimatedView delay={0}>
+          <View style={styles.header}>
+            <Text style={[styles.headerTitle, { color: colors.headerText }]}>
+              {getGreeting()}
+            </Text>
+            <Text style={[styles.headerSubtitle, { color: colors.grey }]}>
+              {t("home.subtitle")}
+            </Text>
+          </View>
+        </AnimatedView>
 
         <View style={styles.buttonGrid}>
-          <HomeButton
-            title={t("home.cameraButton")}
-            icon="camera"
-            backgroundColor={colors.primary}
-            layout="horizontal"
-            style={{ width: "100%", height: 135 }}
-            onPress={handleCameraPress}
-            accessibilityLabel={t("home.cameraButton")}
-          />
-          <View style={styles.row}>
+          <AnimatedView delay={100}>
             <HomeButton
-              title={t("home.scanButton")}
-              icon="scan"
-              backgroundColor={colors.accent}
-              style={{ flex: 1, height: 140 }}
-              onPress={handleScanPress}
-              accessibilityLabel={t("home.scanButton")}
+              title={t("home.cameraButton")}
+              icon="camera"
+              backgroundColor={colors.primary}
+              layout="horizontal"
+              style={{ width: "100%", height: 135 }}
+              onPress={handleCameraPress}
+              accessibilityLabel={t("home.cameraButton")}
             />
-            <HomeButton
-              title={t("home.voiceButton")}
-              icon="mic"
-              backgroundColor={colors.secondary}
-              style={{ flex: 1, height: 140 }}
-              onPress={handleVoicePress}
-              accessibilityLabel={t("home.voiceButton")}
-            />
-          </View>
+          </AnimatedView>
+          <AnimatedView delay={200}>
+            <View style={styles.row}>
+              <HomeButton
+                title={t("home.scanButton")}
+                icon="scan"
+                backgroundColor={colors.accent}
+                style={{ flex: 1, height: 140 }}
+                onPress={handleScanPress}
+                accessibilityLabel={t("home.scanButton")}
+              />
+              <HomeButton
+                title={t("home.voiceButton")}
+                icon="mic"
+                backgroundColor={colors.secondary}
+                style={{ flex: 1, height: 140 }}
+                onPress={handleVoicePress}
+                accessibilityLabel={t("home.voiceButton")}
+              />
+            </View>
+          </AnimatedView>
         </View>
 
         <View style={styles.bottomBar}>
@@ -160,7 +186,7 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
             <Ionicons name="call" size={34} color={colors.white} />
           </TouchableOpacity>
         </View>
-      </Animated.View>
+      </View>
     </SafeAreaView>
   );
 };

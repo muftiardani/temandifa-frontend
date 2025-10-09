@@ -23,6 +23,7 @@ import { Ionicons } from "@expo/vector-icons";
 import * as Google from "expo-auth-session/providers/google";
 import * as WebBrowser from "expo-web-browser";
 import * as LocalAuthentication from "expo-local-authentication";
+import AnimatedPressable from "../components/common/AnimatedPressable";
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -239,7 +240,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
           </Text>
         </TouchableOpacity>
 
-        <TouchableOpacity
+        <AnimatedPressable
           style={[
             styles.button,
             { backgroundColor: isLoading ? colors.grey : colors.primary },
@@ -254,7 +255,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
           ) : (
             <Text style={styles.buttonText}>{t("auth.login")}</Text>
           )}
-        </TouchableOpacity>
+        </AnimatedPressable>
 
         <View style={styles.dividerContainer}>
           <View style={[styles.divider, { backgroundColor: colors.border }]} />
@@ -264,7 +265,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
           <View style={[styles.divider, { backgroundColor: colors.border }]} />
         </View>
 
-        <TouchableOpacity
+        <AnimatedPressable
           style={[styles.socialButton, { borderColor: colors.border }]}
           onPress={() => promptAsync()}
           disabled={!request || isLoading}
@@ -275,7 +276,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
           <Text style={[styles.socialButtonText, { color: colors.text }]}>
             {t("auth.continueWithGoogle")}
           </Text>
-        </TouchableOpacity>
+        </AnimatedPressable>
 
         <TouchableOpacity
           onPress={() => navigation.navigate("Register")}

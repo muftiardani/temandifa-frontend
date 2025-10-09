@@ -25,6 +25,7 @@ import { apiService } from "../services/apiService";
 import LoadingIndicator from "../components/common/LoadingIndicator";
 import { useAppTheme } from "../hooks/useAppTheme";
 import { AnimationDurations } from "../constants/animations";
+import AnimatedPressable from "../components/common/AnimatedPressable";
 
 type ScanScreenProps = NativeStackScreenProps<RootStackParamList, "Scan">;
 
@@ -124,7 +125,11 @@ const ScanScreen: React.FC<ScanScreenProps> = ({ navigation }) => {
               animatedPlaceholderStyle,
             ]}
           >
-            <Ionicons name="document-text-outline" size={100} color="#E0E0E0" />
+            <Ionicons
+              name="document-text-outline"
+              size={100}
+              color={colors.placeholderIcon}
+            />
             <Text
               style={[
                 styles.placeholderText,
@@ -137,7 +142,7 @@ const ScanScreen: React.FC<ScanScreenProps> = ({ navigation }) => {
         )}
 
         <View style={styles.buttonContainer}>
-          <TouchableOpacity
+          <AnimatedPressable
             style={[styles.button, { backgroundColor: colors.accent }]}
             onPress={handleKameraPress}
             disabled={isProcessing}
@@ -147,9 +152,9 @@ const ScanScreen: React.FC<ScanScreenProps> = ({ navigation }) => {
           >
             <Ionicons name="camera" size={32} color={colors.white} />
             <Text style={styles.buttonText}>{t("scanScreen.camera")}</Text>
-          </TouchableOpacity>
+          </AnimatedPressable>
 
-          <TouchableOpacity
+          <AnimatedPressable
             style={[styles.button, { backgroundColor: colors.secondary }]}
             onPress={handleUnggahPress}
             disabled={isProcessing}
@@ -159,7 +164,7 @@ const ScanScreen: React.FC<ScanScreenProps> = ({ navigation }) => {
           >
             <Ionicons name="cloud-upload" size={32} color={colors.white} />
             <Text style={styles.buttonText}>{t("scanScreen.upload")}</Text>
-          </TouchableOpacity>
+          </AnimatedPressable>
         </View>
       </View>
     </SafeAreaView>

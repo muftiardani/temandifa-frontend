@@ -18,6 +18,7 @@ import { useAppTheme } from "../hooks/useAppTheme";
 import { authService } from "../services/authService";
 import { AuthStackParamList } from "../types/navigation";
 import { Ionicons } from "@expo/vector-icons";
+import AnimatedPressable from "../components/common/AnimatedPressable";
 
 type ForgotPasswordScreenProps = NativeStackScreenProps<
   AuthStackParamList,
@@ -103,7 +104,7 @@ const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({
           />
         </View>
 
-        <TouchableOpacity
+        <AnimatedPressable
           style={[
             styles.button,
             { backgroundColor: isLoading ? colors.grey : colors.primary },
@@ -118,7 +119,7 @@ const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({
           ) : (
             <Text style={styles.buttonText}>{t("auth.sendInstructions")}</Text>
           )}
-        </TouchableOpacity>
+        </AnimatedPressable>
 
         <TouchableOpacity
           onPress={() => navigation.goBack()}

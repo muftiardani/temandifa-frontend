@@ -8,6 +8,9 @@ import {
   FlatList,
   TextInput,
   Alert,
+  LayoutAnimation,
+  UIManager,
+  Platform,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
@@ -15,6 +18,13 @@ import { useAppTheme } from "../hooks/useAppTheme";
 import { useContactStore, EmergencyContact } from "../store/contactStore";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../types/navigation";
+
+if (
+  Platform.OS === "android" &&
+  UIManager.setLayoutAnimationEnabledExperimental
+) {
+  UIManager.setLayoutAnimationEnabledExperimental(true);
+}
 
 type Props = NativeStackScreenProps<RootStackParamList, "EmergencyContacts">;
 
@@ -27,6 +37,7 @@ const EmergencyContactsScreen: React.FC<Props> = ({ navigation }) => {
 
   const handleAddContact = () => {
     if (name.trim() && phoneNumber.trim()) {
+      LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
       addContact({ name, phoneNumber });
       setName("");
       setPhoneNumber("");
@@ -44,7 +55,12 @@ const EmergencyContactsScreen: React.FC<Props> = ({ navigation }) => {
         {
           text: t("dialogs.delete"),
           style: "destructive",
-          onPress: () => removeContact(id),
+          onPress: () => {
+            LayoutAnimation.configureNext(
+              LayoutAnimation.Presets.easeInEaseOut
+            );
+            removeContact(id);
+          },
         },
       ]
     );

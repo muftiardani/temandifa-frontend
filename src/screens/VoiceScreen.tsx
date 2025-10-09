@@ -36,6 +36,8 @@ const VoiceScreen: React.FC<VoiceScreenProps> = ({ navigation }) => {
   } = useAudioRecorder();
 
   const scale = useSharedValue(1);
+  const rippleScale = useSharedValue(1);
+  const rippleOpacity = useSharedValue(1);
 
   useEffect(() => {
     if (isRecording) {
@@ -50,13 +52,29 @@ const VoiceScreen: React.FC<VoiceScreenProps> = ({ navigation }) => {
         -1,
         true
       );
+
+      rippleScale.value = withRepeat(
+        withTiming(4, { duration: 2000, easing: Easing.out(Easing.quad) }),
+        -1
+      );
+      rippleOpacity.value = withRepeat(
+        withTiming(0, { duration: 2000, easing: Easing.out(Easing.quad) }),
+        -1
+      );
     } else {
       scale.value = withTiming(1, { duration: 200 });
+      rippleScale.value = withTiming(1);
+      rippleOpacity.value = withTiming(1);
     }
-  }, [isRecording, scale]);
+  }, [isRecording, scale, rippleScale, rippleOpacity]);
 
   const animatedMicStyle = useAnimatedStyle(() => ({
     transform: [{ scale: scale.value }],
+  }));
+
+  const animatedRippleStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: rippleScale.value }],
+    opacity: rippleOpacity.value,
   }));
 
   const handleMicPress = () => {
@@ -97,27 +115,40 @@ const VoiceScreen: React.FC<VoiceScreenProps> = ({ navigation }) => {
         {isProcessing ? (
           <LoadingIndicator />
         ) : (
-          <Animated.View style={[animatedMicStyle]}>
-            <TouchableOpacity
-              style={[
-                styles.micButton,
-                {
-                  backgroundColor: isRecording ? colors.accent : colors.primary,
-                },
-              ]}
-              onPress={handleMicPress}
-              disabled={isProcessing}
-              accessibilityLabel={
-                isRecording
-                  ? "Berhenti merekam. Tombol"
-                  : "Mulai merekam. Tombol"
-              }
-              accessibilityHint="Ketuk dua kali untuk mengaktifkan"
-              accessibilityRole="button"
-            >
-              <Ionicons name="mic" size={80} color={colors.white} />
-            </TouchableOpacity>
-          </Animated.View>
+          <View style={styles.micContainer}>
+            {isRecording && (
+              <Animated.View
+                style={[
+                  styles.ripple,
+                  { backgroundColor: colors.primary },
+                  animatedRippleStyle,
+                ]}
+              />
+            )}
+            <Animated.View style={[animatedMicStyle]}>
+              <TouchableOpacity
+                style={[
+                  styles.micButton,
+                  {
+                    backgroundColor: isRecording
+                      ? colors.accent
+                      : colors.primary,
+                  },
+                ]}
+                onPress={handleMicPress}
+                disabled={isProcessing}
+                accessibilityLabel={
+                  isRecording
+                    ? "Berhenti merekam. Tombol"
+                    : "Mulai merekam. Tombol"
+                }
+                accessibilityHint="Ketuk dua kali untuk mengaktifkan"
+                accessibilityRole="button"
+              >
+                <Ionicons name="mic" size={80} color={colors.white} />
+              </TouchableOpacity>
+            </Animated.View>
+          </View>
         )}
       </View>
     </SafeAreaView>
@@ -142,6 +173,10 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   infoText: { fontSize: 18, marginBottom: 40, textAlign: "center" },
+  micContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+  },
   micButton: {
     width: 150,
     height: 150,
@@ -149,6 +184,13 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     elevation: 8,
+    zIndex: 1,
+  },
+  ripple: {
+    position: "absolute",
+    width: 150,
+    height: 150,
+    borderRadius: 75,
   },
 });
 

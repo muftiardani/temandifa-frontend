@@ -97,7 +97,11 @@ const AppNavigator = () => (
     <AppStack.Screen name="Camera" component={CameraScreen} />
     <AppStack.Screen name="Scan" component={ScanScreen} />
     <AppStack.Screen name="Voice" component={VoiceScreen} />
-    <AppStack.Screen name="Settings" component={SettingsScreen} />
+    <AppStack.Screen
+      name="Settings"
+      component={SettingsScreen}
+      options={{ animation: "slide_from_bottom" }}
+    />
     <AppStack.Screen name="DocumentScanner" component={DocumentScannerScreen} />
     <AppStack.Screen name="Language" component={LanguageScreen} />
     <AppStack.Screen name="HelpAndGuide" component={HelpAndGuideScreen} />
@@ -116,7 +120,11 @@ const AppNavigator = () => (
       component={VoiceResultScreen}
       options={{ animation: "fade_from_bottom" }}
     />
-    <AppStack.Screen name="Dial" component={DialScreen} />
+    <AppStack.Screen
+      name="Dial"
+      component={DialScreen}
+      options={{ animation: "slide_from_bottom" }}
+    />
     <AppStack.Screen name="OutgoingCall" component={OutgoingCallScreen} />
     <AppStack.Screen
       name="EmergencyContacts"

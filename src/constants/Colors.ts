@@ -29,6 +29,8 @@ export const lightColors = {
   controlBackground: "rgba(0, 0, 0, 0.4)",
   overlay: "rgba(0, 0, 0, 0.5)",
   chevron: "#C7C7CC",
+  switchThumb: "#f4f3f4",
+  placeholderIcon: "#E0E0E0",
 };
 
 export const darkColors = {
@@ -53,4 +55,6 @@ export const darkColors = {
   controlBackground: "rgba(0, 0, 0, 0.4)",
   overlay: "rgba(0, 0, 0, 0.6)",
   chevron: "#C7C7CC",
+  switchThumb: "#f4f3f4",
+  placeholderIcon: "#424242",
 };
