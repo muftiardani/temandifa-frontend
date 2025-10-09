@@ -88,6 +88,7 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
             layout="horizontal"
             style={{ width: "100%", height: 135 }}
             onPress={handleCameraPress}
+            accessibilityLabel={t("home.cameraButton")}
           />
           <View style={styles.row}>
             <HomeButton
@@ -96,6 +97,7 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
               backgroundColor={colors.accent}
               style={{ flex: 1, height: 140 }}
               onPress={handleScanPress}
+              accessibilityLabel={t("home.scanButton")}
             />
             <HomeButton
               title={t("home.voiceButton")}
@@ -103,6 +105,7 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
               backgroundColor={colors.secondary}
               style={{ flex: 1, height: 140 }}
               onPress={handleVoicePress}
+              accessibilityLabel={t("home.voiceButton")}
             />
           </View>
         </View>

@@ -65,6 +65,8 @@ const DialScreen = () => {
     <TouchableOpacity
       style={[styles.contactItem, { borderBottomColor: colors.border }]}
       onPress={() => handleInitiateCall(item.phoneNumber)}
+      accessibilityLabel={`${t("call.call")} ${item.name}`}
+      accessibilityRole="button"
     >
       <Ionicons name="person-circle-outline" size={40} color={colors.primary} />
       <View style={styles.contactInfo}>
@@ -87,6 +89,8 @@ const DialScreen = () => {
         <TouchableOpacity
           onPress={() => navigation.goBack()}
           style={styles.backButton}
+          accessibilityLabel={t("general.back")}
+          accessibilityRole="button"
         >
           <Ionicons name="chevron-back" size={24} color={colors.text} />
         </TouchableOpacity>
@@ -119,6 +123,7 @@ const DialScreen = () => {
               value={phoneNumber}
               onChangeText={setPhoneNumber}
               editable={!isLoading}
+              accessibilityLabel={t("call.orEnterPhoneNumber")}
             />
             <TouchableOpacity
               style={[
@@ -127,6 +132,8 @@ const DialScreen = () => {
               ]}
               onPress={() => handleInitiateCall(phoneNumber)}
               disabled={isLoading}
+              accessibilityLabel={t("call.call")}
+              accessibilityRole="button"
             >
               {isLoading ? (
                 <ActivityIndicator color={colors.white} />

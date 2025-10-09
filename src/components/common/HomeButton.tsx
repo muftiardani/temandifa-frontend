@@ -5,6 +5,7 @@ import {
   Text,
   StyleProp,
   ViewStyle,
+  AccessibilityProps,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import Animated, {
@@ -14,7 +15,7 @@ import Animated, {
 } from "react-native-reanimated";
 import { useAppTheme } from "../../hooks/useAppTheme";
 
-type HomeButtonProps = {
+interface HomeButtonProps extends AccessibilityProps {
   icon: keyof typeof Ionicons.glyphMap;
   title: string;
   onPress: () => void;
@@ -22,7 +23,7 @@ type HomeButtonProps = {
   layout?: "horizontal" | "vertical";
   style?: StyleProp<ViewStyle>;
   testID?: string;
-};
+}
 
 const HomeButton = ({
   icon,
@@ -32,9 +33,9 @@ const HomeButton = ({
   layout = "vertical",
   style,
   testID,
+  ...props
 }: HomeButtonProps) => {
   const { colors } = useAppTheme();
-
   const scale = useSharedValue(1);
 
   const animatedStyle = useAnimatedStyle(() => {
@@ -69,6 +70,8 @@ const HomeButton = ({
           },
         ]}
         testID={testID}
+        accessibilityRole="button"
+        {...props}
       >
         <Ionicons
           name={icon}

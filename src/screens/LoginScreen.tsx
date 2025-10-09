@@ -147,7 +147,12 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
       style={{ flex: 1, backgroundColor: colors.background }}
     >
       <ScrollView contentContainerStyle={styles.container}>
-        <TouchableOpacity style={styles.skipButton} onPress={loginAsGuest}>
+        <TouchableOpacity
+          style={styles.skipButton}
+          onPress={loginAsGuest}
+          accessibilityLabel={t("onboarding.skip")}
+          accessibilityRole="button"
+        >
           <Text style={[styles.skipText, { color: colors.primary }]}>
             {t("onboarding.skip")}
           </Text>
@@ -182,11 +187,14 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
             value={login}
             onChangeText={setLogin}
             autoCapitalize="none"
+            accessibilityLabel={t("auth.usernameOrEmail")}
           />
           {isBiometricSupported && (
             <TouchableOpacity
               onPress={handleBiometricLogin}
               style={styles.biometricButton}
+              accessibilityLabel={t("auth.loginWithBiometrics")}
+              accessibilityRole="button"
             >
               <Ionicons name="finger-print" size={28} color={colors.grey} />
             </TouchableOpacity>
@@ -212,10 +220,15 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
             value={password}
             onChangeText={setPassword}
             secureTextEntry
+            accessibilityLabel={t("auth.password")}
           />
         </View>
 
-        <TouchableOpacity onPress={() => navigation.navigate("ForgotPassword")}>
+        <TouchableOpacity
+          onPress={() => navigation.navigate("ForgotPassword")}
+          accessibilityRole="link"
+          accessibilityLabel={t("auth.forgotPassword")}
+        >
           <Text
             style={[
               styles.linkText,
@@ -233,6 +246,8 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
           ]}
           onPress={handleLogin}
           disabled={isLoading}
+          accessibilityLabel={t("auth.login")}
+          accessibilityRole="button"
         >
           {isLoading ? (
             <ActivityIndicator color={colors.white} />
@@ -253,6 +268,8 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
           style={[styles.socialButton, { borderColor: colors.border }]}
           onPress={() => promptAsync()}
           disabled={!request || isLoading}
+          accessibilityLabel={t("auth.continueWithGoogle")}
+          accessibilityRole="button"
         >
           <Ionicons name="logo-google" size={24} color={colors.text} />
           <Text style={[styles.socialButtonText, { color: colors.text }]}>
@@ -263,6 +280,8 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
         <TouchableOpacity
           onPress={() => navigation.navigate("Register")}
           style={styles.footer}
+          accessibilityRole="link"
+          accessibilityLabel={`${t("auth.noAccount")} ${t("auth.register")}`}
         >
           <Text style={[styles.footerText, { color: colors.grey }]}>
             {t("auth.noAccount")}

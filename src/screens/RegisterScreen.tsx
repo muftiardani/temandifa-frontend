@@ -146,6 +146,7 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
           onChangeText={handleUsernameChange}
           autoCapitalize="none"
           error={usernameError}
+          accessibilityLabel={t("auth.username")}
         />
 
         <ValidatedInput
@@ -156,6 +157,7 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
           keyboardType="email-address"
           autoCapitalize="none"
           error={emailError}
+          accessibilityLabel={t("auth.email")}
         />
 
         <ValidatedInput
@@ -167,6 +169,10 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
           value={phoneNumber}
           onChangeText={setPhoneNumber}
           keyboardType="phone-pad"
+          accessibilityLabel={`${t("contacts.phoneNumber")} (${t(
+            "general.optional",
+            "Opsional"
+          )})`}
         />
 
         <ValidatedInput
@@ -176,6 +182,7 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
           onChangeText={handlePasswordChange}
           secureTextEntry
           error={passwordError}
+          accessibilityLabel={t("auth.password")}
         />
 
         <TouchableOpacity
@@ -188,6 +195,8 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
           ]}
           onPress={handleRegister}
           disabled={!isFormValid || isLoading}
+          accessibilityLabel={t("auth.register")}
+          accessibilityRole="button"
         >
           {isLoading ? (
             <ActivityIndicator color={colors.white} />
@@ -199,6 +208,8 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
         <TouchableOpacity
           onPress={() => navigation.goBack()}
           style={styles.footer}
+          accessibilityRole="link"
+          accessibilityLabel={`${t("auth.haveAccount")} ${t("auth.login")}`}
         >
           <Text style={[styles.footerText, { color: colors.grey }]}>
             {t("auth.haveAccount")}

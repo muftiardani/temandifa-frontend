@@ -5,11 +5,12 @@ import {
   Text,
   StyleSheet,
   TextInputProps,
+  AccessibilityProps,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useAppTheme } from "../../hooks/useAppTheme";
 
-interface ValidatedInputProps extends TextInputProps {
+interface ValidatedInputProps extends TextInputProps, AccessibilityProps {
   icon?: keyof typeof Ionicons.glyphMap;
   error?: string;
 }
@@ -47,7 +48,14 @@ const ValidatedInput: React.FC<ValidatedInputProps> = ({
           {...props}
         />
       </View>
-      {hasError ? <Text style={styles.errorText}>{error}</Text> : null}
+      {hasError ? (
+        <Text
+          style={[styles.errorText, { color: colors.error }]}
+          accessibilityLiveRegion="polite"
+        >
+          {error}
+        </Text>
+      ) : null}
     </>
   );
 };
@@ -71,7 +79,6 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   errorText: {
-    color: "red",
     alignSelf: "flex-start",
     marginLeft: 15,
     marginBottom: 10,

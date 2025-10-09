@@ -55,6 +55,8 @@ const OutgoingCallScreen = () => {
       <TouchableOpacity
         onPress={handleCancelCall}
         style={[styles.button, { backgroundColor: colors.danger }]}
+        accessibilityLabel={t("dialogs.cancel")}
+        accessibilityRole="button"
       >
         <Ionicons name="close" size={32} color={colors.white} />
       </TouchableOpacity>

@@ -67,6 +67,8 @@ const IncomingCallScreen = () => {
           <TouchableOpacity
             onPress={handleDecline}
             style={[styles.button, { backgroundColor: colors.danger }]}
+            accessibilityLabel={t("call.decline")}
+            accessibilityRole="button"
           >
             <Ionicons name="close" size={40} color={colors.white} />
           </TouchableOpacity>
@@ -78,6 +80,8 @@ const IncomingCallScreen = () => {
           <TouchableOpacity
             onPress={handleAccept}
             style={[styles.button, { backgroundColor: colors.success }]}
+            accessibilityLabel={t("call.accept")}
+            accessibilityRole="button"
           >
             <Ionicons name="call" size={32} color={colors.white} />
           </TouchableOpacity>

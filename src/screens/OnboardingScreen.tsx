@@ -80,6 +80,9 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = () => {
     index: number;
   }) => {
     const isLastItem = index === onboardingData.length - 1;
+    const buttonText = isLastItem
+      ? t("onboarding.getStarted")
+      : t("onboarding.next");
 
     return (
       <View style={[styles.slideContainer, { width }]}>
@@ -92,10 +95,10 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = () => {
         <TouchableOpacity
           style={[styles.button, { backgroundColor: colors.primary }]}
           onPress={() => handleNext(index)}
+          accessibilityLabel={buttonText}
+          accessibilityRole="button"
         >
-          <Text style={styles.buttonText}>
-            {isLastItem ? t("onboarding.getStarted") : t("onboarding.next")}
-          </Text>
+          <Text style={styles.buttonText}>{buttonText}</Text>
         </TouchableOpacity>
       </View>
     );
@@ -108,6 +111,8 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = () => {
       <TouchableOpacity
         style={styles.skipButton}
         onPress={handleFinishOnboarding}
+        accessibilityLabel={t("onboarding.skip")}
+        accessibilityRole="button"
       >
         <Text style={[styles.skipText, { color: colors.grey }]}>
           {t("onboarding.skip")}

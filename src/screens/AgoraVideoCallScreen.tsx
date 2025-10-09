@@ -18,9 +18,11 @@ import { Ionicons } from "@expo/vector-icons";
 
 import { useAppTheme } from "../hooks/useAppTheme";
 import { useAgoraCall } from "../hooks/useAgoraCall";
+import { useTranslation } from "react-i18next";
 
 const AgoraVideoCallScreen = () => {
   const { colors } = useAppTheme();
+  const { t } = useTranslation();
 
   const {
     isJoined,
@@ -92,6 +94,12 @@ const AgoraVideoCallScreen = () => {
             { backgroundColor: colors.controlBackground },
           ]}
           onPress={toggleCamera}
+          accessibilityLabel={
+            isCameraOff
+              ? t("call.turnCameraOn", "Nyalakan kamera")
+              : t("call.turnCameraOff", "Matikan kamera")
+          }
+          accessibilityRole="button"
         >
           <Ionicons
             name={isCameraOff ? "videocam-off" : "videocam"}
@@ -105,6 +113,12 @@ const AgoraVideoCallScreen = () => {
             { backgroundColor: colors.controlBackground },
           ]}
           onPress={toggleMute}
+          accessibilityLabel={
+            isMuted
+              ? t("call.unmute", "Nyalakan suara")
+              : t("call.mute", "Matikan suara")
+          }
+          accessibilityRole="button"
         >
           <Ionicons
             name={isMuted ? "mic-off" : "mic"}
@@ -118,12 +132,16 @@ const AgoraVideoCallScreen = () => {
             { backgroundColor: colors.controlBackground },
           ]}
           onPress={switchCamera}
+          accessibilityLabel={t("call.switchCamera", "Ganti kamera")}
+          accessibilityRole="button"
         >
           <Ionicons name="camera-reverse" size={28} color={colors.white} />
         </TouchableOpacity>
         <TouchableOpacity
           style={[styles.iconButton, { backgroundColor: colors.danger }]}
           onPress={handleLeave}
+          accessibilityLabel={t("call.endCall", "Akhiri panggilan")}
+          accessibilityRole="button"
         >
           <Ionicons
             name="call"

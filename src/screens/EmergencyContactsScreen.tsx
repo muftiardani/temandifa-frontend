@@ -60,7 +60,11 @@ const EmergencyContactsScreen: React.FC<Props> = ({ navigation }) => {
           {item.phoneNumber}
         </Text>
       </View>
-      <TouchableOpacity onPress={() => confirmRemove(item.id)}>
+      <TouchableOpacity
+        onPress={() => confirmRemove(item.id)}
+        accessibilityLabel={`${t("dialogs.delete")} ${item.name}`}
+        accessibilityRole="button"
+      >
         <Ionicons name="trash-outline" size={24} color={colors.danger} />
       </TouchableOpacity>
     </View>
@@ -72,6 +76,8 @@ const EmergencyContactsScreen: React.FC<Props> = ({ navigation }) => {
         <TouchableOpacity
           onPress={() => navigation.goBack()}
           style={styles.backButton}
+          accessibilityLabel={t("general.back")}
+          accessibilityRole="button"
         >
           <Ionicons name="chevron-back" size={24} color={colors.text} />
         </TouchableOpacity>
@@ -90,6 +96,7 @@ const EmergencyContactsScreen: React.FC<Props> = ({ navigation }) => {
           value={name}
           onChangeText={setName}
           placeholderTextColor={colors.grey}
+          accessibilityLabel={t("contacts.contactName")}
         />
         <TextInput
           style={[
@@ -101,10 +108,13 @@ const EmergencyContactsScreen: React.FC<Props> = ({ navigation }) => {
           onChangeText={setPhoneNumber}
           keyboardType="phone-pad"
           placeholderTextColor={colors.grey}
+          accessibilityLabel={t("contacts.phoneNumber")}
         />
         <TouchableOpacity
           style={[styles.addButton, { backgroundColor: colors.primary }]}
           onPress={handleAddContact}
+          accessibilityLabel={t("contacts.addContact")}
+          accessibilityRole="button"
         >
           <Text style={styles.addButtonText}>{t("contacts.addContact")}</Text>
         </TouchableOpacity>

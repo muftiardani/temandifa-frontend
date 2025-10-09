@@ -48,8 +48,8 @@ const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({
       await authService.forgotPassword(email);
       Toast.show({
         type: "success",
-        text1: t("general.success"), // Anda mungkin perlu menambahkan ini ke file i18n
-        text2: t("auth.sendInstructionsSuccess"), // Dan ini juga
+        text1: t("general.success"),
+        text2: t("auth.instructionsSentSuccess"),
       });
       navigation.goBack();
     } catch (error: any) {
@@ -93,12 +93,13 @@ const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({
           />
           <TextInput
             style={[styles.input, { color: colors.text }]}
-            placeholder="Email"
+            placeholder={t("auth.email")}
             placeholderTextColor={colors.grey}
             value={email}
             onChangeText={setEmail}
             keyboardType="email-address"
             autoCapitalize="none"
+            accessibilityLabel={t("auth.email")}
           />
         </View>
 
@@ -109,6 +110,8 @@ const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({
           ]}
           onPress={handleForgotPassword}
           disabled={isLoading}
+          accessibilityLabel={t("auth.sendInstructions")}
+          accessibilityRole="button"
         >
           {isLoading ? (
             <ActivityIndicator color={colors.white} />
@@ -120,6 +123,8 @@ const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({
         <TouchableOpacity
           onPress={() => navigation.goBack()}
           style={styles.footer}
+          accessibilityLabel={t("auth.backToLogin")}
+          accessibilityRole="link"
         >
           <Text style={[styles.footerText, { color: colors.primary }]}>
             {t("auth.backToLogin")}
