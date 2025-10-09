@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
-  TextInput,
   TouchableOpacity,
   StyleSheet,
   ActivityIndicator,
@@ -23,6 +22,7 @@ import { Ionicons } from "@expo/vector-icons";
 import * as Google from "expo-auth-session/providers/google";
 import * as WebBrowser from "expo-web-browser";
 import * as LocalAuthentication from "expo-local-authentication";
+import ValidatedInput from "../components/common/ValidatedInput";
 import AnimatedPressable from "../components/common/AnimatedPressable";
 
 WebBrowser.maybeCompleteAuthSession();
@@ -169,22 +169,10 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
           </Text>
         </View>
 
-        <View
-          style={[
-            styles.inputContainer,
-            { borderColor: colors.border, backgroundColor: colors.card },
-          ]}
-        >
-          <Ionicons
-            name="person-outline"
-            size={22}
-            color={colors.grey}
-            style={styles.inputIcon}
-          />
-          <TextInput
-            style={[styles.input, { color: colors.text }]}
+        <View style={styles.inputGroup}>
+          <ValidatedInput
+            icon="person-outline"
             placeholder={t("auth.usernameOrEmail")}
-            placeholderTextColor={colors.grey}
             value={login}
             onChangeText={setLogin}
             autoCapitalize="none"
@@ -202,28 +190,14 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
           )}
         </View>
 
-        <View
-          style={[
-            styles.inputContainer,
-            { borderColor: colors.border, backgroundColor: colors.card },
-          ]}
-        >
-          <Ionicons
-            name="lock-closed-outline"
-            size={22}
-            color={colors.grey}
-            style={styles.inputIcon}
-          />
-          <TextInput
-            style={[styles.input, { color: colors.text }]}
-            placeholder={t("auth.password")}
-            placeholderTextColor={colors.grey}
-            value={password}
-            onChangeText={setPassword}
-            secureTextEntry
-            accessibilityLabel={t("auth.password")}
-          />
-        </View>
+        <ValidatedInput
+          icon="lock-closed-outline"
+          placeholder={t("auth.password")}
+          value={password}
+          onChangeText={setPassword}
+          secureTextEntry
+          accessibilityLabel={t("auth.password")}
+        />
 
         <TouchableOpacity
           onPress={() => navigation.navigate("ForgotPassword")}
@@ -321,25 +295,16 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginTop: 8,
   },
-  inputContainer: {
+  inputGroup: {
     flexDirection: "row",
     alignItems: "center",
-    width: "100%",
-    borderWidth: 1,
-    borderRadius: 12,
-    marginBottom: 15,
-    paddingHorizontal: 10,
-  },
-  input: {
-    flex: 1,
-    padding: 15,
-    fontSize: 16,
-  },
-  inputIcon: {
-    marginRight: 10,
   },
   biometricButton: {
-    padding: 10,
+    position: "absolute",
+    right: 0,
+    height: "100%",
+    justifyContent: "center",
+    paddingHorizontal: 15,
   },
   button: {
     width: "100%",

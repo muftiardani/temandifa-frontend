@@ -112,6 +112,8 @@
     "usernameOrEmail": "Username or Email",
     "email": "Email",
     "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "passwordsDoNotMatch": "Password confirmation does not match.",
     "forgotPassword": "Forgot Password?",
     "or": "OR",
     "continueWithGoogle": "Continue with Google",

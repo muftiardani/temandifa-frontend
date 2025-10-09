@@ -112,6 +112,8 @@
     "usernameOrEmail": "Username atau Email",
     "email": "Email",
     "password": "Password",
+    "confirmPassword": "Konfirmasi Password",
+    "passwordsDoNotMatch": "Konfirmasi password tidak cocok.",
     "forgotPassword": "Lupa Password?",
     "or": "ATAU",
     "continueWithGoogle": "Lanjutkan dengan Google",

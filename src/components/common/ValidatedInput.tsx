@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   TextInput,
@@ -6,6 +6,7 @@ import {
   StyleSheet,
   TextInputProps,
   AccessibilityProps,
+  TouchableOpacity,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useAppTheme } from "../../hooks/useAppTheme";
@@ -18,10 +19,12 @@ interface ValidatedInputProps extends TextInputProps, AccessibilityProps {
 const ValidatedInput: React.FC<ValidatedInputProps> = ({
   icon,
   error,
+  secureTextEntry,
   ...props
 }) => {
   const { colors } = useAppTheme();
   const hasError = Boolean(error);
+  const [isSecure, setIsSecure] = useState(secureTextEntry);
 
   return (
     <>
@@ -45,8 +48,24 @@ const ValidatedInput: React.FC<ValidatedInputProps> = ({
         <TextInput
           style={[styles.input, { color: colors.text }]}
           placeholderTextColor={colors.grey}
+          secureTextEntry={isSecure}
           {...props}
         />
+        {secureTextEntry && (
+          <TouchableOpacity
+            onPress={() => setIsSecure(!isSecure)}
+            style={styles.eyeIcon}
+            accessibilityLabel={
+              isSecure ? "Tampilkan password" : "Sembunyikan password"
+            }
+          >
+            <Ionicons
+              name={isSecure ? "eye-off-outline" : "eye-outline"}
+              size={24}
+              color={colors.grey}
+            />
+          </TouchableOpacity>
+        )}
       </View>
       {hasError ? (
         <Text
@@ -77,6 +96,9 @@ const styles = StyleSheet.create({
   },
   inputIcon: {
     marginRight: 10,
+  },
+  eyeIcon: {
+    padding: 10,
   },
   errorText: {
     alignSelf: "flex-start",

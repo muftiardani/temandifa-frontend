@@ -39,11 +39,13 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState(""); // State baru
   const [isLoading, setIsLoading] = useState(false);
 
   const [usernameError, setUsernameError] = useState("");
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
+  const [confirmPasswordError, setConfirmPasswordError] = useState(""); // State error baru
   const [isFormValid, setIsFormValid] = useState(false);
 
   const { colors } = useAppTheme();
@@ -63,9 +65,12 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
     const isUsernameValid = username.length >= 3;
     const isEmailValid = validateEmail(email);
     const isPasswordValid = validatePassword(password) === "";
+    const doPasswordsMatch = password === confirmPassword; // Validasi baru
 
-    setIsFormValid(isUsernameValid && isEmailValid && isPasswordValid);
-  }, [username, email, password]);
+    setIsFormValid(
+      isUsernameValid && isEmailValid && isPasswordValid && doPasswordsMatch
+    );
+  }, [username, email, password, confirmPassword]);
 
   const handleUsernameChange = (text: string) => {
     setUsername(text);
@@ -91,6 +96,15 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
       setPasswordError(validatePassword(text));
     } else {
       setPasswordError("");
+    }
+  };
+
+  const handleConfirmPasswordChange = (text: string) => {
+    setConfirmPassword(text);
+    if (text.length > 0 && password !== text) {
+      setConfirmPasswordError(t("auth.passwordsDoNotMatch"));
+    } else {
+      setConfirmPasswordError("");
     }
   };
 
@@ -184,6 +198,16 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
           secureTextEntry
           error={passwordError}
           accessibilityLabel={t("auth.password")}
+        />
+
+        <ValidatedInput
+          icon="lock-closed-outline"
+          placeholder={t("auth.confirmPassword")}
+          value={confirmPassword}
+          onChangeText={handleConfirmPasswordChange}
+          secureTextEntry
+          error={confirmPasswordError}
+          accessibilityLabel={t("auth.confirmPassword")}
         />
 
         <AnimatedPressable
