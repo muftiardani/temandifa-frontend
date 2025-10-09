@@ -169,26 +169,26 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
           </Text>
         </View>
 
-        <View style={styles.inputGroup}>
-          <ValidatedInput
-            icon="person-outline"
-            placeholder={t("auth.usernameOrEmail")}
-            value={login}
-            onChangeText={setLogin}
-            autoCapitalize="none"
-            accessibilityLabel={t("auth.usernameOrEmail")}
-          />
-          {isBiometricSupported && (
-            <TouchableOpacity
-              onPress={handleBiometricLogin}
-              style={styles.biometricButton}
-              accessibilityLabel={t("auth.loginWithBiometrics")}
-              accessibilityRole="button"
-            >
-              <Ionicons name="finger-print" size={28} color={colors.grey} />
-            </TouchableOpacity>
-          )}
-        </View>
+        <ValidatedInput
+          icon="person-outline"
+          placeholder={t("auth.usernameOrEmail")}
+          value={login}
+          onChangeText={setLogin}
+          autoCapitalize="none"
+          accessibilityLabel={t("auth.usernameOrEmail")}
+          rightIcon={
+            isBiometricSupported ? (
+              <TouchableOpacity
+                onPress={handleBiometricLogin}
+                style={styles.biometricButton}
+                accessibilityLabel={t("auth.loginWithBiometrics")}
+                accessibilityRole="button"
+              >
+                <Ionicons name="finger-print" size={28} color={colors.grey} />
+              </TouchableOpacity>
+            ) : undefined
+          }
+        />
 
         <ValidatedInput
           icon="lock-closed-outline"
@@ -295,16 +295,8 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginTop: 8,
   },
-  inputGroup: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
   biometricButton: {
-    position: "absolute",
-    right: 0,
-    height: "100%",
-    justifyContent: "center",
-    paddingHorizontal: 15,
+    padding: 10,
   },
   button: {
     width: "100%",

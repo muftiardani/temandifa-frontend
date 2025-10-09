@@ -3,9 +3,9 @@ import {
   View,
   Text,
   StyleSheet,
-  TouchableOpacity,
   Switch,
   SafeAreaView,
+  Alert,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
@@ -13,6 +13,8 @@ import { useTranslation } from "react-i18next";
 import { RootStackParamList } from "../types/navigation";
 import { useAppStore } from "../store/appStore";
 import { useAppTheme } from "../hooks/useAppTheme";
+import { useAuthStore } from "../store/authStore";
+import AnimatedPressable from "../components/common/AnimatedPressable";
 
 type SettingsScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -33,7 +35,7 @@ const SettingsItem = React.memo(
     borderColor: string;
     accessibilityHint?: string;
   }) => (
-    <TouchableOpacity
+    <AnimatedPressable
       style={[styles.itemContainer, { borderBottomColor: borderColor }]}
       onPress={onPress}
       accessibilityLabel={label}
@@ -42,7 +44,7 @@ const SettingsItem = React.memo(
     >
       <Text style={[styles.itemLabel, { color: textColor }]}>{label}</Text>
       <Ionicons name="chevron-forward" size={24} color="#C7C7CC" />
-    </TouchableOpacity>
+    </AnimatedPressable>
   )
 );
 
@@ -50,20 +52,36 @@ const SettingsScreen: React.FC<SettingsScreenProps> = ({ navigation }) => {
   const { toggleTheme } = useAppStore();
   const { t } = useTranslation();
   const { colors, theme } = useAppTheme();
+  const { logout, isGuest } = useAuthStore();
   const isDarkMode = theme === "dark";
+
+  const handleLogout = () => {
+    Alert.alert(
+      t("dialogs.logoutConfirmationTitle"),
+      t("dialogs.logoutConfirmationMessage"),
+      [
+        { text: t("dialogs.cancel"), style: "cancel" },
+        {
+          text: t("auth.logout"),
+          style: "destructive",
+          onPress: () => logout(),
+        },
+      ]
+    );
+  };
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
       <View style={{ flex: 1 }}>
         <View style={[styles.header, { borderBottomColor: colors.border }]}>
-          <TouchableOpacity
+          <AnimatedPressable
             onPress={() => navigation.goBack()}
             style={styles.backButton}
             accessibilityLabel={t("general.back")}
             accessibilityRole="button"
           >
             <Ionicons name="chevron-back" size={24} color={colors.text} />
-          </TouchableOpacity>
+          </AnimatedPressable>
           <Text style={[styles.headerTitle, { color: colors.headerText }]}>
             {t("settings.title")}
           </Text>
@@ -80,7 +98,7 @@ const SettingsScreen: React.FC<SettingsScreenProps> = ({ navigation }) => {
                 false: colors.switchInactive,
                 true: colors.primary,
               }}
-              thumbColor={isDarkMode ? colors.white : "#f4f3f4"}
+              thumbColor={isDarkMode ? colors.white : colors.switchThumb}
               ios_backgroundColor="#3e3e3e"
               onValueChange={toggleTheme}
               value={isDarkMode}
@@ -95,13 +113,17 @@ const SettingsScreen: React.FC<SettingsScreenProps> = ({ navigation }) => {
             borderColor={colors.border}
             accessibilityHint={`Navigasi ke halaman ${t("settings.language")}`}
           />
-          <SettingsItem
-            label="Kontak Darurat"
-            onPress={() => navigation.navigate("EmergencyContacts")}
-            textColor={colors.text}
-            borderColor={colors.border}
-            accessibilityHint="Navigasi ke halaman Kontak Darurat"
-          />
+          {!isGuest && (
+            <SettingsItem
+              label={t("settings.emergencyContacts")}
+              onPress={() => navigation.navigate("EmergencyContacts")}
+              textColor={colors.text}
+              borderColor={colors.border}
+              accessibilityHint={`Navigasi ke halaman ${t(
+                "settings.emergencyContacts"
+              )}`}
+            />
+          )}
           <SettingsItem
             label={t("settings.helpAndGuide")}
             onPress={() => navigation.navigate("HelpAndGuide")}
@@ -127,6 +149,19 @@ const SettingsScreen: React.FC<SettingsScreenProps> = ({ navigation }) => {
             borderColor={colors.border}
             accessibilityHint={`Navigasi ke halaman ${t("settings.about")}`}
           />
+
+          {!isGuest && (
+            <AnimatedPressable
+              style={styles.logoutButton}
+              onPress={handleLogout}
+              accessibilityLabel={t("auth.logout")}
+              accessibilityRole="button"
+            >
+              <Text style={[styles.logoutButtonText, { color: colors.danger }]}>
+                {t("auth.logout")}
+              </Text>
+            </AnimatedPressable>
+          )}
         </View>
         <Text style={[styles.footerText, { color: colors.footerText }]}>
           {t("settings.appName")}
@@ -160,6 +195,15 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontSize: 16,
     paddingBottom: 60,
+  },
+  logoutButton: {
+    marginTop: 30,
+    paddingVertical: 16,
+    alignItems: "center",
+  },
+  logoutButtonText: {
+    fontSize: 17,
+    fontWeight: "600",
   },
 });
 

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, ReactNode } from "react";
 import {
   View,
   TextInput,
@@ -14,12 +14,14 @@ import { useAppTheme } from "../../hooks/useAppTheme";
 interface ValidatedInputProps extends TextInputProps, AccessibilityProps {
   icon?: keyof typeof Ionicons.glyphMap;
   error?: string;
+  rightIcon?: ReactNode;
 }
 
 const ValidatedInput: React.FC<ValidatedInputProps> = ({
   icon,
   error,
   secureTextEntry,
+  rightIcon,
   ...props
 }) => {
   const { colors } = useAppTheme();
@@ -27,7 +29,7 @@ const ValidatedInput: React.FC<ValidatedInputProps> = ({
   const [isSecure, setIsSecure] = useState(secureTextEntry);
 
   return (
-    <>
+    <View style={styles.wrapper}>
       <View
         style={[
           styles.inputContainer,
@@ -66,6 +68,7 @@ const ValidatedInput: React.FC<ValidatedInputProps> = ({
             />
           </TouchableOpacity>
         )}
+        {rightIcon}
       </View>
       {hasError ? (
         <Text
@@ -75,23 +78,26 @@ const ValidatedInput: React.FC<ValidatedInputProps> = ({
           {error}
         </Text>
       ) : null}
-    </>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
+  wrapper: {
+    marginBottom: 15,
+  },
   inputContainer: {
     flexDirection: "row",
     alignItems: "center",
     width: "100%",
     borderWidth: 1,
     borderRadius: 12,
-    marginBottom: 5,
     paddingHorizontal: 10,
   },
   input: {
     flex: 1,
-    padding: 15,
+    paddingVertical: 15,
+    paddingHorizontal: 5,
     fontSize: 16,
   },
   inputIcon: {
@@ -103,7 +109,7 @@ const styles = StyleSheet.create({
   errorText: {
     alignSelf: "flex-start",
     marginLeft: 15,
-    marginBottom: 10,
+    marginTop: 4,
     fontSize: 12,
   },
 });

@@ -103,6 +103,7 @@
   },
   "auth": {
     "login": "Login",
+    "logout": "Logout",
     "register": "Register",
     "welcomeBack": "Welcome Back",
     "loginToContinue": "Login to continue",
@@ -154,6 +155,8 @@
     "failed": "Failed"
   },
   "call": {
+    "logoutConfirmationTitle": "Logout Confirmation",
+    "logoutConfirmationMessage": "Are you sure you want to log out of your account?",
     "videoCall": "Video Call",
     "incomingCall": "Incoming Call",
     "temandifaVideoCall": "TemanDifa Video Call",

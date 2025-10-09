@@ -103,6 +103,7 @@
   },
   "auth": {
     "login": "Login",
+    "logout": "Keluar",
     "register": "Daftar",
     "welcomeBack": "Selamat Datang Kembali",
     "loginToContinue": "Login untuk melanjutkan",
@@ -147,6 +148,8 @@
     "loginWithBiometrics": "Login dengan Biometrik"
   },
   "dialogs": {
+    "logoutConfirmationTitle": "Konfirmasi Keluar",
+    "logoutConfirmationMessage": "Apakah Anda yakin ingin keluar dari akun Anda?",
     "deleteContactTitle": "Hapus Kontak",
     "deleteContactMessage": "Apakah Anda yakin ingin menghapus kontak ini?",
     "cancel": "Batal",
