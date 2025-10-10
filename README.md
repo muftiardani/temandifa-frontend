@@ -1,15 +1,15 @@
 # TemanDifa Frontend
 
-Selamat datang di repositori *frontend* untuk aplikasi seluler TemanDifa. Aplikasi ini dibangun menggunakan React Native dan Expo, dirancang khusus untuk memberikan serangkaian alat bantu berbasis AI bagi penyandang disabilitas.
+Selamat datang di repositori *frontend* untuk aplikasi seluler **TemanDifa**. Aplikasi ini dibangun menggunakan React Native dan Expo, dirancang sebagai serangkaian alat bantu canggih berbasis AI untuk penyandang disabilitas, dengan fokus pada aksesibilitas dan keandalan.
 
 ## ✨ Fitur Utama
 
-  - **Deteksi Objek Real-time**: Menggunakan kamera untuk mengidentifikasi objek di sekitar pengguna dan memberikan *feedback* suara.
-  - **Pemindai Teks (OCR)**: Memungkinkan pengguna memindai dokumen melalui kamera atau mengunggah gambar dari galeri untuk diubah menjadi teks.
-  - **Transkripsi Suara**: Merekam suara dan mengubahnya menjadi teks untuk kemudahan komunikasi atau pencatatan.
-  - **Panggilan Video Darurat**: Fitur panggilan video terintegrasi menggunakan Agora untuk terhubung dengan kontak darurat secara cepat.
-  - **Antarmuka yang Dapat Disesuaikan**: Mendukung tema terang dan gelap untuk kenyamanan visual pengguna.
-  - **Pelaporan Error Otomatis**: Terintegrasi dengan Sentry untuk pemantauan dan pelaporan *crash* secara *real-time*.
+  - **Deteksi Objek Real-time**: Menggunakan kamera untuk mengidentifikasi objek di sekitar pengguna dan memberikan *feedback* suara secara langsung.
+  - **Pemindai Teks (OCR)**: Memungkinkan pengguna memindai dokumen melalui kamera atau mengunggah gambar dari galeri. Teks yang dihasilkan dapat didengarkan melalui fitur *Text-to-Speech*.
+  - **Transkripsi Suara**: Merekam suara dan mengubahnya menjadi teks, berguna untuk komunikasi atau pencatatan cepat.
+  - **Panggilan Video Darurat yang Andal**: Fitur panggilan video *real-time* menggunakan **Agora SDK**, terintegrasi dengan *backend* untuk manajemen sesi yang tangguh, notifikasi *push*, dan pemulihan sesi panggilan.
+  - **Antarmuka yang Dapat Disesuaikan**: Mendukung tema terang dan gelap (`light/dark mode`) serta multibahasa (Indonesia & Inggris) untuk kenyamanan pengguna.
+  - **Pelaporan Error Otomatis**: Terintegrasi dengan **Sentry** untuk pemantauan *crash* dan pelaporan *error* secara *real-time*, memastikan stabilitas aplikasi.
 
 ## 🛠️ Tumpukan Teknologi
 
@@ -19,17 +19,14 @@ Selamat datang di repositori *frontend* untuk aplikasi seluler TemanDifa. Aplika
 | **Bahasa** | [TypeScript](https://www.typescriptlang.org/) |
 | **Navigasi** | [React Navigation](https://reactnavigation.org/) |
 | **Manajemen State** | [Zustand](https://github.com/pmndrs/zustand) |
-| **Panggilan Video** | [Agora SDK](https://www.agora.io/en/) |
+| **Panggilan Video** | [Agora SDK for React Native](https://www.agora.io/en/) |
 | **Pengujian** | [Jest](https://jestjs.io/), [React Native Testing Library](https://testing-library.com/docs/react-native-testing-library/intro/) |
 | **Pemantauan Error** | [Sentry](https://sentry.io/) |
-
-## 📋 Prasyarat
-
-  - [Node.js](https://nodejs.org/en/) (v18 atau lebih baru)
-  - [Expo CLI](https://docs.expo.dev/get-started/installation/)
-  - Perangkat seluler dengan aplikasi Expo Go atau simulator (Android Studio / Xcode)
+| **Internasionalisasi** | [i18next](https://www.i18next.com/) |
 
 ## 🚀 Memulai
+
+Pastikan Anda sudah menyiapkan [backend TemanDifa](https://www.google.com/search?q=https://github.com/muftiardani/temandifa-backend) dan menjalankannya.
 
 1.  **Clone repositori ini:**
 
@@ -45,19 +42,22 @@ Selamat datang di repositori *frontend* untuk aplikasi seluler TemanDifa. Aplika
     ```
 
 3.  **Konfigurasi Variabel Lingkungan:**
-    Buat file `.env` di direktori utama proyek. File ini digunakan untuk menyimpan konfigurasi penting.
+    Buat file `.env` di direktori utama proyek. File ini digunakan untuk menyimpan konfigurasi penting yang terhubung ke layanan eksternal dan *backend*.
 
     ```env
     # URL base dari backend TemanDifa
-    API_BASE_URL=http://localhost:3000/api
+    EXPO_PUBLIC_API_BASE_URL=http://<IP_ADDRESS_LOCAL_ANDA>:3000/api
 
     # Kredensial dari Agora untuk fitur panggilan video
-    AGORA_APP_ID=AGORA_APP_ID_ANDA
-    AGORA_CHANNEL_NAME=NAMA_CHANNEL_ANDA
-    AGORA_TOKEN=TOKEN_AGORA_ANDA
+    EXPO_PUBLIC_AGORA_APP_ID=AGORA_APP_ID_ANDA
 
     # DSN untuk integrasi Sentry (Error Reporting)
-    SENTRY_DSN=SENTRY_DSN_ANDA
+    EXPO_PUBLIC_SENTRY_DSN=SENTRY_DSN_ANDA
+
+    # Kredensial Google untuk Otentikasi
+    EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID=ID_KLIEN_WEB_GOOGLE_ANDA
+    EXPO_PUBLIC_GOOGLE_ANDROID_CLIENT_ID=ID_KLIEN_ANDROID_GOOGLE_ANDA
+    EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID=ID_KLIEN_IOS_GOOGLE_ANDA
     ```
 
 4.  **Jalankan aplikasi:**
@@ -66,20 +66,22 @@ Selamat datang di repositori *frontend* untuk aplikasi seluler TemanDifa. Aplika
     npm start
     ```
 
-    Pindai kode QR yang muncul menggunakan aplikasi Expo Go di perangkat Anda, atau jalankan di simulator.
+    Pindai kode QR yang muncul menggunakan aplikasi Expo Go di perangkat Anda, atau jalankan di simulator (Android/iOS).
 
 ## 🏗️ Struktur Proyek
 
 ```
 temandifa-frontend/
 ├── src/
-│   ├── components/     # Komponen UI yang dapat digunakan kembali
-│   ├── config/         # Konfigurasi aplikasi (URL API, dll.)
-│   ├── constants/      # Nilai konstan (warna, string, gaya)
-│   ├── navigation/     # Pengaturan alur navigasi aplikasi
+│   ├── components/     # Komponen UI generik yang dapat digunakan kembali
+│   ├── config/         # Konfigurasi aplikasi (URL API, kunci eksternal)
+│   ├── constants/      # Nilai konstan (warna, durasi animasi)
+│   ├── hooks/          # Custom hooks untuk logika bisnis (panggilan, kamera, audio)
+│   ├── i18n/           # Konfigurasi dan file terjemahan (internasionalisasi)
+│   ├── navigation/     # Pengaturan alur navigasi aplikasi (React Navigation)
 │   ├── screens/        # Komponen untuk setiap layar aplikasi
-│   ├── services/       # Logika untuk berinteraksi dengan API
-│   ├── store/          # Manajemen state global (Zustand)
+│   ├── services/       # Logika untuk berinteraksi dengan API backend
+│   ├── store/          # Manajemen state global (Zustand stores)
 │   └── types/          # Definisi tipe TypeScript
 ├── App.tsx             # Titik masuk utama aplikasi
 └── package.json        # Dependensi dan skrip proyek
@@ -93,11 +95,11 @@ Untuk menjalankan unit test dan memastikan semua komponen berfungsi seperti yang
 npm test
 ```
 
-Proyek ini menggunakan Jest dan React Native Testing Library untuk pengujian.
+Proyek ini menggunakan Jest dan React Native Testing Library untuk pengujian komponen UI dan logika aplikasi.
 
 ## 📦 Membangun Aplikasi untuk Produksi
 
-Untuk membuat file aplikasi yang dapat diinstal (*standalone build*), proyek ini menggunakan Expo Application Services (EAS).
+Untuk membuat *file* aplikasi yang dapat diinstal (*standalone build*), proyek ini menggunakan Expo Application Services (EAS).
 
 1.  **Login ke Akun Expo Anda:**
 
@@ -122,4 +124,4 @@ Untuk membuat file aplikasi yang dapat diinstal (*standalone build*), proyek ini
     npx eas build --platform ios
     ```
 
-    Ikuti instruksi yang muncul di terminal. Setelah selesai, Anda akan mendapatkan tautan untuk mengunduh file aplikasi Anda.
+    Ikuti instruksi yang muncul di terminal. Setelah selesai, Anda akan mendapatkan tautan untuk mengunduh *file* aplikasi Anda.
