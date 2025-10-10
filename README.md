@@ -26,7 +26,7 @@ Selamat datang di repositori *frontend* untuk aplikasi seluler **TemanDifa**. Ap
 
 ## 🚀 Memulai
 
-Pastikan Anda sudah menyiapkan [backend TemanDifa](https://www.google.com/search?q=https://github.com/muftiardani/temandifa-backend) dan menjalankannya.
+Pastikan Anda sudah menyiapkan [TemanDifa Backend](https://github.com/muftiardani/temandifa-backend) dan menjalankannya.
 
 1.  **Clone repositori ini:**
 
