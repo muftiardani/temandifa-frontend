@@ -9,6 +9,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import * as SplashScreen from "expo-splash-screen";
 import * as Notifications from "expo-notifications";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { jwtDecode } from "jwt-decode";
 
 import AnimatedSplashScreen from "../screens/AnimatedSplashScreen";
 import OnboardingScreen from "../screens/OnboardingScreen";
@@ -36,6 +37,7 @@ import EmergencyContactsScreen from "../screens/EmergencyContactsScreen";
 import { useAuthStore } from "../store/authStore";
 import { useAppStore } from "../store/appStore";
 import { useCallStore } from "../store/callStore";
+import { callService } from "../services/callService";
 import {
   RootStackParamList,
   AuthStackParamList,
@@ -150,16 +152,23 @@ const RootNavigator = () => {
 
   const theme = useAppStore((state) => state.theme);
   const navigationRef = useRef<NavigationContainerRef<any>>(null);
+
   const {
     isAuthenticated,
     isGuest,
     isLoading: isAuthLoading,
     loadToken,
   } = useAuthStore();
-  const { setIncomingCall } = useCallStore();
+  const { setIncomingCall, setCallCredentials } = useCallStore();
+
+  const onLayoutRootView = useCallback(async () => {
+    if (isSplashAnimationComplete) {
+      await SplashScreen.hideAsync();
+    }
+  }, [isSplashAnimationComplete]);
 
   useEffect(() => {
-    async function prepare() {
+    async function prepareAndCheckCallStatus() {
       await SplashScreen.preventAutoHideAsync();
       try {
         const hasCompleted = await AsyncStorage.getItem(
@@ -168,12 +177,46 @@ const RootNavigator = () => {
         if (hasCompleted === "true") {
           completeOnboarding();
         }
+
         await loadToken();
+        const accessToken = useAuthStore.getState().accessToken;
+
+        if (accessToken) {
+          const status = await callService.getStatus();
+          if (status && status.activeCall) {
+            const { activeCall } = status;
+            const decodedToken: { id: string } = jwtDecode(accessToken);
+            const currentUserId = decodedToken.id;
+
+            if (
+              activeCall.status === "ringing" &&
+              activeCall.callee.id === currentUserId
+            ) {
+              setIncomingCall({
+                callId: activeCall.callId,
+                channelName: activeCall.channelName,
+                callerName: activeCall.caller.name,
+              });
+              navigationRef.current?.navigate("IncomingCall");
+            } else if (activeCall.status === "active") {
+              const userRole =
+                activeCall.caller.id === currentUserId ? "caller" : "callee";
+              setCallCredentials({
+                channelName: activeCall.channelName,
+                token: activeCall[userRole].token,
+                uid: activeCall[userRole].uid,
+              });
+              navigationRef.current?.navigate("VideoCall");
+            }
+          }
+        }
       } catch (e) {
         console.warn("Gagal menyiapkan aplikasi:", e);
+      } finally {
       }
     }
-    prepare();
+
+    prepareAndCheckCallStatus();
 
     const notificationListener = Notifications.addNotificationReceivedListener(
       (notification) => {
@@ -206,11 +249,13 @@ const RootNavigator = () => {
       notificationListener.remove();
       responseListener.remove();
     };
-  }, [loadToken, setIncomingCall, completeOnboarding]);
-
-  const onLayoutRootView = useCallback(async () => {
-    await SplashScreen.hideAsync();
   }, []);
+
+  useEffect(() => {
+    if (isSplashAnimationComplete && !isAuthLoading) {
+      onLayoutRootView();
+    }
+  }, [isSplashAnimationComplete, isAuthLoading, onLayoutRootView]);
 
   if (isAuthLoading || !isSplashAnimationComplete) {
     return (

@@ -9,7 +9,7 @@ import {
   StreamFallbackOptions,
 } from "react-native-agora";
 import { useCallStore } from "../store/callStore";
-import { socketService } from "../services/socketService";
+import { callService } from "../services/callService";
 import { Config } from "../config";
 
 const MAX_RETRIES = 3;
@@ -76,6 +76,7 @@ export const useAgoraCall = () => {
           onUserOffline: () => {
             console.log("Pengguna lain meninggalkan channel.");
             setRemoteUid(0);
+            handleLeave();
           },
           onError: (err) => {
             console.error("Agora RTC Error:", err);
@@ -130,12 +131,16 @@ export const useAgoraCall = () => {
     return () => {
       leave();
     };
-  }, [channelName, token, uid, leave]);
+  }, [channelName, token, uid]);
 
-  const handleLeave = () => {
+  const handleLeave = async () => {
     leave();
     if (callId) {
-      socketService.emit("end-call", { callId });
+      try {
+        await callService.end(callId);
+      } catch (error) {
+        console.error("Gagal mengakhiri panggilan via API:", error);
+      }
     }
     clearCall();
     if (navigation.canGoBack()) {

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -9,7 +9,7 @@ import {
   ActivityIndicator,
   FlatList,
 } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 import Toast from "react-native-toast-message";
 import { useTranslation } from "react-i18next";
@@ -25,11 +25,18 @@ const DialScreen = () => {
   const { colors } = useAppTheme();
   const navigation = useNavigation<AppNavigationProp>();
   const { setOutgoingCall } = useCallStore();
-  const { contacts } = useContactStore();
+  const { contacts, fetchContacts } = useContactStore();
   const { t } = useTranslation();
 
+  useFocusEffect(
+    React.useCallback(() => {
+      fetchContacts();
+    }, [fetchContacts])
+  );
+
   const handleInitiateCall = async (numberToCall: string) => {
-    if (!numberToCall.trim()) {
+    const trimmedNumber = numberToCall.trim();
+    if (!trimmedNumber) {
       Toast.show({
         type: "error",
         text1: t("general.failure"),
@@ -39,7 +46,7 @@ const DialScreen = () => {
     }
     setIsLoading(true);
     try {
-      const data = await callService.initiate(numberToCall);
+      const data = await callService.initiate(trimmedNumber);
       if (data.callId) {
         setOutgoingCall(data);
         navigation.replace("OutgoingCall");
@@ -102,9 +109,14 @@ const DialScreen = () => {
       <FlatList
         data={contacts}
         renderItem={renderContactItem}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item._id}
         ListHeaderComponent={
-          <View style={styles.manualDialContainer}>
+          <View
+            style={[
+              styles.manualDialContainer,
+              { borderBottomColor: colors.border },
+            ]}
+          >
             <Text style={[styles.title, { color: colors.text }]}>
               {t("call.quickContacts")}
             </Text>
@@ -174,7 +186,6 @@ const styles = StyleSheet.create({
     padding: 20,
     alignItems: "center",
     borderBottomWidth: 1,
-    borderBottomColor: "#ccc",
   },
   title: { fontSize: 24, fontWeight: "bold", marginBottom: 20 },
   input: {

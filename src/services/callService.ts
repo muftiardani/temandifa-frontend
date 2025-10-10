@@ -17,14 +17,37 @@ export const callService = {
   },
 
   answer: async (callId: string) => {
-    const response = await fetchWithAuth(`${API_URL}/answer`, {
+    const response = await fetchWithAuth(`${API_URL}/${callId}/answer`, {
       method: "POST",
-      body: JSON.stringify({ callId }),
     });
     if (!response.ok) {
       const errorData = await response.json();
       throw new Error(errorData.message || "Gagal menjawab panggilan.");
     }
     return response.json();
+  },
+
+  end: async (callId: string) => {
+    const response = await fetchWithAuth(`${API_URL}/${callId}/end`, {
+      method: "POST",
+    });
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.message || "Gagal mengakhiri panggilan.");
+    }
+    return response.json();
+  },
+
+  getStatus: async () => {
+    try {
+      const response = await fetchWithAuth(`${API_URL}/status`);
+      if (!response.ok) {
+        return null;
+      }
+      return response.json();
+    } catch (error) {
+      console.error("Gagal memeriksa status panggilan:", error);
+      return null;
+    }
   },
 };

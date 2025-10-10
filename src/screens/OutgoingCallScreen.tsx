@@ -11,7 +11,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
 import { useAppTheme } from "../hooks/useAppTheme";
 import { useCallStore } from "../store/callStore";
-import { socketService } from "../services/socketService";
+import { callService } from "../services/callService";
 
 const OutgoingCallScreen = () => {
   const { colors } = useAppTheme();
@@ -23,15 +23,21 @@ const OutgoingCallScreen = () => {
 
   useEffect(() => {
     if (!isActive) {
-      navigation.goBack();
+      if (navigation.canGoBack()) {
+        navigation.goBack();
+      }
     }
   }, [isActive, navigation]);
 
-  const handleCancelCall = () => {
-    if (callId) {
-      socketService.emit("cancel-call", { callId });
+  const handleCancelCall = async () => {
+    if (!callId) return;
+    try {
+      await callService.end(callId);
+    } catch (error) {
+      console.error("Gagal membatalkan panggilan:", error);
+    } finally {
+      clearCall();
     }
-    clearCall();
   };
 
   return (

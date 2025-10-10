@@ -113,4 +113,21 @@ export const apiService = {
     postFormDataWithAuth(Config.api.scanUrl, uri, "image", "image"),
   transcribeAudio: (uri: string) =>
     postFormDataWithAuth(Config.api.transcribeUrl, uri, "audio", "audio"),
+
+  updatePushToken: async (token: string) => {
+    const response = await fetchWithAuth(
+      `${Config.api.baseUrl}/v1/users/pushtoken`,
+      {
+        method: "PUT",
+        body: JSON.stringify({ token }),
+      }
+    );
+
+    if (!response.ok) {
+      const data = await response.json();
+      throw new Error(data.message || "Gagal memperbarui push token.");
+    }
+
+    return response.json();
+  },
 };

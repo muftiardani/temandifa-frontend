@@ -7,7 +7,6 @@ import { useAppTheme } from "../hooks/useAppTheme";
 import { useCallStore } from "../store/callStore";
 import { callService } from "../services/callService";
 import { AppNavigationProp } from "../types/navigation";
-import { socketService } from "../services/socketService";
 
 const IncomingCallScreen = () => {
   const { colors } = useAppTheme();
@@ -19,7 +18,9 @@ const IncomingCallScreen = () => {
 
   useEffect(() => {
     if (!isReceivingCall) {
-      navigation.goBack();
+      if (navigation.canGoBack()) {
+        navigation.goBack();
+      }
     }
   }, [isReceivingCall, navigation]);
 
@@ -40,11 +41,15 @@ const IncomingCallScreen = () => {
     }
   };
 
-  const handleDecline = () => {
-    if (callId) {
-      socketService.emit("decline-call", { callId });
+  const handleDecline = async () => {
+    if (!callId) return;
+    try {
+      await callService.end(callId);
+    } catch (error) {
+      console.error("Gagal menolak panggilan:", error);
+    } finally {
+      clearCall();
     }
-    clearCall();
   };
 
   return (
