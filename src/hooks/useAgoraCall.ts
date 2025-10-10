@@ -12,6 +12,9 @@ import { useCallStore } from "../store/callStore";
 import { socketService } from "../services/socketService";
 import { Config } from "../config";
 
+const MAX_RETRIES = 3;
+const RETRY_DELAY = 2000;
+
 export const useAgoraCall = () => {
   const navigation = useNavigation();
   const agoraEngineRef = useRef<IRtcEngine | null>(null);
@@ -55,7 +58,7 @@ export const useAgoraCall = () => {
       return;
     }
 
-    const setupAndJoin = async () => {
+    const setupAndJoin = async (retries = 0) => {
       try {
         await getPermission();
         agoraEngineRef.current = createAgoraRtcEngine();
@@ -96,12 +99,29 @@ export const useAgoraCall = () => {
           clientRoleType: ClientRoleType.ClientRoleBroadcaster,
         });
       } catch (e) {
-        console.error("Gagal melakukan setup & join channel Agora:", e);
-        Alert.alert(
-          "Gagal Terhubung",
-          "Tidak dapat terhubung ke server panggilan video."
+        console.error(
+          `Gagal melakukan setup & join channel Agora (percobaan ${
+            retries + 1
+          }):`,
+          e
         );
-        handleLeave();
+
+        if (agoraEngineRef.current) {
+          agoraEngineRef.current.release();
+          agoraEngineRef.current = null;
+        }
+
+        if (retries < MAX_RETRIES) {
+          const delay = RETRY_DELAY * Math.pow(2, retries);
+          console.log(`Mencoba lagi dalam ${delay / 1000} detik...`);
+          setTimeout(() => setupAndJoin(retries + 1), delay);
+        } else {
+          Alert.alert(
+            "Gagal Terhubung",
+            "Tidak dapat terhubung ke server panggilan video setelah beberapa kali percobaan. Periksa koneksi internet Anda."
+          );
+          handleLeave();
+        }
       }
     };
 

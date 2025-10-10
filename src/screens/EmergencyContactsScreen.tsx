@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -11,9 +11,11 @@ import {
   LayoutAnimation,
   UIManager,
   Platform,
+  ActivityIndicator,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
+import Toast from "react-native-toast-message";
 import { useAppTheme } from "../hooks/useAppTheme";
 import { useContactStore, EmergencyContact } from "../store/contactStore";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
@@ -31,18 +33,51 @@ type Props = NativeStackScreenProps<RootStackParamList, "EmergencyContacts">;
 const EmergencyContactsScreen: React.FC<Props> = ({ navigation }) => {
   const { t } = useTranslation();
   const { colors } = useAppTheme();
-  const { contacts, addContact, removeContact } = useContactStore();
+  const { contacts, fetchContacts, addContact, removeContact } =
+    useContactStore();
   const [name, setName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [isFetching, setIsFetching] = useState(true);
 
-  const handleAddContact = () => {
-    if (name.trim() && phoneNumber.trim()) {
+  useEffect(() => {
+    const loadContacts = async () => {
+      setIsFetching(true);
+      await fetchContacts();
+      setIsFetching(false);
+    };
+    loadContacts();
+  }, [fetchContacts]);
+
+  const handleAddContact = async () => {
+    if (!name.trim() || !phoneNumber.trim()) {
+      Toast.show({
+        type: "error",
+        text1: t("dialogs.failed"),
+        text2: t("auth.allFieldsRequired"),
+      });
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      await addContact({ name, phoneNumber });
       LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-      addContact({ name, phoneNumber });
       setName("");
       setPhoneNumber("");
-    } else {
-      Alert.alert(t("dialogs.failed"), t("auth.allFieldsRequired"));
+      Toast.show({
+        type: "success",
+        text1: t("general.success"),
+        text2: "Kontak berhasil ditambahkan.",
+      });
+    } catch (error: any) {
+      Toast.show({
+        type: "error",
+        text1: t("dialogs.failed"),
+        text2: error.message || "Gagal menambahkan kontak.",
+      });
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -55,11 +90,24 @@ const EmergencyContactsScreen: React.FC<Props> = ({ navigation }) => {
         {
           text: t("dialogs.delete"),
           style: "destructive",
-          onPress: () => {
-            LayoutAnimation.configureNext(
-              LayoutAnimation.Presets.easeInEaseOut
-            );
-            removeContact(id);
+          onPress: async () => {
+            try {
+              await removeContact(id);
+              LayoutAnimation.configureNext(
+                LayoutAnimation.Presets.easeInEaseOut
+              );
+              Toast.show({
+                type: "success",
+                text1: t("general.success"),
+                text2: "Kontak berhasil dihapus.",
+              });
+            } catch (error: any) {
+              Toast.show({
+                type: "error",
+                text1: t("dialogs.failed"),
+                text2: error.message || "Gagal menghapus kontak.",
+              });
+            }
           },
         },
       ]
@@ -77,7 +125,7 @@ const EmergencyContactsScreen: React.FC<Props> = ({ navigation }) => {
         </Text>
       </View>
       <TouchableOpacity
-        onPress={() => confirmRemove(item.id)}
+        onPress={() => confirmRemove(item._id)}
         accessibilityLabel={`${t("dialogs.delete")} ${item.name}`}
         accessibilityRole="button"
       >
@@ -88,7 +136,7 @@ const EmergencyContactsScreen: React.FC<Props> = ({ navigation }) => {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
-      <View style={styles.header}>
+      <View style={[styles.header, { borderBottomColor: colors.border }]}>
         <TouchableOpacity
           onPress={() => navigation.goBack()}
           style={styles.backButton}
@@ -102,7 +150,9 @@ const EmergencyContactsScreen: React.FC<Props> = ({ navigation }) => {
         </Text>
       </View>
 
-      <View style={styles.formContainer}>
+      <View
+        style={[styles.formContainer, { borderBottomColor: colors.border }]}
+      >
         <TextInput
           style={[
             styles.input,
@@ -113,6 +163,7 @@ const EmergencyContactsScreen: React.FC<Props> = ({ navigation }) => {
           onChangeText={setName}
           placeholderTextColor={colors.grey}
           accessibilityLabel={t("contacts.contactName")}
+          editable={!isLoading}
         />
         <TextInput
           style={[
@@ -125,28 +176,47 @@ const EmergencyContactsScreen: React.FC<Props> = ({ navigation }) => {
           keyboardType="phone-pad"
           placeholderTextColor={colors.grey}
           accessibilityLabel={t("contacts.phoneNumber")}
+          editable={!isLoading}
         />
         <TouchableOpacity
-          style={[styles.addButton, { backgroundColor: colors.primary }]}
+          style={[
+            styles.addButton,
+            { backgroundColor: isLoading ? colors.grey : colors.primary },
+          ]}
           onPress={handleAddContact}
           accessibilityLabel={t("contacts.addContact")}
           accessibilityRole="button"
+          disabled={isLoading}
         >
-          <Text style={styles.addButtonText}>{t("contacts.addContact")}</Text>
+          {isLoading ? (
+            <ActivityIndicator color={colors.white} />
+          ) : (
+            <Text style={styles.addButtonText}>{t("contacts.addContact")}</Text>
+          )}
         </TouchableOpacity>
       </View>
 
-      <FlatList
-        data={contacts}
-        renderItem={renderItem}
-        keyExtractor={(item) => item.id}
-        contentContainerStyle={styles.listContainer}
-        ListEmptyComponent={
-          <Text style={{ textAlign: "center", color: colors.grey }}>
-            {t("call.noEmergencyContacts")}
-          </Text>
-        }
-      />
+      {isFetching ? (
+        <ActivityIndicator
+          size="large"
+          color={colors.primary}
+          style={{ marginTop: 20 }}
+        />
+      ) : (
+        <FlatList
+          data={contacts}
+          renderItem={renderItem}
+          keyExtractor={(item) => item._id}
+          contentContainerStyle={styles.listContainer}
+          ListEmptyComponent={
+            <Text
+              style={{ textAlign: "center", color: colors.grey, marginTop: 20 }}
+            >
+              {t("call.noEmergencyContacts")}
+            </Text>
+          }
+        />
+      )}
     </SafeAreaView>
   );
 };
@@ -172,7 +242,7 @@ const styles = StyleSheet.create({
   },
   addButton: { padding: 15, borderRadius: 8, alignItems: "center" },
   addButtonText: { color: "#fff", fontSize: 16, fontWeight: "bold" },
-  listContainer: { padding: 20 },
+  listContainer: { paddingHorizontal: 20 },
   itemContainer: {
     flexDirection: "row",
     justifyContent: "space-between",

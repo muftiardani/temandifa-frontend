@@ -1,38 +1,49 @@
 import { create } from "zustand";
-import { persist, createJSONStorage } from "zustand/middleware";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { contactService } from "../services/contactService";
 
 export interface EmergencyContact {
-  id: string;
+  _id: string;
   name: string;
   phoneNumber: string;
 }
 
 interface ContactState {
   contacts: EmergencyContact[];
-  addContact: (contact: Omit<EmergencyContact, "id">) => void;
-  removeContact: (id: string) => void;
+  fetchContacts: () => Promise<void>;
+  addContact: (contact: { name: string; phoneNumber: string }) => Promise<void>;
+  removeContact: (id: string) => Promise<void>;
 }
 
-export const useContactStore = create(
-  persist<ContactState>(
-    (set) => ({
-      contacts: [],
-      addContact: (contact) =>
-        set((state) => ({
-          contacts: [
-            ...state.contacts,
-            { id: Date.now().toString(), ...contact },
-          ],
-        })),
-      removeContact: (id) =>
-        set((state) => ({
-          contacts: state.contacts.filter((c) => c.id !== id),
-        })),
-    }),
-    {
-      name: "emergency-contacts-storage",
-      storage: createJSONStorage(() => AsyncStorage),
+export const useContactStore = create<ContactState>((set) => ({
+  contacts: [],
+  fetchContacts: async () => {
+    try {
+      const contacts = await contactService.getContacts();
+      set({ contacts });
+    } catch (error) {
+      console.error("Gagal mengambil kontak:", error);
     }
-  )
-);
+  },
+  addContact: async (contact) => {
+    try {
+      const newContact = await contactService.addContact(contact);
+      set((state) => ({
+        contacts: [...state.contacts, newContact],
+      }));
+    } catch (error) {
+      console.error("Gagal menambahkan kontak:", error);
+      throw error;
+    }
+  },
+  removeContact: async (id) => {
+    try {
+      await contactService.deleteContact(id);
+      set((state) => ({
+        contacts: state.contacts.filter((c) => c._id !== id),
+      }));
+    } catch (error) {
+      console.error("Gagal menghapus kontak:", error);
+      throw error;
+    }
+  },
+}));

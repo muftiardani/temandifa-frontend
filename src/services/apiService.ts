@@ -18,7 +18,7 @@ const processQueue = (error: any, token: string | null = null) => {
   failedQueue = [];
 };
 
-const fetchWithAuth = async (
+export const fetchWithAuth = async (
   url: string,
   options: RequestInit = {}
 ): Promise<Response> => {
@@ -26,9 +26,12 @@ const fetchWithAuth = async (
 
   const originalRequest = async (token: string | null) => {
     const headers: Record<string, string> = {
-      "Content-Type": "application/json",
       ...(options.headers as Record<string, string>),
     };
+
+    if (!(options.body instanceof FormData)) {
+      headers["Content-Type"] = "application/json";
+    }
 
     if (token) {
       headers["Authorization"] = `Bearer ${token}`;
@@ -82,7 +85,6 @@ const postFormDataWithAuth = async (
   fieldName: string,
   fileType: "image" | "audio"
 ) => {
-  const { accessToken } = useAuthStore.getState();
   const formData = new FormData();
 
   const file = {
@@ -92,22 +94,14 @@ const postFormDataWithAuth = async (
   } as any;
   formData.append(fieldName, file);
 
-  const headers: HeadersInit = {};
-  if (accessToken) {
-    headers["Authorization"] = `Bearer ${accessToken}`;
-  }
-
   const response = await fetchWithAuth(url, {
     method: "POST",
     body: formData,
-    headers: {
-      ...headers,
-    },
   });
 
   const data = await response.json();
   if (!response.ok) {
-    throw new Error(data.error || "Terjadi kesalahan pada server.");
+    throw new Error(data.message || "Terjadi kesalahan pada server.");
   }
   return data;
 };
@@ -120,5 +114,3 @@ export const apiService = {
   transcribeAudio: (uri: string) =>
     postFormDataWithAuth(Config.api.transcribeUrl, uri, "audio", "audio"),
 };
-
-export { fetchWithAuth };
