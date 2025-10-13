@@ -6,6 +6,7 @@ import {
   Switch,
   SafeAreaView,
   Alert,
+  TouchableOpacity,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
@@ -35,7 +36,7 @@ const SettingsItem = React.memo(
     borderColor: string;
     accessibilityHint?: string;
   }) => (
-    <AnimatedPressable
+    <TouchableOpacity
       style={[styles.itemContainer, { borderBottomColor: borderColor }]}
       onPress={onPress}
       accessibilityLabel={label}
@@ -44,7 +45,7 @@ const SettingsItem = React.memo(
     >
       <Text style={[styles.itemLabel, { color: textColor }]}>{label}</Text>
       <Ionicons name="chevron-forward" size={24} color="#C7C7CC" />
-    </AnimatedPressable>
+    </TouchableOpacity>
   )
 );
 
@@ -74,14 +75,14 @@ const SettingsScreen: React.FC<SettingsScreenProps> = ({ navigation }) => {
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
       <View style={{ flex: 1 }}>
         <View style={[styles.header, { borderBottomColor: colors.border }]}>
-          <AnimatedPressable
+          <TouchableOpacity
             onPress={() => navigation.goBack()}
             style={styles.backButton}
             accessibilityLabel={t("general.back")}
             accessibilityRole="button"
           >
             <Ionicons name="chevron-back" size={24} color={colors.text} />
-          </AnimatedPressable>
+          </TouchableOpacity>
           <Text style={[styles.headerTitle, { color: colors.headerText }]}>
             {t("settings.title")}
           </Text>
