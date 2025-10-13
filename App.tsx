@@ -6,6 +6,7 @@ import RootNavigator from "./src/navigation/RootNavigator";
 import { Config } from "./src/config";
 import { usePushNotifications } from "./src/hooks/usePushNotifications";
 import "./src/i18n";
+import GlobalLoadingIndicator from "./src/components/common/GlobalLoadingIndicator";
 
 Sentry.init({
   dsn: Config.sentry.dsn,
@@ -25,6 +26,7 @@ const App = () => {
       <RootNavigator />
       <Toast />
       <NotificationProvider />
+      <GlobalLoadingIndicator />
     </GestureHandlerRootView>
   );
 };

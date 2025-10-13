@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { View, StyleSheet, Text, ActivityIndicator } from "react-native";
 import DocumentScanner from "react-native-document-scanner-plugin";
 import * as Speech from "expo-speech";
@@ -18,9 +18,11 @@ type DocScannerNavigationProp = NativeStackNavigationProp<
 export default function DocumentScannerScreen() {
   const navigation = useNavigation<DocScannerNavigationProp>();
   const isFocused = useIsFocused();
-  const [isProcessing, setIsProcessing] = useState(false);
   const { t } = useTranslation();
   const { colors } = useAppTheme();
+
+  const isLoading = useAppStore((state) => state.isLoading);
+  const setIsLoading = useAppStore((state) => state.setIsLoading);
   const language = useAppStore((state) => state.language);
 
   useEffect(() => {
@@ -49,7 +51,7 @@ export default function DocumentScannerScreen() {
   };
 
   const handlePictureTaken = async (imageUri: string) => {
-    setIsProcessing(true);
+    setIsLoading(true);
     Speech.speak(t("scanResult.imageTakenProcessing"), {
       language: language === "id" ? "id-ID" : "en-US",
     });
@@ -64,7 +66,7 @@ export default function DocumentScannerScreen() {
       });
       navigation.goBack();
     } finally {
-      setIsProcessing(false);
+      setIsLoading(false);
     }
   };
 
@@ -72,7 +74,7 @@ export default function DocumentScannerScreen() {
     <View style={[styles.container, { backgroundColor: colors.overlay }]}>
       <ActivityIndicator size="large" color={colors.primary} />
       <Text style={[styles.statusText, { color: colors.white }]}>
-        {isProcessing
+        {isLoading
           ? t("scanResult.imageProcessing")
           : t("scanResult.scannerOpening")}
       </Text>

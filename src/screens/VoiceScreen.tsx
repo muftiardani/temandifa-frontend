@@ -22,12 +22,15 @@ import { RootStackParamList } from "../types/navigation";
 import { useAppTheme } from "../hooks/useAppTheme";
 import { useAudioRecorder } from "../hooks/useAudioRecorder";
 import LoadingIndicator from "../components/common/LoadingIndicator";
+import { useAppStore } from "../store/appStore";
 
 type VoiceScreenProps = NativeStackScreenProps<RootStackParamList, "Voice">;
 
 const VoiceScreen: React.FC<VoiceScreenProps> = ({ navigation }) => {
   const { t } = useTranslation();
   const { colors } = useAppTheme();
+  const setIsLoading = useAppStore((state) => state.setIsLoading);
+
   const {
     isRecording,
     isProcessing,
@@ -38,6 +41,10 @@ const VoiceScreen: React.FC<VoiceScreenProps> = ({ navigation }) => {
   const scale = useSharedValue(1);
   const rippleScale = useSharedValue(1);
   const rippleOpacity = useSharedValue(1);
+
+  useEffect(() => {
+    setIsLoading(isProcessing);
+  }, [isProcessing, setIsLoading]);
 
   useEffect(() => {
     if (isRecording) {

@@ -24,6 +24,7 @@ import * as WebBrowser from "expo-web-browser";
 import * as LocalAuthentication from "expo-local-authentication";
 import ValidatedInput from "../components/common/ValidatedInput";
 import AnimatedPressable from "../components/common/AnimatedPressable";
+import { useAppStore } from "../store/appStore"; // <-- 1. IMPORT GLOBAL STORE
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -36,7 +37,10 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
   const [login, setLogin] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+
+  const isLoading = useAppStore((state) => state.isLoading);
+  const setIsLoading = useAppStore((state) => state.setIsLoading);
+
   const { colors } = useAppTheme();
   const { setTokens, loginAsGuest, refreshAccessToken } = useAuthStore();
   const [isBiometricSupported, setIsBiometricSupported] = useState(false);
@@ -275,7 +279,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
           accessibilityLabel={`${t("auth.noAccount")} ${t("auth.register")}`}
         >
           <Text style={[styles.footerText, { color: colors.grey }]}>
-            {t("auth.noAccount")}
+            {t("auth.noAccount")}{" "}
             <Text style={{ color: colors.primary, fontWeight: "bold" }}>
               {t("auth.register")}
             </Text>

@@ -19,6 +19,7 @@ import { useAuthStore } from "../store/authStore";
 import { AuthStackParamList } from "../types/navigation";
 import ValidatedInput from "../components/common/ValidatedInput";
 import AnimatedPressable from "../components/common/AnimatedPressable";
+import { useAppStore } from "../store/appStore";
 
 type RegisterScreenProps = NativeStackScreenProps<
   AuthStackParamList,
@@ -38,7 +39,9 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+
+  const isLoading = useAppStore((state) => state.isLoading);
+  const setIsLoading = useAppStore((state) => state.setIsLoading);
 
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
@@ -64,7 +67,7 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
     const doPasswordsMatch = password === confirmPassword && password !== "";
 
     setIsFormValid(isEmailValid && isPasswordValid && doPasswordsMatch);
-  }, [email, password, confirmPassword]);
+  }, [email, password, confirmPassword, t]);
 
   const handleEmailChange = (text: string) => {
     setEmail(text);
@@ -200,7 +203,7 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
           accessibilityLabel={`${t("auth.haveAccount")} ${t("auth.login")}`}
         >
           <Text style={[styles.footerText, { color: colors.grey }]}>
-            {t("auth.haveAccount")}
+            {t("auth.haveAccount")}{" "}
             <Text style={{ color: colors.primary, fontWeight: "bold" }}>
               {t("auth.login")}
             </Text>

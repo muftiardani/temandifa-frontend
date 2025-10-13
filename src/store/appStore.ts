@@ -10,9 +10,11 @@ interface AppState {
   theme: Theme;
   language: Language;
   hasCompletedOnboarding: boolean;
+  isLoading: boolean;
   toggleTheme: () => void;
   setLanguage: (lang: Language) => void;
   completeOnboarding: () => void;
+  setIsLoading: (status: boolean) => void;
 }
 
 type PersistedState = {
@@ -26,12 +28,14 @@ export const useAppStore = create(
       theme: Appearance.getColorScheme() ?? "light",
       language: "id",
       hasCompletedOnboarding: false,
+      isLoading: false,
       toggleTheme: () =>
         set((state) => ({
           theme: state.theme === "light" ? "dark" : "light",
         })),
       setLanguage: (lang) => set({ language: lang }),
       completeOnboarding: () => set({ hasCompletedOnboarding: true }),
+      setIsLoading: (status) => set({ isLoading: status }),
     }),
     {
       name: "app-storage",

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -18,15 +18,18 @@ import { callService } from "../services/callService";
 import { useCallStore } from "../store/callStore";
 import { AppNavigationProp } from "../types/navigation";
 import { useContactStore, EmergencyContact } from "../store/contactStore";
+import { useAppStore } from "../store/appStore";
 
 const DialScreen = () => {
   const [phoneNumber, setPhoneNumber] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
   const { colors } = useAppTheme();
   const navigation = useNavigation<AppNavigationProp>();
   const { setOutgoingCall } = useCallStore();
   const { contacts, fetchContacts } = useContactStore();
   const { t } = useTranslation();
+
+  const isLoading = useAppStore((state) => state.isLoading);
+  const setIsLoading = useAppStore((state) => state.setIsLoading);
 
   useFocusEffect(
     React.useCallback(() => {

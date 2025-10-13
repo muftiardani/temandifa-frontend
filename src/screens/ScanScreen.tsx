@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import {
   View,
   Text,
@@ -19,20 +19,21 @@ import Animated, {
   Easing,
 } from "react-native-reanimated";
 import { useTranslation } from "react-i18next";
-
 import { RootStackParamList } from "../types/navigation";
 import { apiService } from "../services/apiService";
 import LoadingIndicator from "../components/common/LoadingIndicator";
 import { useAppTheme } from "../hooks/useAppTheme";
 import { AnimationDurations } from "../constants/animations";
 import AnimatedPressable from "../components/common/AnimatedPressable";
+import { useAppStore } from "../store/appStore";
 
 type ScanScreenProps = NativeStackScreenProps<RootStackParamList, "Scan">;
 
 const ScanScreen: React.FC<ScanScreenProps> = ({ navigation }) => {
-  const [isProcessing, setIsProcessing] = useState(false);
   const { t } = useTranslation();
   const { colors } = useAppTheme();
+  const isLoading = useAppStore((state) => state.isLoading);
+  const setIsLoading = useAppStore((state) => state.setIsLoading);
 
   const placeholderTranslateY = useSharedValue(0);
 
@@ -51,7 +52,7 @@ const ScanScreen: React.FC<ScanScreenProps> = ({ navigation }) => {
       -1,
       true
     );
-  }, []);
+  }, [placeholderTranslateY]);
 
   const animatedPlaceholderStyle = useAnimatedStyle(() => ({
     transform: [{ translateY: placeholderTranslateY.value }],
@@ -81,7 +82,7 @@ const ScanScreen: React.FC<ScanScreenProps> = ({ navigation }) => {
   };
 
   const uploadImageForScan = async (uri: string) => {
-    setIsProcessing(true);
+    setIsLoading(true);
     try {
       const data = await apiService.scanImage(uri);
       if (data) {
@@ -94,7 +95,7 @@ const ScanScreen: React.FC<ScanScreenProps> = ({ navigation }) => {
         text2: error.message || t("general.genericError"),
       });
     } finally {
-      setIsProcessing(false);
+      setIsLoading(false);
     }
   };
 
@@ -115,7 +116,7 @@ const ScanScreen: React.FC<ScanScreenProps> = ({ navigation }) => {
       </View>
 
       <View style={styles.content}>
-        {isProcessing ? (
+        {isLoading ? (
           <LoadingIndicator text={t("scanScreen.processing")} />
         ) : (
           <Animated.View
@@ -145,7 +146,7 @@ const ScanScreen: React.FC<ScanScreenProps> = ({ navigation }) => {
           <AnimatedPressable
             style={[styles.button, { backgroundColor: colors.accent }]}
             onPress={handleKameraPress}
-            disabled={isProcessing}
+            disabled={isLoading}
             accessibilityLabel={`${t("scanScreen.camera")}. Tombol`}
             accessibilityHint="Membuka kamera untuk memindai dokumen"
             accessibilityRole="button"
@@ -157,7 +158,7 @@ const ScanScreen: React.FC<ScanScreenProps> = ({ navigation }) => {
           <AnimatedPressable
             style={[styles.button, { backgroundColor: colors.secondary }]}
             onPress={handleUnggahPress}
-            disabled={isProcessing}
+            disabled={isLoading}
             accessibilityLabel={`${t("scanScreen.upload")}. Tombol`}
             accessibilityHint="Mengunggah gambar dari galeri untuk dipindai"
             accessibilityRole="button"

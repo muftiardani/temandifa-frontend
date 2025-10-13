@@ -20,6 +20,7 @@ import { useAppTheme } from "../hooks/useAppTheme";
 import { useContactStore, EmergencyContact } from "../store/contactStore";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../types/navigation";
+import { useAppStore } from "../store/appStore";
 
 if (
   Platform.OS === "android" &&
@@ -37,8 +38,10 @@ const EmergencyContactsScreen: React.FC<Props> = ({ navigation }) => {
     useContactStore();
   const [name, setName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
   const [isFetching, setIsFetching] = useState(true);
+
+  const isLoading = useAppStore((state) => state.isLoading);
+  const setIsLoading = useAppStore((state) => state.setIsLoading);
 
   useEffect(() => {
     const loadContacts = async () => {

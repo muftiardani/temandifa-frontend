@@ -19,6 +19,7 @@ import { authService } from "../services/authService";
 import { AuthStackParamList } from "../types/navigation";
 import { Ionicons } from "@expo/vector-icons";
 import AnimatedPressable from "../components/common/AnimatedPressable";
+import { useAppStore } from "../store/appStore";
 
 type ForgotPasswordScreenProps = NativeStackScreenProps<
   AuthStackParamList,
@@ -31,9 +32,11 @@ const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({
   navigation,
 }) => {
   const [email, setEmail] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
   const { colors } = useAppTheme();
   const { t } = useTranslation();
+
+  const isLoading = useAppStore((state) => state.isLoading);
+  const setIsLoading = useAppStore((state) => state.setIsLoading);
 
   const handleForgotPassword = async () => {
     if (!email.trim()) {

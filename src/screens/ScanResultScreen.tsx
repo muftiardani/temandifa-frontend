@@ -61,18 +61,6 @@ const ScanResultScreen: React.FC<ScanResultScreenProps> = ({
     };
   }, [navigation]);
 
-  useEffect(() => {
-    const interval = setInterval(async () => {
-      if (isMounted.current) {
-        const speakingStatus = await Speech.isSpeakingAsync();
-        if (speakingStatus !== isSpeaking) {
-          setIsSpeaking(speakingStatus);
-        }
-      }
-    }, 500);
-    return () => clearInterval(interval);
-  }, [isSpeaking]);
-
   const handleSpeakButton = async () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
     const speakingStatus = await Speech.isSpeakingAsync();
@@ -80,9 +68,11 @@ const ScanResultScreen: React.FC<ScanResultScreenProps> = ({
       Speech.stop();
       setIsSpeaking(false);
     } else {
-      setIsSpeaking(true);
       Speech.speak(scannedText, {
         language: language === "id" ? "id-ID" : "en-US",
+        onStart: () => {
+          if (isMounted.current) setIsSpeaking(true);
+        },
         onDone: () => {
           if (isMounted.current) setIsSpeaking(false);
         },
