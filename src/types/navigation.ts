@@ -20,6 +20,7 @@ export type RootStackParamList = {
   Scan: undefined;
   Voice: undefined;
   Settings: undefined;
+  Profile: undefined;
   VideoCall: undefined;
   ScanResult: { scannedText: string };
   VoiceResult: { transcribedText: string };

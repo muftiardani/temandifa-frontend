@@ -37,7 +37,12 @@
     ],
     "skip": "Skip",
     "next": "Next",
-    "getStarted": "Get Started"
+    "getStarted": "Get Started",
+    "accessibility": {
+      "skipHint": "Skips the introduction and goes straight to the app.",
+      "nextHint": "Proceeds to the next introduction page.",
+      "getStartedHint": "Finishes the introduction and starts using the app."
+    }
   },
   "permissions": {
     "camera": "We need your permission to use the camera",
@@ -99,7 +104,10 @@
     "optional": "Optional",
     "networkError": "Failed to connect to the server. Check your internet connection.",
     "genericError": "An error occurred. Please try again later.",
-    "serverError": "An error occurred on the server."
+    "serverError": "An error occurred on the server.",
+    "accessibility": {
+      "backHint": "Returns to the previous screen."
+    }
   },
   "auth": {
     "login": "Login",
@@ -144,9 +152,16 @@
     "sendInstructions": "Send Instructions",
     "backToLogin": "Back to Login",
     "loginWithBiometrics": "Login with Biometrics",
-    "rememberMe": "Remember Me"
+    "rememberMe": "Remember Me",
+    "accessibility": {
+      "forgotPasswordHint": "Navigates to the forgot password page.",
+      "registerHint": "Navigates to the new account registration page.",
+      "loginHint": "Navigates to the login page."
+    }
   },
   "dialogs": {
+    "logoutConfirmationTitle": "Logout Confirmation",
+    "logoutConfirmationMessage": "Are you sure you want to log out of your account?",
     "deleteContactTitle": "Delete Contact",
     "deleteContactMessage": "Are you sure you want to delete this contact?",
     "cancel": "Cancel",
@@ -154,8 +169,6 @@
     "failed": "Failed"
   },
   "call": {
-    "logoutConfirmationTitle": "Logout Confirmation",
-    "logoutConfirmationMessage": "Are you sure you want to log out of your account?",
     "videoCall": "Video Call",
     "incomingCall": "Incoming Call",
     "temandifaVideoCall": "TemanDifa Video Call",
@@ -174,11 +187,28 @@
     "unmute": "Unmute",
     "mute": "Mute",
     "switchCamera": "Switch camera",
-    "endCall": "End call"
+    "endCall": "End call",
+    "accessibility": {
+      "cameraStateOn": "Your camera is currently off. Tap to turn on.",
+      "cameraStateOff": "Your camera is currently on. Tap to turn off.",
+      "micStateOn": "You are currently muted. Tap to unmute.",
+      "micStateOff": "You are currently unmuted. Tap to mute.",
+      "switchCameraHint": "Switches between front and back camera.",
+      "endCallHint": "Ends the current video call."
+    }
   },
   "contacts": {
     "addContact": "Add Contact",
     "contactName": "Contact Name",
-    "phoneNumber": "Phone Number"
+    "phoneNumber": "Phone Number",
+    "accessibility": {
+      "addContactHint": "Adds the filled contact to the list."
+    }
+  },
+  "profile": {
+    "title": "Profile",
+    "guest": "Guest",
+    "user": "User",
+    "accessibilityHint": "Opens the profile page"
   }
 }

@@ -37,7 +37,12 @@
     ],
     "skip": "Lewati",
     "next": "Lanjutkan",
-    "getStarted": "Mulai Sekarang"
+    "getStarted": "Mulai Sekarang",
+    "accessibility": {
+      "skipHint": "Lewati perkenalan dan langsung masuk ke aplikasi.",
+      "nextHint": "Lanjutkan ke halaman perkenalan berikutnya.",
+      "getStartedHint": "Selesaikan perkenalan dan mulai gunakan aplikasi."
+    }
   },
   "permissions": {
     "camera": "Kami butuh izin Anda untuk menggunakan kamera",
@@ -99,7 +104,10 @@
     "optional": "Opsional",
     "networkError": "Gagal terhubung ke server. Periksa koneksi internet Anda.",
     "genericError": "Terjadi kesalahan. Silakan coba lagi nanti.",
-    "serverError": "Terjadi kesalahan pada server."
+    "serverError": "Terjadi kesalahan pada server.",
+    "accessibility": {
+      "backHint": "Kembali ke layar sebelumnya."
+    }
   },
   "auth": {
     "login": "Login",
@@ -144,7 +152,12 @@
     "sendInstructions": "Kirim Instruksi",
     "backToLogin": "Kembali ke Login",
     "loginWithBiometrics": "Login dengan Biometrik",
-    "rememberMe": "Ingat Saya"
+    "rememberMe": "Ingat Saya",
+    "accessibility": {
+      "forgotPasswordHint": "Navigasi ke halaman lupa password.",
+      "registerHint": "Navigasi ke halaman pendaftaran akun baru.",
+      "loginHint": "Navigasi ke halaman login."
+    }
   },
   "dialogs": {
     "logoutConfirmationTitle": "Konfirmasi Keluar",
@@ -174,11 +187,28 @@
     "unmute": "Nyalakan suara",
     "mute": "Matikan suara",
     "switchCamera": "Ganti kamera",
-    "endCall": "Akhiri panggilan"
+    "endCall": "Akhiri panggilan",
+    "accessibility": {
+      "cameraStateOn": "Saat ini kamera Anda mati. Ketuk untuk menyalakan.",
+      "cameraStateOff": "Saat ini kamera Anda menyala. Ketuk untuk mematikan.",
+      "micStateOn": "Saat ini suara Anda mati. Ketuk untuk menyalakan.",
+      "micStateOff": "Saat ini suara Anda menyala. Ketuk untuk mematikan.",
+      "switchCameraHint": "Mengalihkan antara kamera depan dan belakang.",
+      "endCallHint": "Mengakhiri panggilan video saat ini."
+    }
   },
   "contacts": {
     "addContact": "Tambah Kontak",
     "contactName": "Nama Kontak",
-    "phoneNumber": "Nomor Telepon"
+    "phoneNumber": "Nomor Telepon",
+    "accessibility": {
+      "addContactHint": "Menambahkan kontak yang telah diisi ke dalam daftar."
+    }
+  },
+  "profile": {
+    "title": "Profil",
+    "guest": "Tamu",
+    "user": "Pengguna",
+    "accessibilityHint": "Membuka halaman profil"
   }
 }

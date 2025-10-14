@@ -100,6 +100,7 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
   const handleScanPress = () => navigation.navigate("Scan");
   const handleVoicePress = () => navigation.navigate("Voice");
   const handleSettingsPress = () => navigation.navigate("Settings");
+  const handleProfilePress = () => navigation.navigate("Profile");
 
   const handleVideoCallPress = () => {
     if (isAuthenticated) {
@@ -167,22 +168,10 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
           <Animated.View style={animatedLeftContainerStyle}>
             <View
               style={[
-                styles.helpSettingsContainer,
+                styles.bottomButtonsContainer,
                 { backgroundColor: colors.darkGrey },
               ]}
             >
-              <TouchableOpacity
-                onPress={() => navigation.navigate("HelpAndGuide")}
-                accessibilityLabel={t("home.helpButton")}
-                accessibilityHint="Membuka panduan aplikasi"
-                accessibilityRole="button"
-              >
-                <Ionicons
-                  name="help-circle-outline"
-                  size={44}
-                  color={colors.white}
-                />
-              </TouchableOpacity>
               <TouchableOpacity
                 onPress={handleSettingsPress}
                 accessibilityLabel={t("home.settingsButton")}
@@ -192,6 +181,18 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
                 <Ionicons
                   name="settings-outline"
                   size={34}
+                  color={colors.white}
+                />
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={handleProfilePress}
+                accessibilityLabel="Profil"
+                accessibilityHint="Membuka halaman profil"
+                accessibilityRole="button"
+              >
+                <Ionicons
+                  name="person-circle-outline"
+                  size={40}
                   color={colors.white}
                 />
               </TouchableOpacity>
@@ -238,7 +239,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
   },
-  helpSettingsContainer: {
+  bottomButtonsContainer: {
     flexDirection: "row",
     alignItems: "center",
     borderRadius: 50,

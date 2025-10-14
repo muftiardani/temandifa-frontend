@@ -33,6 +33,7 @@ import LoginScreen from "../screens/LoginScreen";
 import RegisterScreen from "../screens/RegisterScreen";
 import ForgotPasswordScreen from "../screens/ForgotPasswordScreen";
 import EmergencyContactsScreen from "../screens/EmergencyContactsScreen";
+import ProfileScreen from "../screens/ProfileScreen";
 
 import { useAuthStore } from "../store/authStore";
 import { useAppStore } from "../store/appStore";
@@ -102,6 +103,11 @@ const AppNavigator = () => (
     <AppStack.Screen
       name="Settings"
       component={SettingsScreen}
+      options={{ animation: "slide_from_bottom" }}
+    />
+    <AppStack.Screen
+      name="Profile"
+      component={ProfileScreen}
       options={{ animation: "slide_from_bottom" }}
     />
     <AppStack.Screen name="DocumentScanner" component={DocumentScannerScreen} />
