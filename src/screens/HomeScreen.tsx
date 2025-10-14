@@ -77,7 +77,6 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
 
   useEffect(() => {
     const animationConfig = { duration: 700, easing: Easing.out(Easing.ease) };
-
     bottomBarOpacity.value = withDelay(300, withTiming(1, animationConfig));
     leftContainerTranslateX.value = withDelay(
       300,
@@ -137,7 +136,7 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
               icon="camera"
               backgroundColor={colors.primary}
               layout="horizontal"
-              style={{ width: "100%", height: 135 }}
+              style={{ width: "100%", height: 140 }}
               onPress={handleCameraPress}
               accessibilityLabel={t("home.cameraButton")}
             />
@@ -180,7 +179,7 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
               >
                 <Ionicons
                   name="help-circle-outline"
-                  size={40}
+                  size={44}
                   color={colors.white}
                 />
               </TouchableOpacity>
@@ -192,7 +191,7 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
               >
                 <Ionicons
                   name="settings-outline"
-                  size={32}
+                  size={34}
                   color={colors.white}
                 />
               </TouchableOpacity>
@@ -224,17 +223,17 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, paddingHorizontal: 20, paddingTop: 40 },
-  header: { marginBottom: 30 },
-  headerTitle: { fontSize: 36, fontWeight: "700", marginBottom: 8 },
-  headerSubtitle: { fontSize: 18 },
-  buttonGrid: { gap: 20 },
-  row: { flexDirection: "row", gap: 20 },
+  container: { flex: 1, paddingTop: 50 },
+  header: { marginBottom: 25 },
+  headerTitle: { fontSize: 36, fontWeight: "700", marginBottom: 4, paddingHorizontal: 20 },
+  headerSubtitle: { fontSize: 18, paddingHorizontal: 20 },
+  buttonGrid: { gap: 10, paddingHorizontal: 15 },
+  row: { flexDirection: "row", gap: 10 },
   bottomBar: {
     position: "absolute",
     bottom: 60,
-    left: 20,
-    right: 20,
+    left: 15,
+    right: 15,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
@@ -244,8 +243,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderRadius: 50,
     height: 75,
-    paddingHorizontal: 30,
-    gap: 25,
+    paddingHorizontal: 20,
+    gap: 20,
   },
   emergencyButton: {
     width: 75,
