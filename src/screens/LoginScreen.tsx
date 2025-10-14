@@ -24,7 +24,7 @@ import * as WebBrowser from "expo-web-browser";
 import * as LocalAuthentication from "expo-local-authentication";
 import ValidatedInput from "../components/common/ValidatedInput";
 import AnimatedPressable from "../components/common/AnimatedPressable";
-import { useAppStore } from "../store/appStore"; // <-- 1. IMPORT GLOBAL STORE
+import { useAppStore } from "../store/appStore";
 
 WebBrowser.maybeCompleteAuthSession();
 

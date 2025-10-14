@@ -61,6 +61,34 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
   const { colors } = useAppTheme();
   const { isAuthenticated } = useAuthStore();
 
+  const bottomBarOpacity = useSharedValue(0);
+  const leftContainerTranslateX = useSharedValue(-50);
+  const rightButtonTranslateX = useSharedValue(50);
+
+  const animatedLeftContainerStyle = useAnimatedStyle(() => ({
+    opacity: bottomBarOpacity.value,
+    transform: [{ translateX: leftContainerTranslateX.value }],
+  }));
+
+  const animatedRightButtonStyle = useAnimatedStyle(() => ({
+    opacity: bottomBarOpacity.value,
+    transform: [{ translateX: rightButtonTranslateX.value }],
+  }));
+
+  useEffect(() => {
+    const animationConfig = { duration: 700, easing: Easing.out(Easing.ease) };
+
+    bottomBarOpacity.value = withDelay(300, withTiming(1, animationConfig));
+    leftContainerTranslateX.value = withDelay(
+      300,
+      withTiming(0, animationConfig)
+    );
+    rightButtonTranslateX.value = withDelay(
+      350,
+      withTiming(0, animationConfig)
+    );
+  }, [bottomBarOpacity, leftContainerTranslateX, rightButtonTranslateX]);
+
   const getGreeting = () => {
     const currentHour = new Date().getHours();
     if (currentHour < 12) return t("greetings.morning");
@@ -137,54 +165,58 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
         </View>
 
         <View style={styles.bottomBar}>
-          <View
-            style={[
-              styles.helpSettingsContainer,
-              { backgroundColor: colors.darkGrey },
-            ]}
-          >
+          <Animated.View style={animatedLeftContainerStyle}>
+            <View
+              style={[
+                styles.helpSettingsContainer,
+                { backgroundColor: colors.darkGrey },
+              ]}
+            >
+              <TouchableOpacity
+                onPress={() => navigation.navigate("HelpAndGuide")}
+                accessibilityLabel={t("home.helpButton")}
+                accessibilityHint="Membuka panduan aplikasi"
+                accessibilityRole="button"
+              >
+                <Ionicons
+                  name="help-circle-outline"
+                  size={40}
+                  color={colors.white}
+                />
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={handleSettingsPress}
+                accessibilityLabel={t("home.settingsButton")}
+                accessibilityHint={`Membuka ${t("settings.title")}`}
+                accessibilityRole="button"
+              >
+                <Ionicons
+                  name="settings-outline"
+                  size={32}
+                  color={colors.white}
+                />
+              </TouchableOpacity>
+            </View>
+          </Animated.View>
+          <Animated.View style={animatedRightButtonStyle}>
             <TouchableOpacity
-              onPress={() => navigation.navigate("HelpAndGuide")}
-              accessibilityLabel={t("home.helpButton")}
-              accessibilityHint="Membuka panduan aplikasi"
+              style={[
+                styles.emergencyButton,
+                { backgroundColor: colors.danger },
+                !isAuthenticated && { backgroundColor: colors.darkGrey },
+              ]}
+              onPress={handleVideoCallPress}
+              accessibilityLabel={t("home.emergencyButton")}
+              accessibilityHint={
+                isAuthenticated
+                  ? "Membuka layar untuk memulai panggilan video"
+                  : "Login diperlukan untuk fitur ini"
+              }
               accessibilityRole="button"
             >
-              <Ionicons
-                name="help-circle-outline"
-                size={40}
-                color={colors.white}
-              />
+              <Ionicons name="call" size={34} color={colors.white} />
             </TouchableOpacity>
-            <TouchableOpacity
-              onPress={handleSettingsPress}
-              accessibilityLabel={t("home.settingsButton")}
-              accessibilityHint={`Membuka ${t("settings.title")}`}
-              accessibilityRole="button"
-            >
-              <Ionicons
-                name="settings-outline"
-                size={32}
-                color={colors.white}
-              />
-            </TouchableOpacity>
-          </View>
-          <TouchableOpacity
-            style={[
-              styles.emergencyButton,
-              { backgroundColor: colors.danger },
-              !isAuthenticated && { backgroundColor: colors.darkGrey },
-            ]}
-            onPress={handleVideoCallPress}
-            accessibilityLabel={t("home.emergencyButton")}
-            accessibilityHint={
-              isAuthenticated
-                ? "Membuka layar untuk memulai panggilan video"
-                : "Login diperlukan untuk fitur ini"
-            }
-            accessibilityRole="button"
-          >
-            <Ionicons name="call" size={34} color={colors.white} />
-          </TouchableOpacity>
+          </Animated.View>
         </View>
       </View>
     </SafeAreaView>
