@@ -144,6 +144,7 @@ const EmergencyContactsScreen: React.FC<Props> = ({ navigation }) => {
           onPress={() => navigation.goBack()}
           style={styles.backButton}
           accessibilityLabel={t("general.back")}
+          accessibilityHint={t("general.accessibility.backHint")}
           accessibilityRole="button"
         >
           <Ionicons name="chevron-back" size={24} color={colors.text} />
@@ -188,6 +189,7 @@ const EmergencyContactsScreen: React.FC<Props> = ({ navigation }) => {
           ]}
           onPress={handleAddContact}
           accessibilityLabel={t("contacts.addContact")}
+          accessibilityHint={t("contacts.accessibility.addContactHint")}
           accessibilityRole="button"
           disabled={isLoading}
         >

@@ -24,18 +24,23 @@ const SettingsItem = ({
   icon,
   textColor,
   borderColor,
+  accessibilityHint,
 }: {
   label: string;
   onPress: () => void;
   icon: keyof typeof Ionicons.glyphMap;
   textColor: string;
   borderColor: string;
+  accessibilityHint?: string;
 }) => {
   const { colors } = useAppTheme();
   return (
     <TouchableOpacity
       style={[styles.itemContainer, { borderBottomColor: borderColor }]}
       onPress={onPress}
+      accessibilityLabel={label}
+      accessibilityRole="button"
+      accessibilityHint={accessibilityHint}
     >
       <View style={styles.itemContent}>
         <Ionicons
@@ -57,13 +62,13 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
   const { logout, accessToken, isGuest } = useAuthStore();
 
   const userEmail = (() => {
-    if (isGuest) return "Tamu";
-    if (!accessToken) return "Pengguna";
+    if (isGuest) return t("profile.guest");
+    if (!accessToken) return t("profile.user");
     try {
       const decoded: { email: string } = jwtDecode(accessToken);
       return decoded.email;
     } catch (e) {
-      return "Pengguna";
+      return t("profile.user");
     }
   })();
 
@@ -89,11 +94,14 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
           <TouchableOpacity
             onPress={() => navigation.goBack()}
             style={styles.backButton}
+            accessibilityLabel={t("general.back")}
+            accessibilityHint={t("general.accessibility.backHint")}
+            accessibilityRole="button"
           >
             <Ionicons name="chevron-back" size={24} color={colors.text} />
           </TouchableOpacity>
           <Text style={[styles.headerTitle, { color: colors.headerText }]}>
-            Profil
+            {t("profile.title")}
           </Text>
         </View>
 
@@ -111,6 +119,9 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
             icon="help-circle-outline"
             textColor={colors.text}
             borderColor={colors.border}
+            accessibilityHint={`Navigasi ke halaman ${t(
+              "settings.helpAndGuide"
+            )}`}
           />
         </View>
 
@@ -119,6 +130,8 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
             <AnimatedPressable
               style={styles.logoutButton}
               onPress={handleLogout}
+              accessibilityLabel={t("auth.logout")}
+              accessibilityRole="button"
             >
               <Text style={[styles.logoutButtonText, { color: colors.danger }]}>
                 {t("auth.logout")}

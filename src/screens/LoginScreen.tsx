@@ -90,6 +90,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
         if (!newAccessToken) {
           Alert.alert(t("auth.loginFailed"), t("auth.sessionExpired"));
         }
+        setIsLoading(false);
       }
     } catch (error) {
       Toast.show({
@@ -97,7 +98,6 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
         text1: t("general.error"),
         text2: t("auth.biometricAuthFailed"),
       });
-    } finally {
       setIsLoading(false);
     }
   };
@@ -216,6 +216,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
             onPress={() => navigation.navigate("ForgotPassword")}
             accessibilityRole="link"
             accessibilityLabel={t("auth.forgotPassword")}
+            accessibilityHint={t("auth.accessibility.forgotPasswordHint")}
           >
             <Text style={[styles.linkText, { color: colors.primary }]}>
               {t("auth.forgotPassword")}
@@ -265,6 +266,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
           style={styles.skipButton}
           onPress={loginAsGuest}
           accessibilityLabel={t("onboarding.skip")}
+          accessibilityHint={t("onboarding.accessibility.skipHint")}
           accessibilityRole="button"
         >
           <Text style={[styles.skipText, { color: colors.grey }]}>
@@ -277,6 +279,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
           style={styles.footer}
           accessibilityRole="link"
           accessibilityLabel={`${t("auth.noAccount")} ${t("auth.register")}`}
+          accessibilityHint={t("auth.accessibility.registerHint")}
         >
           <Text style={[styles.footerText, { color: colors.grey }]}>
             {t("auth.noAccount")}{" "}

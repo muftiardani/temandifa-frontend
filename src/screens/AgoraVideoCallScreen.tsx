@@ -95,9 +95,12 @@ const AgoraVideoCallScreen = () => {
           ]}
           onPress={toggleCamera}
           accessibilityLabel={
+            isCameraOff ? t("call.turnCameraOn") : t("call.turnCameraOff")
+          }
+          accessibilityHint={
             isCameraOff
-              ? t("call.turnCameraOn", "Nyalakan kamera")
-              : t("call.turnCameraOff", "Matikan kamera")
+              ? t("call.accessibility.cameraStateOn")
+              : t("call.accessibility.cameraStateOff")
           }
           accessibilityRole="button"
         >
@@ -113,10 +116,11 @@ const AgoraVideoCallScreen = () => {
             { backgroundColor: colors.controlBackground },
           ]}
           onPress={toggleMute}
-          accessibilityLabel={
+          accessibilityLabel={isMuted ? t("call.unmute") : t("call.mute")}
+          accessibilityHint={
             isMuted
-              ? t("call.unmute", "Nyalakan suara")
-              : t("call.mute", "Matikan suara")
+              ? t("call.accessibility.micStateOn")
+              : t("call.accessibility.micStateOff")
           }
           accessibilityRole="button"
         >
@@ -132,7 +136,8 @@ const AgoraVideoCallScreen = () => {
             { backgroundColor: colors.controlBackground },
           ]}
           onPress={switchCamera}
-          accessibilityLabel={t("call.switchCamera", "Ganti kamera")}
+          accessibilityLabel={t("call.switchCamera")}
+          accessibilityHint={t("call.accessibility.switchCameraHint")}
           accessibilityRole="button"
         >
           <Ionicons name="camera-reverse" size={28} color={colors.white} />
@@ -140,7 +145,8 @@ const AgoraVideoCallScreen = () => {
         <TouchableOpacity
           style={[styles.iconButton, { backgroundColor: colors.danger }]}
           onPress={handleLeave}
-          accessibilityLabel={t("call.endCall", "Akhiri panggilan")}
+          accessibilityLabel={t("call.endCall")}
+          accessibilityHint={t("call.accessibility.endCallHint")}
           accessibilityRole="button"
         >
           <Ionicons

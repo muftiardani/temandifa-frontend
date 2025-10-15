@@ -83,6 +83,9 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = () => {
     const buttonText = isLastItem
       ? t("onboarding.getStarted")
       : t("onboarding.next");
+    const buttonHint = isLastItem
+      ? t("onboarding.accessibility.getStartedHint")
+      : t("onboarding.accessibility.nextHint");
 
     return (
       <View style={[styles.slideContainer, { width }]}>
@@ -96,6 +99,7 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = () => {
           style={[styles.button, { backgroundColor: colors.primary }]}
           onPress={() => handleNext(index)}
           accessibilityLabel={buttonText}
+          accessibilityHint={buttonHint}
           accessibilityRole="button"
         >
           <Text style={styles.buttonText}>{buttonText}</Text>
@@ -112,6 +116,7 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = () => {
         style={styles.skipButton}
         onPress={handleFinishOnboarding}
         accessibilityLabel={t("onboarding.skip")}
+        accessibilityHint={t("onboarding.accessibility.skipHint")}
         accessibilityRole="button"
       >
         <Text style={[styles.skipText, { color: colors.grey }]}>
