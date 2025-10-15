@@ -201,6 +201,10 @@
     "addContact": "Add Contact",
     "contactName": "Contact Name",
     "phoneNumber": "Phone Number",
+    "addSuccess": "Contact added successfully.",
+    "addFailed": "Failed to add contact.",
+    "deleteSuccess": "Contact deleted successfully.",
+    "deleteFailed": "Failed to delete contact.",
     "accessibility": {
       "addContactHint": "Adds the filled contact to the list."
     }

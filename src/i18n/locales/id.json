@@ -201,6 +201,10 @@
     "addContact": "Tambah Kontak",
     "contactName": "Nama Kontak",
     "phoneNumber": "Nomor Telepon",
+    "addSuccess": "Kontak berhasil ditambahkan.",
+    "addFailed": "Gagal menambahkan kontak.",
+    "deleteSuccess": "Kontak berhasil dihapus.",
+    "deleteFailed": "Gagal menghapus kontak.",
     "accessibility": {
       "addContactHint": "Menambahkan kontak yang telah diisi ke dalam daftar."
     }

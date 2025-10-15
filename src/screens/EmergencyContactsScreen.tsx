@@ -71,13 +71,13 @@ const EmergencyContactsScreen: React.FC<Props> = ({ navigation }) => {
       Toast.show({
         type: "success",
         text1: t("general.success"),
-        text2: "Kontak berhasil ditambahkan.",
+        text2: t("contacts.addSuccess"),
       });
     } catch (error: any) {
       Toast.show({
         type: "error",
         text1: t("dialogs.failed"),
-        text2: error.message || "Gagal menambahkan kontak.",
+        text2: error.message || t("contacts.addFailed"),
       });
     } finally {
       setIsLoading(false);
@@ -102,13 +102,13 @@ const EmergencyContactsScreen: React.FC<Props> = ({ navigation }) => {
               Toast.show({
                 type: "success",
                 text1: t("general.success"),
-                text2: "Kontak berhasil dihapus.",
+                text2: t("contacts.deleteSuccess"),
               });
             } catch (error: any) {
               Toast.show({
                 type: "error",
                 text1: t("dialogs.failed"),
-                text2: error.message || "Gagal menghapus kontak.",
+                text2: error.message || t("contacts.deleteFailed"),
               });
             }
           },
@@ -189,7 +189,6 @@ const EmergencyContactsScreen: React.FC<Props> = ({ navigation }) => {
           ]}
           onPress={handleAddContact}
           accessibilityLabel={t("contacts.addContact")}
-          accessibilityHint={t("contacts.accessibility.addContactHint")}
           accessibilityRole="button"
           disabled={isLoading}
         >
