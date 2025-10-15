@@ -1,4 +1,5 @@
 import React, { useState, useCallback, useEffect, useRef } from "react";
+import { Text, View } from "react-native";
 import {
   NavigationContainer,
   DefaultTheme,
@@ -8,6 +9,7 @@ import {
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import * as SplashScreen from "expo-splash-screen";
 import * as Notifications from "expo-notifications";
+import * as Linking from "expo-linking";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { jwtDecode } from "jwt-decode";
 
@@ -34,6 +36,7 @@ import RegisterScreen from "../screens/RegisterScreen";
 import ForgotPasswordScreen from "../screens/ForgotPasswordScreen";
 import EmergencyContactsScreen from "../screens/EmergencyContactsScreen";
 import ProfileScreen from "../screens/ProfileScreen";
+import ResetPasswordScreen from "../screens/ResetPasswordScreen";
 
 import { useAuthStore } from "../store/authStore";
 import { useAppStore } from "../store/appStore";
@@ -81,6 +84,8 @@ Notifications.setNotificationHandler({
   }),
 });
 
+const prefix = Linking.createURL("/");
+
 const AuthNavigator = () => (
   <AuthStack.Navigator
     screenOptions={{ headerShown: false, animation: "slide_from_right" }}
@@ -88,6 +93,7 @@ const AuthNavigator = () => (
     <AuthStack.Screen name="Login" component={LoginScreen} />
     <AuthStack.Screen name="Register" component={RegisterScreen} />
     <AuthStack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
+    <AuthStack.Screen name="ResetPassword" component={ResetPasswordScreen} />
   </AuthStack.Navigator>
 );
 
@@ -152,11 +158,9 @@ const AppNavigator = () => (
 );
 
 const RootNavigator = () => {
-  const { hasCompletedOnboarding, completeOnboarding } = useAppStore();
+  const { hasCompletedOnboarding, completeOnboarding, theme } = useAppStore();
   const [isSplashAnimationComplete, setSplashAnimationComplete] =
     useState(false);
-
-  const theme = useAppStore((state) => state.theme);
   const navigationRef = useRef<NavigationContainerRef<any>>(null);
 
   const {
@@ -173,8 +177,21 @@ const RootNavigator = () => {
     }
   }, [isSplashAnimationComplete]);
 
+  const linking = {
+    prefixes: [prefix],
+    config: {
+      screens: {
+        Auth: {
+          screens: {
+            ResetPassword: "reset-password/:token",
+          },
+        },
+      },
+    },
+  };
+
   useEffect(() => {
-    async function prepareAndCheckCallStatus() {
+    async function prepareApp() {
       await SplashScreen.preventAutoHideAsync();
       try {
         const hasCompleted = await AsyncStorage.getItem(
@@ -189,7 +206,7 @@ const RootNavigator = () => {
 
         if (accessToken) {
           const status = await callService.getStatus();
-          if (status && status.activeCall) {
+          if (status?.activeCall) {
             const { activeCall } = status;
             const decodedToken: { id: string } = jwtDecode(accessToken);
             const currentUserId = decodedToken.id;
@@ -218,11 +235,10 @@ const RootNavigator = () => {
         }
       } catch (e) {
         console.warn("Gagal menyiapkan aplikasi:", e);
-      } finally {
       }
     }
 
-    prepareAndCheckCallStatus();
+    prepareApp();
 
     const notificationListener = Notifications.addNotificationReceivedListener(
       (notification) => {
@@ -267,9 +283,7 @@ const RootNavigator = () => {
     return (
       <AnimatedSplashScreen
         onReady={onLayoutRootView}
-        onAnimationComplete={() => {
-          setSplashAnimationComplete(true);
-        }}
+        onAnimationComplete={() => setSplashAnimationComplete(true)}
       />
     );
   }
@@ -278,6 +292,14 @@ const RootNavigator = () => {
     <NavigationContainer
       ref={navigationRef}
       theme={theme === "dark" ? MyDarkTheme : MyLightTheme}
+      linking={linking}
+      fallback={
+        <View
+          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+        >
+          <Text>Memuat...</Text>
+        </View>
+      }
     >
       <RootStack.Navigator screenOptions={{ headerShown: false }}>
         {!hasCompletedOnboarding ? (

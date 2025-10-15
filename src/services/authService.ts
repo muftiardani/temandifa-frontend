@@ -55,6 +55,13 @@ export const authService = {
     });
   },
 
+  resetPassword: async (token: string, password: string) => {
+    return fetchAPI(`resetpassword/${token}`, {
+      method: "POST",
+      body: JSON.stringify({ password }),
+    });
+  },
+
   refreshToken: async (refreshToken: string) => {
     return fetchAPI("refresh-token", {
       method: "POST",
