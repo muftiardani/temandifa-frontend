@@ -12,6 +12,7 @@ export const contactService = {
     }
     return response.json();
   },
+
   addContact: async (contact: { name: string; phoneNumber: string }) => {
     const response = await fetchWithAuth(API_URL, {
       method: "POST",
@@ -23,6 +24,7 @@ export const contactService = {
     }
     return response.json();
   },
+
   deleteContact: async (id: string) => {
     const response = await fetchWithAuth(`${API_URL}/${id}`, {
       method: "DELETE",
@@ -30,6 +32,21 @@ export const contactService = {
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
       throw new Error(errorData.message || "Gagal menghapus kontak.");
+    }
+    return response.json();
+  },
+
+  updateContact: async (
+    id: string,
+    contact: { name: string; phoneNumber: string }
+  ) => {
+    const response = await fetchWithAuth(`${API_URL}/${id}`, {
+      method: "PUT",
+      body: JSON.stringify(contact),
+    });
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.message || "Gagal memperbarui kontak.");
     }
     return response.json();
   },

@@ -138,16 +138,26 @@ const SettingsScreen: React.FC<SettingsScreenProps> = ({ navigation }) => {
             accessibilityHint={`Navigasi ke halaman ${t("settings.language")}`}
           />
           {!isGuest && (
-            <SettingsItem
-              icon="shield-checkmark-outline"
-              label={t("settings.emergencyContacts")}
-              onPress={() => navigation.navigate("EmergencyContacts")}
-              textColor={colors.text}
-              borderColor={colors.border}
-              accessibilityHint={`Navigasi ke halaman ${t(
-                "settings.emergencyContacts"
-              )}`}
-            />
+            <>
+              <SettingsItem
+                icon="shield-checkmark-outline"
+                label={t("settings.emergencyContacts")}
+                onPress={() => navigation.navigate("EmergencyContacts")}
+                textColor={colors.text}
+                borderColor={colors.border}
+                accessibilityHint={`Navigasi ke halaman ${t(
+                  "settings.emergencyContacts"
+                )}`}
+              />
+              <SettingsItem
+                icon="list-outline"
+                label="Manajemen Sesi"
+                onPress={() => navigation.navigate("SessionManagement")}
+                textColor={colors.text}
+                borderColor={colors.border}
+                accessibilityHint="Navigasi ke halaman Manajemen Sesi"
+              />
+            </>
           )}
           <SettingsItem
             icon="help-circle-outline"

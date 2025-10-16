@@ -12,6 +12,10 @@ interface ContactState {
   fetchContacts: () => Promise<void>;
   addContact: (contact: { name: string; phoneNumber: string }) => Promise<void>;
   removeContact: (id: string) => Promise<void>;
+  updateContact: (
+    id: string,
+    contact: { name: string; phoneNumber: string }
+  ) => Promise<void>;
 }
 
 export const useContactStore = create<ContactState>((set) => ({
@@ -43,6 +47,19 @@ export const useContactStore = create<ContactState>((set) => ({
       }));
     } catch (error) {
       console.error("Gagal menghapus kontak:", error);
+      throw error;
+    }
+  },
+  updateContact: async (id, contact) => {
+    try {
+      const updatedContact = await contactService.updateContact(id, contact);
+      set((state) => ({
+        contacts: state.contacts.map((c) =>
+          c._id === id ? updatedContact : c
+        ),
+      }));
+    } catch (error) {
+      console.error("Gagal memperbarui kontak:", error);
       throw error;
     }
   },

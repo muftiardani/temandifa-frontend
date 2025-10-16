@@ -1,4 +1,5 @@
 import { Config } from "../config";
+import { fetchWithAuth } from "./apiService";
 
 const API_URL = `${Config.api.baseUrl}/v1/auth`;
 
@@ -74,5 +75,25 @@ export const authService = {
       method: "POST",
       body: JSON.stringify({ refreshToken }),
     });
+  },
+
+  getSessions: async () => {
+    const response = await fetchWithAuth(`${API_URL}/sessions`);
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.message || "Gagal mengambil daftar sesi.");
+    }
+    return response.json();
+  },
+
+  revokeSession: async (sessionId: string) => {
+    const response = await fetchWithAuth(`${API_URL}/sessions/${sessionId}`, {
+      method: "DELETE",
+    });
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.message || "Gagal menghapus sesi.");
+    }
+    return response.json();
   },
 };

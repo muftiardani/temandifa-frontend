@@ -37,6 +37,7 @@ import ForgotPasswordScreen from "../screens/ForgotPasswordScreen";
 import EmergencyContactsScreen from "../screens/EmergencyContactsScreen";
 import ProfileScreen from "../screens/ProfileScreen";
 import ResetPasswordScreen from "../screens/ResetPasswordScreen";
+import SessionManagementScreen from "../screens/SessionManagementScreen";
 
 import { useAuthStore } from "../store/authStore";
 import { useAppStore } from "../store/appStore";
@@ -143,6 +144,10 @@ const AppNavigator = () => (
     <AppStack.Screen
       name="EmergencyContacts"
       component={EmergencyContactsScreen}
+    />
+    <AppStack.Screen
+      name="SessionManagement"
+      component={SessionManagementScreen}
     />
     <AppStack.Screen
       name="IncomingCall"

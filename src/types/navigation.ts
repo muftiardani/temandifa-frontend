@@ -34,6 +34,7 @@ export type RootStackParamList = {
   IncomingCall: undefined;
   OutgoingCall: undefined;
   EmergencyContacts: undefined;
+  SessionManagement: undefined;
 };
 
 export type AppNavigationProp = NativeStackNavigationProp<

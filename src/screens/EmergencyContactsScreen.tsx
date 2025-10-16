@@ -34,11 +34,12 @@ type Props = NativeStackScreenProps<RootStackParamList, "EmergencyContacts">;
 const EmergencyContactsScreen: React.FC<Props> = ({ navigation }) => {
   const { t } = useTranslation();
   const { colors } = useAppTheme();
-  const { contacts, fetchContacts, addContact, removeContact } =
+  const { contacts, fetchContacts, addContact, removeContact, updateContact } =
     useContactStore();
   const [name, setName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [isFetching, setIsFetching] = useState(true);
+  const [editingContactId, setEditingContactId] = useState<string | null>(null);
 
   const isLoading = useAppStore((state) => state.isLoading);
   const setIsLoading = useAppStore((state) => state.setIsLoading);
@@ -52,7 +53,19 @@ const EmergencyContactsScreen: React.FC<Props> = ({ navigation }) => {
     loadContacts();
   }, [fetchContacts]);
 
-  const handleAddContact = async () => {
+  const handleSelectContactForEdit = (contact: EmergencyContact) => {
+    setEditingContactId(contact._id);
+    setName(contact.name);
+    setPhoneNumber(contact.phoneNumber);
+  };
+
+  const handleCancelEdit = () => {
+    setEditingContactId(null);
+    setName("");
+    setPhoneNumber("");
+  };
+
+  const handleAddOrUpdateContact = async () => {
     if (!name.trim() || !phoneNumber.trim()) {
       Toast.show({
         type: "error",
@@ -64,20 +77,32 @@ const EmergencyContactsScreen: React.FC<Props> = ({ navigation }) => {
 
     setIsLoading(true);
     try {
-      await addContact({ name, phoneNumber });
+      if (editingContactId) {
+        await updateContact(editingContactId, { name, phoneNumber });
+        Toast.show({
+          type: "success",
+          text1: t("general.success"),
+          text2: "Kontak berhasil diperbarui.",
+        });
+      } else {
+        await addContact({ name, phoneNumber });
+        Toast.show({
+          type: "success",
+          text1: t("general.success"),
+          text2: t("contacts.addSuccess"),
+        });
+      }
       LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-      setName("");
-      setPhoneNumber("");
-      Toast.show({
-        type: "success",
-        text1: t("general.success"),
-        text2: t("contacts.addSuccess"),
-      });
+      handleCancelEdit();
     } catch (error: any) {
       Toast.show({
         type: "error",
         text1: t("dialogs.failed"),
-        text2: error.message || t("contacts.addFailed"),
+        text2:
+          error.message ||
+          (editingContactId
+            ? "Gagal memperbarui kontak."
+            : t("contacts.addFailed")),
       });
     } finally {
       setIsLoading(false);
@@ -127,13 +152,23 @@ const EmergencyContactsScreen: React.FC<Props> = ({ navigation }) => {
           {item.phoneNumber}
         </Text>
       </View>
-      <TouchableOpacity
-        onPress={() => confirmRemove(item._id)}
-        accessibilityLabel={`${t("dialogs.delete")} ${item.name}`}
-        accessibilityRole="button"
-      >
-        <Ionicons name="trash-outline" size={24} color={colors.danger} />
-      </TouchableOpacity>
+      <View style={styles.itemActions}>
+        <TouchableOpacity
+          onPress={() => handleSelectContactForEdit(item)}
+          accessibilityLabel={`Edit ${item.name}`}
+          accessibilityRole="button"
+        >
+          <Ionicons name="pencil-outline" size={24} color={colors.primary} />
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => confirmRemove(item._id)}
+          accessibilityLabel={`${t("dialogs.delete")} ${item.name}`}
+          accessibilityRole="button"
+          style={{ marginLeft: 16 }}
+        >
+          <Ionicons name="trash-outline" size={24} color={colors.danger} />
+        </TouchableOpacity>
+      </View>
     </View>
   );
 
@@ -187,17 +222,31 @@ const EmergencyContactsScreen: React.FC<Props> = ({ navigation }) => {
             styles.addButton,
             { backgroundColor: isLoading ? colors.grey : colors.primary },
           ]}
-          onPress={handleAddContact}
-          accessibilityLabel={t("contacts.addContact")}
+          onPress={handleAddOrUpdateContact}
+          accessibilityLabel={
+            editingContactId ? "Perbarui Kontak" : t("contacts.addContact")
+          }
           accessibilityRole="button"
           disabled={isLoading}
         >
           {isLoading ? (
             <ActivityIndicator color={colors.white} />
           ) : (
-            <Text style={styles.addButtonText}>{t("contacts.addContact")}</Text>
+            <Text style={styles.addButtonText}>
+              {editingContactId ? "Perbarui Kontak" : t("contacts.addContact")}
+            </Text>
           )}
         </TouchableOpacity>
+        {editingContactId && (
+          <TouchableOpacity
+            onPress={handleCancelEdit}
+            style={styles.cancelButton}
+          >
+            <Text style={[styles.cancelButtonText, { color: colors.grey }]}>
+              Batalkan Edit
+            </Text>
+          </TouchableOpacity>
+        )}
       </View>
 
       {isFetching ? (
@@ -256,6 +305,17 @@ const styles = StyleSheet.create({
   },
   itemName: { fontSize: 18, fontWeight: "600" },
   itemPhone: { fontSize: 14, marginTop: 4 },
+  itemActions: {
+    flexDirection: "row",
+  },
+  cancelButton: {
+    marginTop: 12,
+    alignItems: "center",
+  },
+  cancelButtonText: {
+    fontSize: 14,
+    fontWeight: "500",
+  },
 });
 
 export default EmergencyContactsScreen;
