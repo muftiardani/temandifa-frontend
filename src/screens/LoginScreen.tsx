@@ -110,10 +110,14 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
       );
       await setTokens(accessToken, refreshToken, true);
     } catch (error: any) {
+      const errorMessage =
+        error.message === "networkError"
+          ? t("general.networkError")
+          : error.message || t("general.genericError");
       Toast.show({
         type: "error",
         text1: t("auth.loginFailed"),
-        text2: error.message || t("general.serverError"),
+        text2: errorMessage,
       });
     } finally {
       setIsLoading(false);
@@ -137,10 +141,14 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
       );
       await setTokens(accessToken, refreshToken, rememberMe);
     } catch (error: any) {
+      const errorMessage =
+        error.message === "networkError"
+          ? t("general.networkError")
+          : error.message || t("general.genericError");
       Toast.show({
         type: "error",
         text1: t("auth.loginFailed"),
-        text2: error.message,
+        text2: errorMessage,
       });
     } finally {
       setIsLoading(false);

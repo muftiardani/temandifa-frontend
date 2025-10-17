@@ -60,8 +60,14 @@ export default function DocumentScannerScreen() {
       if (result) {
         navigation.replace("ScanResult", { scannedText: result.scannedText });
       }
-    } catch (error) {
-      Speech.speak(t("scanResult.imageProcessingFailed"), {
+    } catch (error: any) {
+      const errorMessage =
+        error.message === "networkError"
+          ? t("general.networkError")
+          : error.message === "serverError"
+          ? t("general.serverError")
+          : t("scanResult.imageProcessingFailed");
+      Speech.speak(errorMessage, {
         language: language === "id" ? "id-ID" : "en-US",
       });
       navigation.goBack();

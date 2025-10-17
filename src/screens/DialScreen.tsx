@@ -53,18 +53,16 @@ const DialScreen = () => {
       if (data.callId) {
         setOutgoingCall(data);
         navigation.replace("OutgoingCall");
-      } else {
-        Toast.show({
-          type: "error",
-          text1: t("general.failure"),
-          text2: data.message || t("general.genericError"),
-        });
       }
     } catch (error: any) {
+      const errorMessage =
+        error.message === "networkError"
+          ? t("general.networkError")
+          : error.message || t("general.genericError");
       Toast.show({
         type: "error",
-        text1: t("general.error"),
-        text2: error.message || t("general.networkError"),
+        text1: t("general.failure"),
+        text2: errorMessage,
       });
     } finally {
       setIsLoading(false);

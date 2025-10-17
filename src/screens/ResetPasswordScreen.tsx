@@ -58,10 +58,14 @@ const ResetPasswordScreen: React.FC<Props> = ({ route, navigation }) => {
         [{ text: "OK", onPress: () => navigation.navigate("Login") }]
       );
     } catch (error: any) {
+      const errorMessage =
+        error.message === "networkError"
+          ? t("general.networkError")
+          : error.message || t("general.genericError");
       Toast.show({
         type: "error",
         text1: t("general.failure"),
-        text2: error.message,
+        text2: errorMessage,
       });
     } finally {
       setIsLoading(false);

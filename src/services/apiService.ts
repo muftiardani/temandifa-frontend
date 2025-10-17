@@ -42,7 +42,14 @@ export const fetchWithAuth = async (
       headers,
     };
 
-    return fetch(url, newOptions);
+    try {
+      return await fetch(url, newOptions);
+    } catch (error: any) {
+      if (error.message === "Network request failed") {
+        throw new Error("networkError");
+      }
+      throw error;
+    }
   };
 
   let response = await originalRequest(accessToken);
@@ -101,7 +108,7 @@ const postFormDataWithAuth = async (
 
   const data = await response.json();
   if (!response.ok) {
-    throw new Error(data.message || "Terjadi kesalahan pada server.");
+    throw new Error(data.message || "serverError");
   }
   return data;
 };

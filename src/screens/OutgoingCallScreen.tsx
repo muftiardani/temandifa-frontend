@@ -9,6 +9,7 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
+import Toast from "react-native-toast-message";
 import { useAppTheme } from "../hooks/useAppTheme";
 import { useCallStore } from "../store/callStore";
 import { callService } from "../services/callService";
@@ -33,7 +34,16 @@ const OutgoingCallScreen = () => {
     if (!callId) return;
     try {
       await callService.end(callId);
-    } catch (error) {
+    } catch (error: any) {
+      const errorMessage =
+        error.message === "networkError"
+          ? t("general.networkError")
+          : error.message || t("general.genericError");
+      Toast.show({
+        type: "error",
+        text1: t("general.failure"),
+        text2: errorMessage,
+      });
       console.error("Gagal membatalkan panggilan:", error);
     } finally {
       clearCall();

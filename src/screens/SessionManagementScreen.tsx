@@ -40,10 +40,14 @@ const SessionManagementScreen: React.FC<Props> = ({ navigation }) => {
       const data = await authService.getSessions();
       setSessions(data);
     } catch (error: any) {
+      const errorMessage =
+        error.message === "networkError"
+          ? t("general.networkError")
+          : error.message || t("general.genericError");
       Toast.show({
         type: "error",
         text1: t("general.failure"),
-        text2: error.message,
+        text2: errorMessage,
       });
     } finally {
       setIsLoading(false);
@@ -73,12 +77,16 @@ const SessionManagementScreen: React.FC<Props> = ({ navigation }) => {
                 text1: t("general.success"),
                 text2: "Sesi berhasil dihapus.",
               });
-              fetchSessions(); // Muat ulang daftar sesi
+              fetchSessions();
             } catch (error: any) {
+              const errorMessage =
+                error.message === "networkError"
+                  ? t("general.networkError")
+                  : error.message || t("general.genericError");
               Toast.show({
                 type: "error",
                 text1: t("general.failure"),
-                text2: error.message,
+                text2: errorMessage,
               });
             }
           },

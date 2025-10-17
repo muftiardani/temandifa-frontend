@@ -102,9 +102,11 @@
     "failure": "Gagal",
     "success": "Berhasil",
     "optional": "Opsional",
-    "networkError": "Gagal terhubung ke server. Periksa koneksi internet Anda.",
-    "genericError": "Terjadi kesalahan. Silakan coba lagi nanti.",
-    "serverError": "Terjadi kesalahan pada server.",
+    "networkError": "Koneksi internet terputus. Silakan periksa koneksi Anda dan coba lagi.",
+    "genericError": "Terjadi kesalahan yang tidak terduga. Silakan coba lagi nanti.",
+    "serverError": "Terjadi masalah pada server. Tim kami sedang menanganinya.",
+    "sessionExpiredError": "Sesi Anda telah berakhir. Demi keamanan, silakan login kembali.",
+    "validationError": "Data yang Anda masukkan tidak valid. Mohon periksa kembali.",
     "accessibility": {
       "backHint": "Kembali ke layar sebelumnya."
     }

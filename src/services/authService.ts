@@ -4,27 +4,34 @@ import { fetchWithAuth } from "./apiService";
 const API_URL = `${Config.api.baseUrl}/v1/auth`;
 
 const fetchAPI = async (endpoint: string, options: RequestInit = {}) => {
-  const headers = {
-    "Content-Type": "application/json",
-    ...options.headers,
-  };
+  try {
+    const headers = {
+      "Content-Type": "application/json",
+      ...options.headers,
+    };
 
-  const response = await fetch(`${API_URL}/${endpoint}`, {
-    ...options,
-    headers,
-  });
-  const data = await response.json();
+    const response = await fetch(`${API_URL}/${endpoint}`, {
+      ...options,
+      headers,
+    });
+    const data = await response.json();
 
-  if (!response.ok) {
-    if (response.status === 422 && data.errors) {
-      const errorMessages = data.errors
-        .map((err: any) => Object.values(err)[0])
-        .join("\n");
-      throw new Error(errorMessages);
+    if (!response.ok) {
+      if (response.status === 422 && data.errors) {
+        const errorMessages = data.errors
+          .map((err: any) => Object.values(err)[0])
+          .join("\n");
+        throw new Error(errorMessages);
+      }
+      throw new Error(data.message || "serverError");
     }
-    throw new Error(data.message || "Terjadi kesalahan pada server.");
+    return data;
+  } catch (error: any) {
+    if (error.message === "Network request failed") {
+      throw new Error("networkError");
+    }
+    throw error;
   }
-  return data;
 };
 
 export const authService = {

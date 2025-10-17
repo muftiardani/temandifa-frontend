@@ -119,10 +119,14 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
       });
       await setTokens(accessToken, refreshToken);
     } catch (error: any) {
+      const errorMessage =
+        error.message === "networkError"
+          ? t("general.networkError")
+          : error.message || t("general.genericError");
       Toast.show({
         type: "error",
         text1: t("auth.registrationFailed"),
-        text2: error.message,
+        text2: errorMessage,
       });
     } finally {
       setIsLoading(false);

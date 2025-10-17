@@ -57,10 +57,14 @@ const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({
       });
       navigation.goBack();
     } catch (error: any) {
+      const errorMessage =
+        error.message === "networkError"
+          ? t("general.networkError")
+          : error.message || t("general.genericError");
       Toast.show({
         type: "error",
         text1: t("general.failure"),
-        text2: error.message,
+        text2: errorMessage,
       });
     } finally {
       setIsLoading(false);

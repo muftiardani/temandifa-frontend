@@ -67,7 +67,7 @@ export const useCameraDetection = () => {
           speakTopObject(result);
         }
       } catch (error: any) {
-        console.error("Gagal mendeteksi objek:", error);
+        console.error("Gagal mendeteksi objek:", error.message);
       } finally {
         setIsProcessing(false);
       }

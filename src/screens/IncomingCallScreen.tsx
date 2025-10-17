@@ -35,8 +35,12 @@ const IncomingCallScreen = () => {
         alert(t("call.answerFailed"));
         clearCall();
       }
-    } catch (error) {
-      alert(t("call.connectionFailed"));
+    } catch (error: any) {
+      const errorMessage =
+        error.message === "networkError"
+          ? t("general.networkError")
+          : t("call.connectionFailed");
+      alert(errorMessage);
       clearCall();
     }
   };

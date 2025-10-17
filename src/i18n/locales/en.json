@@ -102,9 +102,11 @@
     "failure": "Failed",
     "success": "Success",
     "optional": "Optional",
-    "networkError": "Failed to connect to the server. Check your internet connection.",
-    "genericError": "An error occurred. Please try again later.",
-    "serverError": "An error occurred on the server.",
+    "networkError": "Network connection lost. Please check your connection and try again.",
+    "genericError": "An unexpected error occurred. Please try again later.",
+    "serverError": "There was a problem with our server. Our team is looking into it.",
+    "sessionExpiredError": "Your session has expired. For your security, please log in again.",
+    "validationError": "The data you entered is invalid. Please double-check.",
     "accessibility": {
       "backHint": "Returns to the previous screen."
     }

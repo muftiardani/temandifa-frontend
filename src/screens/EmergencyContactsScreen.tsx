@@ -95,14 +95,14 @@ const EmergencyContactsScreen: React.FC<Props> = ({ navigation }) => {
       LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
       handleCancelEdit();
     } catch (error: any) {
+      const errorMessage =
+        error.message === "networkError"
+          ? t("general.networkError")
+          : error.message || t("general.genericError");
       Toast.show({
         type: "error",
         text1: t("dialogs.failed"),
-        text2:
-          error.message ||
-          (editingContactId
-            ? "Gagal memperbarui kontak."
-            : t("contacts.addFailed")),
+        text2: errorMessage,
       });
     } finally {
       setIsLoading(false);
@@ -130,10 +130,14 @@ const EmergencyContactsScreen: React.FC<Props> = ({ navigation }) => {
                 text2: t("contacts.deleteSuccess"),
               });
             } catch (error: any) {
+              const errorMessage =
+                error.message === "networkError"
+                  ? t("general.networkError")
+                  : error.message || t("contacts.deleteFailed");
               Toast.show({
                 type: "error",
                 text1: t("dialogs.failed"),
-                text2: error.message || t("contacts.deleteFailed"),
+                text2: errorMessage,
               });
             }
           },

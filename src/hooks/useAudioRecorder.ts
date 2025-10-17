@@ -66,10 +66,16 @@ export const useAudioRecorder = () => {
         });
       }
     } catch (error: any) {
+      const errorMessage =
+        error.message === "networkError"
+          ? t("general.networkError")
+          : error.message === "serverError"
+          ? t("general.serverError")
+          : t("general.genericError");
       Toast.show({
         type: "error",
         text1: t("general.failure"),
-        text2: error.message || t("general.genericError"),
+        text2: errorMessage,
       });
     } finally {
       setIsProcessing(false);
