@@ -28,7 +28,7 @@ import { useAppStore } from "../store/appStore";
 
 WebBrowser.maybeCompleteAuthSession();
 
-const LOGO = require("../../assets/icon.png");
+const LOGO = require("../../assets/auth-icon.png");
 
 type LoginScreenProps = NativeStackScreenProps<AuthStackParamList, "Login">;
 
@@ -304,9 +304,9 @@ const styles = StyleSheet.create({
     marginBottom: 40,
   },
   logo: {
-    width: 80,
-    height: 80,
-    marginBottom: 20,
+    width: 100,
+    height: 100,
+    marginBottom: 10,
   },
   title: {
     fontSize: 28,

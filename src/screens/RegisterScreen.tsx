@@ -26,7 +26,7 @@ type RegisterScreenProps = NativeStackScreenProps<
   "Register"
 >;
 
-const LOGO = require("../../assets/icon.png");
+const LOGO = require("../../assets/auth-icon.png");
 
 const validateEmail = (email: string) => {
   const re =
@@ -218,12 +218,12 @@ const styles = StyleSheet.create({
   container: { flexGrow: 1, justifyContent: "center", padding: 20 },
   header: {
     alignItems: "center",
-    marginBottom: 30,
+    marginBottom: 40,
   },
   logo: {
-    width: 60,
-    height: 60,
-    marginBottom: 15,
+    width: 100,
+    height: 100,
+    marginBottom: 10,
   },
   title: {
     fontSize: 28,
