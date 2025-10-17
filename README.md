@@ -31,7 +31,7 @@ Pastikan Anda sudah menyiapkan [TemanDifa Backend](https://github.com/muftiardan
 1.  **Clone repositori ini:**
 
     ```bash
-    git clone https://github.com/muftiardani/temandifa-frontend.git
+    git clone https://github.com/TemanDifa/TemanDifa-Frontend.git
     cd temandifa-frontend
     ```
 
