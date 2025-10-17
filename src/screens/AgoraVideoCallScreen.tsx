@@ -15,10 +15,10 @@ import Animated, {
   Easing,
 } from "react-native-reanimated";
 import { Ionicons } from "@expo/vector-icons";
+import { useTranslation } from "react-i18next";
 
 import { useAppTheme } from "../hooks/useAppTheme";
 import { useAgoraCall } from "../hooks/useAgoraCall";
-import { useTranslation } from "react-i18next";
 
 const AgoraVideoCallScreen = () => {
   const { colors } = useAppTheme();
@@ -55,7 +55,7 @@ const AgoraVideoCallScreen = () => {
         <View style={styles.placeholder}>
           <ActivityIndicator size="large" color={colors.primary} />
           <Text style={[styles.placeholderText, { color: colors.white }]}>
-            Menyambungkan ke panggilan...
+            {t("agoraVideoCall.connecting")}
           </Text>
         </View>
       );
@@ -70,7 +70,7 @@ const AgoraVideoCallScreen = () => {
     return (
       <View style={styles.placeholder}>
         <Text style={[styles.placeholderText, { color: colors.white }]}>
-          Menunggu pengguna lain bergabung...
+          {t("agoraVideoCall.waiting")}
         </Text>
       </View>
     );

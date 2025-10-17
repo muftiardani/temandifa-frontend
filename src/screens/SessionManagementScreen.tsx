@@ -60,14 +60,14 @@ const SessionManagementScreen: React.FC<Props> = ({ navigation }) => {
 
   const handleRevokeSession = (sessionId: string, isCurrent: boolean) => {
     Alert.alert(
-      "Hapus Sesi",
+      t("sessionManagement.deleteSessionTitle"),
       isCurrent
-        ? "Anda akan keluar dari perangkat ini. Apakah Anda yakin?"
-        : "Apakah Anda yakin ingin menghapus sesi ini?",
+        ? t("sessionManagement.deleteCurrentSessionMessage")
+        : t("sessionManagement.deleteOtherSessionMessage"),
       [
-        { text: "Batal", style: "cancel" },
+        { text: t("dialogs.cancel"), style: "cancel" },
         {
-          text: "Hapus",
+          text: t("dialogs.delete"),
           style: "destructive",
           onPress: async () => {
             try {
@@ -75,7 +75,7 @@ const SessionManagementScreen: React.FC<Props> = ({ navigation }) => {
               Toast.show({
                 type: "success",
                 text1: t("general.success"),
-                text2: "Sesi berhasil dihapus.",
+                text2: t("sessionManagement.deleteSuccess"),
               });
               fetchSessions();
             } catch (error: any) {
@@ -110,14 +110,15 @@ const SessionManagementScreen: React.FC<Props> = ({ navigation }) => {
       <View style={styles.itemDetails}>
         <Text style={[styles.itemUserAgent, { color: colors.text }]}>
           {item.isCurrent
-            ? "Perangkat Ini"
+            ? t("sessionManagement.thisDevice")
             : item.userAgent.substring(0, 30) + "..."}
         </Text>
         <Text style={[styles.itemInfo, { color: colors.grey }]}>
           IP: {item.ip}
         </Text>
         <Text style={[styles.itemInfo, { color: colors.grey }]}>
-          Terakhir Aktif: {new Date(item.lastActiveAt).toLocaleString()}
+          {t("sessionManagement.lastActive")}:{" "}
+          {new Date(item.lastActiveAt).toLocaleString()}
         </Text>
       </View>
       <TouchableOpacity
@@ -135,7 +136,7 @@ const SessionManagementScreen: React.FC<Props> = ({ navigation }) => {
           <Ionicons name="chevron-back" size={24} color={colors.text} />
         </TouchableOpacity>
         <Text style={[styles.headerTitle, { color: colors.headerText }]}>
-          Manajemen Sesi
+          {t("sessionManagement.title")}
         </Text>
       </View>
 
@@ -157,7 +158,7 @@ const SessionManagementScreen: React.FC<Props> = ({ navigation }) => {
             <Text
               style={{ textAlign: "center", color: colors.grey, marginTop: 20 }}
             >
-              Tidak ada sesi aktif.
+              {t("sessionManagement.noSessions")}
             </Text>
           }
         />

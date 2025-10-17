@@ -94,7 +94,8 @@
     "privacyAndSecurity": "Privacy & Security",
     "about": "About App",
     "appName": "TemanDifa",
-    "emergencyContacts": "Emergency Contacts"
+    "emergencyContacts": "Emergency Contacts",
+    "sessionManagement": "Session Management"
   },
   "general": {
     "back": "Back",
@@ -207,6 +208,9 @@
     "addFailed": "Failed to add contact.",
     "deleteSuccess": "Contact deleted successfully.",
     "deleteFailed": "Failed to delete contact.",
+    "updateButton": "Update Contact",
+    "cancelEdit": "Cancel Edit",
+    "updateSuccess": "Contact updated successfully.",
     "accessibility": {
       "addContactHint": "Adds the filled contact to the list."
     }
@@ -216,5 +220,29 @@
     "guest": "Guest",
     "user": "User",
     "accessibilityHint": "Opens the profile page"
+  },
+  "resetPassword": {
+    "title": "Create New Password",
+    "subtitle": "Your new password must be different from the previous one.",
+    "saveButton": "Save Password",
+    "successMessage": "Your password has been changed successfully. Please log in again.",
+    "backToLoginHint": "Back to Login"
+  },
+  "sessionManagement": {
+    "title": "Session Management",
+    "thisDevice": "This Device",
+    "lastActive": "Last Active",
+    "noSessions": "No active sessions.",
+    "deleteSessionTitle": "Delete Session",
+    "deleteCurrentSessionMessage": "You will be logged out from this device. Are you sure?",
+    "deleteOtherSessionMessage": "Are you sure you want to delete this session?",
+    "deleteSuccess": "Session successfully deleted."
+  },
+  "agoraVideoCall": {
+    "connecting": "Connecting to call...",
+    "waiting": "Waiting for other user to join..."
+  },
+  "navigation": {
+    "loading": "Loading..."
   }
 }

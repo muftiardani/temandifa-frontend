@@ -94,7 +94,8 @@
     "privacyAndSecurity": "Privasi & Keamanan",
     "about": "Tentang Aplikasi",
     "appName": "TemanDifa",
-    "emergencyContacts": "Kontak Darurat"
+    "emergencyContacts": "Kontak Darurat",
+    "sessionManagement": "Manajemen Sesi"
   },
   "general": {
     "back": "Kembali",
@@ -207,6 +208,9 @@
     "addFailed": "Gagal menambahkan kontak.",
     "deleteSuccess": "Kontak berhasil dihapus.",
     "deleteFailed": "Gagal menghapus kontak.",
+    "updateButton": "Perbarui Kontak",
+    "cancelEdit": "Batalkan Edit",
+    "updateSuccess": "Kontak berhasil diperbarui.",
     "accessibility": {
       "addContactHint": "Menambahkan kontak yang telah diisi ke dalam daftar."
     }
@@ -216,5 +220,29 @@
     "guest": "Tamu",
     "user": "Pengguna",
     "accessibilityHint": "Membuka halaman profil"
+  },
+  "resetPassword": {
+    "title": "Buat Password Baru",
+    "subtitle": "Password baru Anda harus berbeda dari yang sebelumnya.",
+    "saveButton": "Simpan Password",
+    "successMessage": "Password Anda telah berhasil diubah. Silakan login kembali.",
+    "backToLoginHint": "Kembali ke Login"
+  },
+  "sessionManagement": {
+    "title": "Manajemen Sesi",
+    "thisDevice": "Perangkat Ini",
+    "lastActive": "Terakhir Aktif",
+    "noSessions": "Tidak ada sesi aktif.",
+    "deleteSessionTitle": "Hapus Sesi",
+    "deleteCurrentSessionMessage": "Anda akan keluar dari perangkat ini. Apakah Anda yakin?",
+    "deleteOtherSessionMessage": "Apakah Anda yakin ingin menghapus sesi ini?",
+    "deleteSuccess": "Sesi berhasil dihapus."
+  },
+  "agoraVideoCall": {
+    "connecting": "Menyambungkan ke panggilan...",
+    "waiting": "Menunggu pengguna lain bergabung..."
+  },
+  "navigation": {
+    "loading": "Memuat..."
   }
 }

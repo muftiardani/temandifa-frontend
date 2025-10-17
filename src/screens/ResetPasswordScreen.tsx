@@ -52,11 +52,9 @@ const ResetPasswordScreen: React.FC<Props> = ({ route, navigation }) => {
     setIsLoading(true);
     try {
       await authService.resetPassword(token, password);
-      Alert.alert(
-        t("general.success"),
-        "Password Anda telah berhasil diubah. Silakan login kembali.",
-        [{ text: "OK", onPress: () => navigation.navigate("Login") }]
-      );
+      Alert.alert(t("general.success"), t("resetPassword.successMessage"), [
+        { text: "OK", onPress: () => navigation.navigate("Login") },
+      ]);
     } catch (error: any) {
       const errorMessage =
         error.message === "networkError"
@@ -82,28 +80,28 @@ const ResetPasswordScreen: React.FC<Props> = ({ route, navigation }) => {
           <TouchableOpacity
             onPress={() => navigation.navigate("Login")}
             style={styles.backButton}
-            accessibilityLabel="Kembali ke Login"
+            accessibilityLabel={t("resetPassword.backToLoginHint")}
           >
             <Ionicons name="arrow-back" size={24} color={colors.text} />
           </TouchableOpacity>
 
           <Text style={[styles.title, { color: colors.text }]}>
-            Buat Password Baru
+            {t("resetPassword.title")}
           </Text>
           <Text style={[styles.subtitle, { color: colors.grey }]}>
-            Password baru Anda harus berbeda dari yang sebelumnya.
+            {t("resetPassword.subtitle")}
           </Text>
 
           <ValidatedInput
             icon="lock-closed-outline"
-            placeholder="Password Baru"
+            placeholder={t("auth.password")}
             value={password}
             onChangeText={setPassword}
             secureTextEntry
           />
           <ValidatedInput
             icon="lock-closed-outline"
-            placeholder="Konfirmasi Password Baru"
+            placeholder={t("auth.confirmPassword")}
             value={confirmPassword}
             onChangeText={setConfirmPassword}
             secureTextEntry
@@ -119,7 +117,9 @@ const ResetPasswordScreen: React.FC<Props> = ({ route, navigation }) => {
             {isLoading ? (
               <ActivityIndicator color={colors.white} />
             ) : (
-              <Text style={styles.buttonText}>Simpan Password</Text>
+              <Text style={styles.buttonText}>
+                {t("resetPassword.saveButton")}
+              </Text>
             )}
           </AnimatedPressable>
         </ScrollView>
