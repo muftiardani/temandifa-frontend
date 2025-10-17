@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import {
   View,
   Text,
@@ -10,128 +10,32 @@ import {
   Platform,
   Image,
 } from "react-native";
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import Toast from "react-native-toast-message";
-import { useTranslation } from "react-i18next";
 import { useAppTheme } from "../hooks/useAppTheme";
-import { authService } from "../services/authService";
-import { useAuthStore } from "../store/authStore";
-import { AuthStackParamList } from "../types/navigation";
+import { useRegisterForm } from "../hooks/useRegisterForm";
 import ValidatedInput from "../components/common/ValidatedInput";
 import AnimatedPressable from "../components/common/AnimatedPressable";
-import { useAppStore } from "../store/appStore";
-
-type RegisterScreenProps = NativeStackScreenProps<
-  AuthStackParamList,
-  "Register"
->;
 
 const LOGO = require("../../assets/auth-icon.png");
 
-const validateEmail = (email: string) => {
-  const re =
-    /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-  return re.test(String(email).toLowerCase());
-};
-
-const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
-  const { t } = useTranslation();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-
-  const isLoading = useAppStore((state) => state.isLoading);
-  const setIsLoading = useAppStore((state) => state.setIsLoading);
-
-  const [emailError, setEmailError] = useState("");
-  const [passwordError, setPasswordError] = useState("");
-  const [confirmPasswordError, setConfirmPasswordError] = useState("");
-  const [isFormValid, setIsFormValid] = useState(false);
+const RegisterScreen: React.FC = () => {
+  const {
+    t,
+    email,
+    password,
+    confirmPassword,
+    isLoading,
+    emailError,
+    passwordError,
+    confirmPasswordError,
+    isFormValid,
+    handleEmailChange,
+    handlePasswordChange,
+    handleConfirmPasswordChange,
+    handleRegister,
+    navigateToLogin,
+  } = useRegisterForm();
 
   const { colors } = useAppTheme();
-  const { setTokens } = useAuthStore();
-
-  const validatePassword = (password: string) => {
-    if (password.length < 8) return t("auth.passwordMin8Chars");
-    if (!/\d/.test(password)) return t("auth.passwordNeedsNumber");
-    if (!/[a-z]/.test(password)) return t("auth.passwordNeedsLowercase");
-    if (!/[A-Z]/.test(password)) return t("auth.passwordNeedsUppercase");
-    if (!/[!@#$%^&*(),.?":{}|<>]/.test(password))
-      return t("auth.passwordNeedsSymbol");
-    return "";
-  };
-
-  useEffect(() => {
-    const isEmailValid = validateEmail(email);
-    const isPasswordValid = validatePassword(password) === "";
-    const doPasswordsMatch = password === confirmPassword && password !== "";
-
-    setIsFormValid(isEmailValid && isPasswordValid && doPasswordsMatch);
-  }, [email, password, confirmPassword, t]);
-
-  const handleEmailChange = (text: string) => {
-    setEmail(text);
-    if (text.length > 0 && !validateEmail(text)) {
-      setEmailError(t("auth.invalidEmail"));
-    } else {
-      setEmailError("");
-    }
-  };
-
-  const handlePasswordChange = (text: string) => {
-    setPassword(text);
-    if (text.length > 0) {
-      setPasswordError(validatePassword(text));
-    } else {
-      setPasswordError("");
-    }
-    if (confirmPassword.length > 0 && text !== confirmPassword) {
-      setConfirmPasswordError(t("auth.passwordsDoNotMatch"));
-    } else {
-      setConfirmPasswordError("");
-    }
-  };
-
-  const handleConfirmPasswordChange = (text: string) => {
-    setConfirmPassword(text);
-    if (text.length > 0 && password !== text) {
-      setConfirmPasswordError(t("auth.passwordsDoNotMatch"));
-    } else {
-      setConfirmPasswordError("");
-    }
-  };
-
-  const handleRegister = async () => {
-    if (!isFormValid) {
-      Toast.show({
-        type: "error",
-        text1: t("general.failure"),
-        text2: t("auth.pleaseCheckFields"),
-      });
-      return;
-    }
-
-    setIsLoading(true);
-    try {
-      const { accessToken, refreshToken } = await authService.register({
-        email,
-        password,
-      });
-      await setTokens(accessToken, refreshToken);
-    } catch (error: any) {
-      const errorMessage =
-        error.message === "networkError"
-          ? t("general.networkError")
-          : error.message || t("general.genericError");
-      Toast.show({
-        type: "error",
-        text1: t("auth.registrationFailed"),
-        text2: errorMessage,
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   return (
     <KeyboardAvoidingView
@@ -201,7 +105,7 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
         </AnimatedPressable>
 
         <TouchableOpacity
-          onPress={() => navigation.goBack()}
+          onPress={navigateToLogin}
           style={styles.footer}
           accessibilityRole="link"
           accessibilityLabel={`${t("auth.haveAccount")} ${t("auth.login")}`}

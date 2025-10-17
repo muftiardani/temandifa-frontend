@@ -151,6 +151,8 @@ const SessionManagementScreen: React.FC<Props> = ({ navigation }) => {
           renderItem={renderItem}
           keyExtractor={(item) => item.id}
           contentContainerStyle={styles.listContainer}
+          initialNumToRender={10}
+          windowSize={5}
           ListEmptyComponent={
             <Text
               style={{ textAlign: "center", color: colors.grey, marginTop: 20 }}

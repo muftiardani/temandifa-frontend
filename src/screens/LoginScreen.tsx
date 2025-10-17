@@ -1,159 +1,44 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import {
   View,
   Text,
   TouchableOpacity,
   StyleSheet,
   ActivityIndicator,
-  Alert,
   Image,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
 } from "react-native";
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import Toast from "react-native-toast-message";
-import { useTranslation } from "react-i18next";
-import { useAppTheme } from "../hooks/useAppTheme";
-import { authService } from "../services/authService";
-import { useAuthStore } from "../store/authStore";
-import { AuthStackParamList } from "../types/navigation";
 import { Ionicons } from "@expo/vector-icons";
-import * as Google from "expo-auth-session/providers/google";
-import * as WebBrowser from "expo-web-browser";
-import * as LocalAuthentication from "expo-local-authentication";
+import { useAppTheme } from "../hooks/useAppTheme";
+import { useLoginForm } from "../hooks/useLoginForm";
 import ValidatedInput from "../components/common/ValidatedInput";
 import AnimatedPressable from "../components/common/AnimatedPressable";
-import { useAppStore } from "../store/appStore";
-
-WebBrowser.maybeCompleteAuthSession();
 
 const LOGO = require("../../assets/auth-icon.png");
 
-type LoginScreenProps = NativeStackScreenProps<AuthStackParamList, "Login">;
-
-const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
-  const { t } = useTranslation();
-  const [login, setLogin] = useState("");
-  const [password, setPassword] = useState("");
-  const [rememberMe, setRememberMe] = useState(false);
-
-  const isLoading = useAppStore((state) => state.isLoading);
-  const setIsLoading = useAppStore((state) => state.setIsLoading);
+const LoginScreen: React.FC = () => {
+  const {
+    t,
+    login,
+    setLogin,
+    password,
+    setPassword,
+    rememberMe,
+    setRememberMe,
+    isLoading,
+    isBiometricSupported,
+    googleAuthRequest,
+    promptGoogleAuth,
+    handleLogin,
+    handleBiometricLogin,
+    loginAsGuest,
+    navigateToRegister,
+    navigateToForgotPassword,
+  } = useLoginForm();
 
   const { colors } = useAppTheme();
-  const { setTokens, loginAsGuest, refreshAccessToken } = useAuthStore();
-  const [isBiometricSupported, setIsBiometricSupported] = useState(false);
-
-  const [request, response, promptAsync] = Google.useAuthRequest({
-    clientId: process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID,
-    androidClientId: process.env.EXPO_PUBLIC_GOOGLE_ANDROID_CLIENT_ID,
-    iosClientId: process.env.EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID,
-  });
-
-  useEffect(() => {
-    (async () => {
-      const compatible = await LocalAuthentication.hasHardwareAsync();
-      const enrolled = await LocalAuthentication.isEnrolledAsync();
-      if (compatible && enrolled) {
-        setIsBiometricSupported(true);
-      }
-    })();
-  }, []);
-
-  useEffect(() => {
-    if (response?.type === "success") {
-      const { authentication } = response;
-      if (authentication?.accessToken) {
-        handleGoogleLogin(authentication.accessToken);
-      }
-    } else if (response?.type === "error") {
-      Toast.show({
-        type: "error",
-        text1: t("auth.googleLoginFailed"),
-        text2: t("auth.googleLoginError"),
-      });
-    }
-  }, [response, t]);
-
-  const handleBiometricLogin = async () => {
-    try {
-      const biometricAuth = await LocalAuthentication.authenticateAsync({
-        promptMessage: t("auth.loginWithBiometrics"),
-        cancelLabel: t("dialogs.cancel"),
-        disableDeviceFallback: true,
-      });
-
-      if (biometricAuth.success) {
-        setIsLoading(true);
-        const newAccessToken = await refreshAccessToken();
-        if (!newAccessToken) {
-          Alert.alert(t("auth.loginFailed"), t("auth.sessionExpired"));
-        }
-        setIsLoading(false);
-      }
-    } catch (error) {
-      Toast.show({
-        type: "error",
-        text1: t("general.error"),
-        text2: t("auth.biometricAuthFailed"),
-      });
-      setIsLoading(false);
-    }
-  };
-
-  const handleGoogleLogin = async (googleAccessToken: string) => {
-    setIsLoading(true);
-    try {
-      const { accessToken, refreshToken } = await authService.loginWithGoogle(
-        googleAccessToken
-      );
-      await setTokens(accessToken, refreshToken, true);
-    } catch (error: any) {
-      const errorMessage =
-        error.message === "networkError"
-          ? t("general.networkError")
-          : error.message || t("general.genericError");
-      Toast.show({
-        type: "error",
-        text1: t("auth.loginFailed"),
-        text2: errorMessage,
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleLogin = async () => {
-    if (!login.trim() || !password.trim()) {
-      Toast.show({
-        type: "error",
-        text1: t("general.failure"),
-        text2: t("auth.allFieldsRequired"),
-      });
-      return;
-    }
-    setIsLoading(true);
-    try {
-      const { accessToken, refreshToken } = await authService.login(
-        login,
-        password
-      );
-      await setTokens(accessToken, refreshToken, rememberMe);
-    } catch (error: any) {
-      const errorMessage =
-        error.message === "networkError"
-          ? t("general.networkError")
-          : error.message || t("general.genericError");
-      Toast.show({
-        type: "error",
-        text1: t("auth.loginFailed"),
-        text2: errorMessage,
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   return (
     <KeyboardAvoidingView
@@ -221,7 +106,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
           </TouchableOpacity>
 
           <TouchableOpacity
-            onPress={() => navigation.navigate("ForgotPassword")}
+            onPress={navigateToForgotPassword}
             accessibilityRole="link"
             accessibilityLabel={t("auth.forgotPassword")}
             accessibilityHint={t("auth.accessibility.forgotPasswordHint")}
@@ -259,8 +144,8 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
 
         <AnimatedPressable
           style={[styles.socialButton, { borderColor: colors.border }]}
-          onPress={() => promptAsync()}
-          disabled={!request || isLoading}
+          onPress={() => promptGoogleAuth()}
+          disabled={!googleAuthRequest || isLoading}
           accessibilityLabel={t("auth.continueWithGoogle")}
           accessibilityRole="button"
         >
@@ -283,14 +168,14 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
         </TouchableOpacity>
 
         <TouchableOpacity
-          onPress={() => navigation.navigate("Register")}
+          onPress={navigateToRegister}
           style={styles.footer}
           accessibilityRole="link"
           accessibilityLabel={`${t("auth.noAccount")} ${t("auth.register")}`}
           accessibilityHint={t("auth.accessibility.registerHint")}
         >
           <Text style={[styles.footerText, { color: colors.grey }]}>
-            {t("auth.noAccount")}{" "}
+            {t("auth.haveAccount")}{" "}
             <Text style={{ color: colors.primary, fontWeight: "bold" }}>
               {t("auth.register")}
             </Text>
