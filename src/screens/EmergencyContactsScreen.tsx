@@ -73,7 +73,9 @@ const EmergencyContactsScreen: React.FC<Props> = ({ navigation }) => {
         <TouchableOpacity
           onPress={() => navigation.goBack()}
           style={styles.backButton}
-          accessibilityLabel={t("general.back")}
+          accessibilityLabel={
+            t("general.back") + t("general.accessibility.buttonSuffix")
+          }
           accessibilityHint={t("general.accessibility.backHint")}
           accessibilityRole="button"
         >
@@ -90,7 +92,11 @@ const EmergencyContactsScreen: React.FC<Props> = ({ navigation }) => {
         <TextInput
           style={[
             styles.input,
-            { color: colors.text, borderColor: colors.border },
+            {
+              color: colors.text,
+              borderColor: colors.border,
+              backgroundColor: colors.card,
+            },
           ]}
           placeholder={t("contacts.contactName")}
           value={name}
@@ -102,7 +108,11 @@ const EmergencyContactsScreen: React.FC<Props> = ({ navigation }) => {
         <TextInput
           style={[
             styles.input,
-            { color: colors.text, borderColor: colors.border },
+            {
+              color: colors.text,
+              borderColor: colors.border,
+              backgroundColor: colors.card,
+            },
           ]}
           placeholder={t("contacts.phoneNumber")}
           value={phoneNumber}
@@ -120,8 +130,10 @@ const EmergencyContactsScreen: React.FC<Props> = ({ navigation }) => {
           onPress={handleAddOrUpdateContact}
           accessibilityLabel={
             editingContactId
-              ? t("contacts.updateButton")
-              : t("contacts.addContact")
+              ? t("contacts.updateButton") +
+                t("general.accessibility.buttonSuffix")
+              : t("contacts.addContact") +
+                t("general.accessibility.buttonSuffix")
           }
           accessibilityRole="button"
           disabled={isLoading}
@@ -129,7 +141,7 @@ const EmergencyContactsScreen: React.FC<Props> = ({ navigation }) => {
           {isLoading ? (
             <ActivityIndicator color={colors.white} />
           ) : (
-            <Text style={styles.addButtonText}>
+            <Text style={[styles.addButtonText, { color: colors.buttonText }]}>
               {editingContactId
                 ? t("contacts.updateButton")
                 : t("contacts.addContact")}
@@ -140,6 +152,10 @@ const EmergencyContactsScreen: React.FC<Props> = ({ navigation }) => {
           <TouchableOpacity
             onPress={handleCancelEdit}
             style={styles.cancelButton}
+            accessibilityLabel={
+              t("contacts.cancelEdit") + t("general.accessibility.buttonSuffix")
+            }
+            accessibilityRole="button"
           >
             <Text style={[styles.cancelButtonText, { color: colors.grey }]}>
               {t("contacts.cancelEdit")}
@@ -195,7 +211,7 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   addButton: { padding: 15, borderRadius: 8, alignItems: "center" },
-  addButtonText: { color: "#fff", fontSize: 16, fontWeight: "bold" },
+  addButtonText: { fontSize: 16, fontWeight: "bold" },
   listContainer: { paddingHorizontal: 20 },
   itemContainer: {
     flexDirection: "row",

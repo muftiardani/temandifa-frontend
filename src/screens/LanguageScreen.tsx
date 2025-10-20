@@ -115,10 +115,10 @@ const styles = StyleSheet.create({
   },
   itemLabel: {
     fontSize: 17,
-    flex: 1,
   },
   checkmarkIcon: {
-    marginLeft: 10,
+    position: "absolute",
+    right: 0,
   },
 });
 

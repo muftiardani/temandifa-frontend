@@ -31,7 +31,9 @@ const PrivacyAndSecurityScreen: React.FC<PrivacyAndSecurityScreenProps> = ({
           <TouchableOpacity
             onPress={() => navigation.goBack()}
             style={styles.backButton}
-            accessibilityLabel={`${t("general.back")}. Tombol`}
+            accessibilityLabel={
+              t("general.back") + t("general.accessibility.buttonSuffix")
+            }
             accessibilityRole="button"
           >
             <Ionicons name="chevron-back" size={24} color={colors.text} />

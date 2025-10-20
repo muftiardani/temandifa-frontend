@@ -123,6 +123,10 @@ const SessionManagementScreen: React.FC<Props> = ({ navigation }) => {
       </View>
       <TouchableOpacity
         onPress={() => handleRevokeSession(item.id, item.isCurrent)}
+        accessibilityLabel={
+          t("auth.logout") + t("general.accessibility.buttonSuffix")
+        }
+        accessibilityRole="button"
       >
         <Ionicons name="log-out-outline" size={24} color={colors.danger} />
       </TouchableOpacity>
@@ -132,7 +136,15 @@ const SessionManagementScreen: React.FC<Props> = ({ navigation }) => {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
       <View style={[styles.header, { borderBottomColor: colors.border }]}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          style={styles.backButton}
+          accessibilityLabel={
+            t("general.back") + t("general.accessibility.buttonSuffix")
+          }
+          accessibilityRole="button"
+          accessibilityHint={t("general.accessibility.backHint")}
+        >
           <Ionicons name="chevron-back" size={24} color={colors.text} />
         </TouchableOpacity>
         <Text style={[styles.headerTitle, { color: colors.headerText }]}>
@@ -176,6 +188,7 @@ const styles = StyleSheet.create({
     paddingBottom: 16,
     borderBottomWidth: 1,
   },
+  backButton: { marginRight: 16, padding: 8 },
   headerTitle: {
     fontSize: 20,
     fontWeight: "600",

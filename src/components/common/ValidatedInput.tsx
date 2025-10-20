@@ -64,6 +64,7 @@ const ValidatedInput: React.FC<ValidatedInputProps> = ({
                 ? t("validatedInput.showPassword")
                 : t("validatedInput.hidePassword")
             }
+            accessibilityRole="button"
           >
             <Ionicons
               name={isSecure ? "eye-off-outline" : "eye-outline"}
