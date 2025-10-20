@@ -43,34 +43,48 @@ const HelpAndGuideScreen: React.FC<HelpAndGuideScreenProps> = ({
 
         <ScrollView style={styles.content}>
           <Text style={[styles.title, { color: colors.primary }]}>
-            Selamat Datang di TemanDifa!
+            {t("helpAndGuide.title")}
           </Text>
           <Text style={[styles.paragraph, { color: colors.grey }]}>
-            Aplikasi ini dirancang untuk membantu Anda dalam aktivitas
-            sehari-hari. Berikut adalah panduan singkat untuk setiap fitur yang
-            tersedia.
+            {t("helpAndGuide.intro")}
           </Text>
 
           <Text style={[styles.subtitle, { color: colors.text }]}>
-            Fitur Kamera
+            {t("helpAndGuide.cameraTitle")}
           </Text>
           <Text style={[styles.paragraph, { color: colors.grey }]}>
-            Arahkan kamera ke objek di sekitar Anda, dan aplikasi akan mencoba
-            mengidentifikasi dan memberitahukannya kepada Anda melalui suara.
-            Fitur ini sangat berguna untuk mengenali benda-benda di lingkungan
-            baru.
+            {t("helpAndGuide.cameraDesc")}
           </Text>
 
           <Text style={[styles.subtitle, { color: colors.text }]}>
-            Fitur Scan
+            {t("helpAndGuide.scanTitle")}
           </Text>
           <Text style={[styles.paragraph, { color: colors.grey }]}>
-            Gunakan fitur Scan untuk membaca teks dari dokumen, buku, atau papan
-            pengumuman. Anda dapat menggunakan kamera langsung atau mengunggah
-            gambar dari galeri Anda. Hasil pemindaian teks dapat didengarkan.
+            {t("helpAndGuide.scanDesc")}
           </Text>
 
-          {/* ... Sisa teks panduan ... */}
+          <Text style={[styles.subtitle, { color: colors.text }]}>
+            {t("helpAndGuide.voiceTitle")}
+          </Text>
+          <Text style={[styles.paragraph, { color: colors.grey }]}>
+            {t("helpAndGuide.voiceDesc")}
+          </Text>
+
+          <Text style={[styles.subtitle, { color: colors.text }]}>
+            {t("helpAndGuide.callTitle")}
+          </Text>
+          <Text style={[styles.paragraph, { color: colors.grey }]}>
+            {t("helpAndGuide.callDesc")}
+          </Text>
+
+          <Text style={[styles.subtitle, { color: colors.text }]}>
+            {t("helpAndGuide.settingsTitle")}
+          </Text>
+          <Text
+            style={[styles.paragraph, { color: colors.grey, marginBottom: 40 }]}
+          >
+            {t("helpAndGuide.settingsDesc")}
+          </Text>
         </ScrollView>
       </View>
     </SafeAreaView>

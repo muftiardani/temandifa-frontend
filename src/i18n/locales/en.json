@@ -56,14 +56,21 @@
     "processing": "Processing...",
     "ready": "Ready",
     "done": "Done",
-    "objectInFront": "In front is {{objectName}}"
+    "objectInFront": "In front is {{objectName}}",
+    "accessibility": {
+      "doneHint": "Return to the home screen"
+    }
   },
   "scanScreen": {
     "title": "Scan Document",
     "placeholder": "Select a scanning method",
     "camera": "Camera",
     "upload": "Upload",
-    "processing": "Processing..."
+    "processing": "Processing...",
+    "accessibility": {
+      "cameraHint": "Opens the camera to scan a document",
+      "uploadHint": "Uploads an image from the gallery to scan"
+    }
   },
   "scanResult": {
     "title": "Scan Result",
@@ -73,14 +80,24 @@
     "imageProcessing": "Processing image...",
     "scannerOpening": "Opening scanner...",
     "imageProcessingFailed": "Failed to process image, please try again.",
-    "imageTakenProcessing": "Image taken, processing"
+    "imageTakenProcessing": "Image taken, processing",
+    "accessibility": {
+      "listenHint": "Double tap to play or stop the audio",
+      "listenLabel": "Listen to scan result",
+      "stopLabel": "Stop listening"
+    }
   },
   "voiceScreen": {
     "title": "Voice",
     "infoProcessing": "Converting voice to text...",
     "infoListening": "Listening...",
     "infoDefault": "Press the button to speak",
-    "recordingFailed": "Failed to start recording. Make sure microphone permission is granted."
+    "recordingFailed": "Failed to start recording. Make sure microphone permission is granted.",
+    "accessibility": {
+      "micStartLabel": "Start recording",
+      "micStopLabel": "Stop recording",
+      "micHint": "Double tap to activate"
+    }
   },
   "voiceResult": {
     "title": "Voice Result"
@@ -95,7 +112,10 @@
     "about": "About App",
     "appName": "TemanDifa",
     "emergencyContacts": "Emergency Contacts",
-    "sessionManagement": "Session Management"
+    "sessionManagement": "Session Management",
+    "accessibility": {
+      "navigateToHint": "Navigate to the {{pageName}} page"
+    }
   },
   "general": {
     "back": "Back",
@@ -108,8 +128,10 @@
     "serverError": "There was a problem with our server. Our team is looking into it.",
     "sessionExpiredError": "Your session has expired. For your security, please log in again.",
     "validationError": "The data you entered is invalid. Please double-check.",
+    "versionPrefix": "Version",
     "accessibility": {
-      "backHint": "Returns to the previous screen."
+      "backHint": "Returns to the previous screen.",
+      "buttonSuffix": ". Button"
     }
   },
   "auth": {
@@ -219,7 +241,9 @@
     "title": "Profile",
     "guest": "Guest",
     "user": "User",
-    "accessibilityHint": "Opens the profile page"
+    "accessibility": {
+      "profileHint": "Opens the profile page"
+    }
   },
   "resetPassword": {
     "title": "Create New Password",
@@ -244,5 +268,46 @@
   },
   "navigation": {
     "loading": "Loading..."
+  },
+  "helpAndGuide": {
+    "title": "Welcome to TemanDifa!",
+    "intro": "This application is designed to assist you in your daily activities. Here is a brief guide for each available feature.",
+    "cameraTitle": "Camera Feature",
+    "cameraDesc": "Point the camera at objects around you, and the application will try to identify and announce them to you via voice. This feature is very useful for recognizing objects in new environments.",
+    "scanTitle": "Scan Feature",
+    "scanDesc": "Use the Scan feature to read text from documents, books, or announcement boards. You can use the camera directly or upload an image from your gallery. The scanned text results can be listened to.",
+    "voiceTitle": "Voice Feature",
+    "voiceDesc": "Record your voice or sounds around you, and the application will convert it into text. Useful for making quick notes or understanding conversations.",
+    "callTitle": "Emergency Call Feature",
+    "callDesc": "Quickly contact your saved emergency contacts via video call. Make sure you are logged in to use this feature.",
+    "settingsTitle": "Settings Feature",
+    "settingsDesc": "Customize your experience by changing the theme (light/dark), language, and managing your emergency contacts."
+  },
+  "privacyAndSecurity": {
+    "title": "Privacy and Security Policy",
+    "intro": "We value your privacy and are committed to protecting your personal data. This policy explains how we collect, use, and protect your information.",
+    "dataCollectionTitle": "Data Collection",
+    "dataCollectionDesc": "We collect data you provide during registration (email), feature usage data (such as images for object detection or audio for transcription), and technical device information to improve our services.",
+    "dataUsageTitle": "Data Usage",
+    "dataUsageDesc": "Your data is used to provide application functionality, improve the accuracy of our AI models, analyze application usage, and communicate with you if necessary.",
+    "dataSharingTitle": "Data Sharing",
+    "dataSharingDesc": "We do not share your personal data with third parties without your consent, except as required by law or to provide core application functions (e.g., cloud services for AI processing).",
+    "dataSecurityTitle": "Data Security",
+    "dataSecurityDesc": "We implement technical and organizational security measures to protect your data from unauthorized access, alteration, or deletion.",
+    "userRightsTitle": "User Rights",
+    "userRightsDesc": "You have the right to access, correct, or delete your personal data. Please contact us if you have any requests regarding your data.",
+    "policyChangesTitle": "Policy Changes",
+    "policyChangesDesc": "This privacy policy may be updated from time to time. We will notify you of significant changes through the application or email.",
+    "contactTitle": "Contact",
+    "contactDesc": "If you have questions about this privacy policy, please contact us at support@temandifa.com."
+  },
+  "validatedInput": {
+    "showPassword": "Show password",
+    "hidePassword": "Hide password"
+  },
+  "languageScreen": {
+    "accessibility": {
+      "selectLanguageLabel": "Select {{languageName}} language"
+    }
   }
 }

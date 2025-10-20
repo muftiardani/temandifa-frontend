@@ -56,14 +56,21 @@
     "processing": "Memproses...",
     "ready": "Siap",
     "done": "Selesai",
-    "objectInFront": "Di depan ada {{objectName}}"
+    "objectInFront": "Di depan ada {{objectName}}",
+    "accessibility": {
+      "doneHint": "Kembali ke layar utama"
+    }
   },
   "scanScreen": {
     "title": "Pindai Dokumen",
     "placeholder": "Pilih metode pemindaian",
     "camera": "Kamera",
     "upload": "Unggah",
-    "processing": "Sedang memproses..."
+    "processing": "Sedang memproses...",
+    "accessibility": {
+      "cameraHint": "Membuka kamera untuk memindai dokumen",
+      "uploadHint": "Mengunggah gambar dari galeri untuk dipindai"
+    }
   },
   "scanResult": {
     "title": "Hasil Pindai",
@@ -73,14 +80,24 @@
     "imageProcessing": "Memproses gambar...",
     "scannerOpening": "Membuka pemindai...",
     "imageProcessingFailed": "Gagal memproses gambar, silakan coba lagi.",
-    "imageTakenProcessing": "Gambar diambil, sedang memproses"
+    "imageTakenProcessing": "Gambar diambil, sedang memproses",
+    "accessibility": {
+      "listenHint": "Ketuk dua kali untuk memutar atau menghentikan suara",
+      "listenLabel": "Dengarkan hasil scan",
+      "stopLabel": "Berhenti mendengarkan"
+    }
   },
   "voiceScreen": {
     "title": "Suara",
     "infoProcessing": "Mengubah suara menjadi teks...",
     "infoListening": "Sedang mendengarkan...",
     "infoDefault": "Tekan tombol untuk berbicara",
-    "recordingFailed": "Gagal memulai rekaman. Pastikan izin mikrofon telah diberikan."
+    "recordingFailed": "Gagal memulai rekaman. Pastikan izin mikrofon telah diberikan.",
+    "accessibility": {
+      "micStartLabel": "Mulai merekam",
+      "micStopLabel": "Berhenti merekam",
+      "micHint": "Ketuk dua kali untuk mengaktifkan"
+    }
   },
   "voiceResult": {
     "title": "Hasil Suara"
@@ -95,7 +112,10 @@
     "about": "Tentang Aplikasi",
     "appName": "TemanDifa",
     "emergencyContacts": "Kontak Darurat",
-    "sessionManagement": "Manajemen Sesi"
+    "sessionManagement": "Manajemen Sesi",
+    "accessibility": {
+      "navigateToHint": "Navigasi ke halaman {{pageName}}"
+    }
   },
   "general": {
     "back": "Kembali",
@@ -108,8 +128,10 @@
     "serverError": "Terjadi masalah pada server. Tim kami sedang menanganinya.",
     "sessionExpiredError": "Sesi Anda telah berakhir. Demi keamanan, silakan login kembali.",
     "validationError": "Data yang Anda masukkan tidak valid. Mohon periksa kembali.",
+    "versionPrefix": "Versi",
     "accessibility": {
-      "backHint": "Kembali ke layar sebelumnya."
+      "backHint": "Kembali ke layar sebelumnya.",
+      "buttonSuffix": ". Tombol"
     }
   },
   "auth": {
@@ -219,7 +241,9 @@
     "title": "Profil",
     "guest": "Tamu",
     "user": "Pengguna",
-    "accessibilityHint": "Membuka halaman profil"
+    "accessibility": {
+      "profileHint": "Membuka halaman profil"
+    }
   },
   "resetPassword": {
     "title": "Buat Password Baru",
@@ -244,5 +268,46 @@
   },
   "navigation": {
     "loading": "Memuat..."
+  },
+  "helpAndGuide": {
+    "title": "Selamat Datang di TemanDifa!",
+    "intro": "Aplikasi ini dirancang untuk membantu Anda dalam aktivitas sehari-hari. Berikut adalah panduan singkat untuk setiap fitur yang tersedia.",
+    "cameraTitle": "Fitur Kamera",
+    "cameraDesc": "Arahkan kamera ke objek di sekitar Anda, dan aplikasi akan mencoba mengidentifikasi dan memberitahukannya kepada Anda melalui suara. Fitur ini sangat berguna untuk mengenali benda-benda di lingkungan baru.",
+    "scanTitle": "Fitur Scan",
+    "scanDesc": "Gunakan fitur Scan untuk membaca teks dari dokumen, buku, atau papan pengumuman. Anda dapat menggunakan kamera langsung atau mengunggah gambar dari galeri Anda. Hasil pemindaian teks dapat didengarkan.",
+    "voiceTitle": "Fitur Suara",
+    "voiceDesc": "Rekam suara Anda atau suara di sekitar Anda, dan aplikasi akan mengubahnya menjadi teks. Berguna untuk membuat catatan cepat atau memahami percakapan.",
+    "callTitle": "Fitur Panggilan Darurat",
+    "callDesc": "Hubungi kontak darurat yang telah Anda simpan dengan cepat melalui panggilan video. Pastikan Anda sudah login untuk menggunakan fitur ini.",
+    "settingsTitle": "Fitur Pengaturan",
+    "settingsDesc": "Sesuaikan pengalaman Anda dengan mengubah tema (terang/gelap), bahasa, dan mengelola kontak darurat Anda."
+  },
+  "privacyAndSecurity": {
+    "title": "Kebijakan Privasi dan Keamanan",
+    "intro": "Kami menghargai privasi Anda dan berkomitmen untuk melindungi data pribadi Anda. Kebijakan ini menjelaskan bagaimana kami mengumpulkan, menggunakan, dan melindungi informasi Anda.",
+    "dataCollectionTitle": "Pengumpulan Data",
+    "dataCollectionDesc": "Kami mengumpulkan data yang Anda berikan saat registrasi (email), data penggunaan fitur (seperti gambar untuk deteksi objek atau audio untuk transkripsi), dan informasi teknis perangkat untuk meningkatkan layanan.",
+    "dataUsageTitle": "Penggunaan Data",
+    "dataUsageDesc": "Data Anda digunakan untuk menyediakan fungsi aplikasi, meningkatkan akurasi model AI kami, menganalisis penggunaan aplikasi, dan berkomunikasi dengan Anda jika diperlukan.",
+    "dataSharingTitle": "Berbagi Data",
+    "dataSharingDesc": "Kami tidak membagikan data pribadi Anda kepada pihak ketiga tanpa izin Anda, kecuali diwajibiban oleh hukum atau untuk menyediakan fungsi inti aplikasi (misalnya, layanan cloud untuk pemrosesan AI).",
+    "dataSecurityTitle": "Keamanan Data",
+    "dataSecurityDesc": "Kami menerapkan langkah-langkah keamanan teknis dan organisasional untuk melindungi data Anda dari akses yang tidak sah, perubahan, atau penghapusan.",
+    "userRightsTitle": "Hak Pengguna",
+    "userRightsDesc": "Anda berhak mengakses, memperbaiki, atau menghapus data pribadi Anda. Silakan hubungi kami jika Anda memiliki permintaan terkait data Anda.",
+    "policyChangesTitle": "Perubahan Kebijakan",
+    "policyChangesDesc": "Kebijakan privasi ini dapat diperbarui dari waktu ke waktu. Kami akan memberi tahu Anda tentang perubahan signifikan melalui aplikasi atau email.",
+    "contactTitle": "Kontak",
+    "contactDesc": "Jika Anda memiliki pertanyaan tentang kebijakan privasi ini, silakan hubungi kami di support@temandifa.com."
+  },
+  "validatedInput": {
+    "showPassword": "Tampilkan password",
+    "hidePassword": "Sembunyikan password"
+  },
+  "languageScreen": {
+    "accessibility": {
+      "selectLanguageLabel": "Pilih bahasa {{languageName}}"
+    }
   }
 }

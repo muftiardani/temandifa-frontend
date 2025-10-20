@@ -124,13 +124,17 @@ const LoginScreen: React.FC = () => {
           ]}
           onPress={handleLogin}
           disabled={isLoading}
-          accessibilityLabel={t("auth.login")}
+          accessibilityLabel={
+            t("auth.login") + t("general.accessibility.buttonSuffix")
+          }
           accessibilityRole="button"
         >
           {isLoading ? (
             <ActivityIndicator color={colors.white} />
           ) : (
-            <Text style={styles.buttonText}>{t("auth.login")}</Text>
+            <Text style={[styles.buttonText, { color: colors.buttonText }]}>
+              {t("auth.login")}
+            </Text>
           )}
         </AnimatedPressable>
 
@@ -146,7 +150,10 @@ const LoginScreen: React.FC = () => {
           style={[styles.socialButton, { borderColor: colors.border }]}
           onPress={() => promptGoogleAuth()}
           disabled={!googleAuthRequest || isLoading}
-          accessibilityLabel={t("auth.continueWithGoogle")}
+          accessibilityLabel={
+            t("auth.continueWithGoogle") +
+            t("general.accessibility.buttonSuffix")
+          }
           accessibilityRole="button"
         >
           <Ionicons name="logo-google" size={24} color={colors.text} />
@@ -236,7 +243,7 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 3,
   },
-  buttonText: { color: "#fff", fontSize: 18, fontWeight: "bold" },
+  buttonText: { fontSize: 18, fontWeight: "bold" },
   linkText: {
     fontSize: 14,
     fontWeight: "500",

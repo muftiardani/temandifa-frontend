@@ -31,7 +31,6 @@ interface AnimatedViewProps {
   style?: StyleProp<ViewStyle>;
   delay?: number;
 }
-
 const AnimatedView: React.FC<AnimatedViewProps> = ({
   children,
   style,
@@ -175,7 +174,9 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
               <TouchableOpacity
                 onPress={handleSettingsPress}
                 accessibilityLabel={t("home.settingsButton")}
-                accessibilityHint={`Membuka ${t("settings.title")}`}
+                accessibilityHint={t("settings.accessibility.navigateToHint", {
+                  pageName: t("settings.title"),
+                })}
                 accessibilityRole="button"
               >
                 <Ionicons
@@ -186,8 +187,8 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={handleProfilePress}
-                accessibilityLabel="Profil"
-                accessibilityHint="Membuka halaman profil"
+                accessibilityLabel={t("profile.title")}
+                accessibilityHint={t("profile.accessibility.profileHint")}
                 accessibilityRole="button"
               >
                 <Ionicons
@@ -202,15 +203,20 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
             <TouchableOpacity
               style={[
                 styles.emergencyButton,
-                { backgroundColor: colors.danger },
-                !isAuthenticated && { backgroundColor: colors.darkGrey },
+                {
+                  backgroundColor: isAuthenticated
+                    ? colors.danger
+                    : colors.darkGrey,
+                },
               ]}
               onPress={handleVideoCallPress}
               accessibilityLabel={t("home.emergencyButton")}
               accessibilityHint={
                 isAuthenticated
-                  ? "Membuka layar untuk memulai panggilan video"
-                  : "Login diperlukan untuk fitur ini"
+                  ? t("settings.accessibility.navigateToHint", {
+                      pageName: t("call.videoCall"),
+                    })
+                  : t("auth.premiumFeatureMessage")
               }
               accessibilityRole="button"
             >
@@ -226,7 +232,12 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: { flex: 1, paddingTop: 50 },
   header: { marginBottom: 25 },
-  headerTitle: { fontSize: 36, fontWeight: "700", marginBottom: 4, paddingHorizontal: 20 },
+  headerTitle: {
+    fontSize: 36,
+    fontWeight: "700",
+    marginBottom: 4,
+    paddingHorizontal: 20,
+  },
   headerSubtitle: { fontSize: 18, paddingHorizontal: 20 },
   buttonGrid: { gap: 10, paddingHorizontal: 15 },
   row: { flexDirection: "row", gap: 10 },

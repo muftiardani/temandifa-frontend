@@ -29,7 +29,9 @@ const AboutScreen: React.FC<AboutScreenProps> = ({ navigation }) => {
           <TouchableOpacity
             onPress={() => navigation.goBack()}
             style={styles.backButton}
-            accessibilityLabel={`${t("general.back")}. Tombol`}
+            accessibilityLabel={
+              t("general.back") + t("general.accessibility.buttonSuffix")
+            }
             accessibilityRole="button"
           >
             <Ionicons name="chevron-back" size={24} color={colors.text} />
@@ -44,11 +46,10 @@ const AboutScreen: React.FC<AboutScreenProps> = ({ navigation }) => {
             {t("settings.appName")}
           </Text>
           <Text style={[styles.version, { color: colors.grey }]}>
-            Versi {appVersion}
+            {t("general.versionPrefix")} {appVersion}
           </Text>
           <Text style={[styles.description, { color: colors.text }]}>
-            TemanDifa adalah aplikasi yang dirancang untuk membantu teman-teman
-            disabilitas dalam aktivitas sehari-hari melalui teknologi.
+            {t("helpAndGuide.intro")}{" "}
           </Text>
         </View>
       </View>

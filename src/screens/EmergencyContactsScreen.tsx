@@ -119,7 +119,9 @@ const EmergencyContactsScreen: React.FC<Props> = ({ navigation }) => {
           ]}
           onPress={handleAddOrUpdateContact}
           accessibilityLabel={
-            editingContactId ? "Perbarui Kontak" : t("contacts.addContact")
+            editingContactId
+              ? t("contacts.updateButton")
+              : t("contacts.addContact")
           }
           accessibilityRole="button"
           disabled={isLoading}
@@ -128,7 +130,9 @@ const EmergencyContactsScreen: React.FC<Props> = ({ navigation }) => {
             <ActivityIndicator color={colors.white} />
           ) : (
             <Text style={styles.addButtonText}>
-              {editingContactId ? "Perbarui Kontak" : t("contacts.addContact")}
+              {editingContactId
+                ? t("contacts.updateButton")
+                : t("contacts.addContact")}
             </Text>
           )}
         </TouchableOpacity>
@@ -138,7 +142,7 @@ const EmergencyContactsScreen: React.FC<Props> = ({ navigation }) => {
             style={styles.cancelButton}
           >
             <Text style={[styles.cancelButtonText, { color: colors.grey }]}>
-              Batalkan Edit
+              {t("contacts.cancelEdit")}
             </Text>
           </TouchableOpacity>
         )}

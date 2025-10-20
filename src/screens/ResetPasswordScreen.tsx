@@ -98,6 +98,7 @@ const ResetPasswordScreen: React.FC<Props> = ({ route, navigation }) => {
             value={password}
             onChangeText={setPassword}
             secureTextEntry
+            accessibilityLabel={t("auth.password")}
           />
           <ValidatedInput
             icon="lock-closed-outline"
@@ -105,6 +106,7 @@ const ResetPasswordScreen: React.FC<Props> = ({ route, navigation }) => {
             value={confirmPassword}
             onChangeText={setConfirmPassword}
             secureTextEntry
+            accessibilityLabel={t("auth.confirmPassword")}
           />
           <AnimatedPressable
             style={[
@@ -113,11 +115,16 @@ const ResetPasswordScreen: React.FC<Props> = ({ route, navigation }) => {
             ]}
             onPress={handleResetPassword}
             disabled={isLoading}
+            accessibilityLabel={
+              t("resetPassword.saveButton") +
+              t("general.accessibility.buttonSuffix")
+            }
+            accessibilityRole="button"
           >
             {isLoading ? (
               <ActivityIndicator color={colors.white} />
             ) : (
-              <Text style={styles.buttonText}>
+              <Text style={[styles.buttonText, { color: colors.buttonText }]}>
                 {t("resetPassword.saveButton")}
               </Text>
             )}
@@ -160,7 +167,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginTop: 15,
   },
-  buttonText: { color: "#fff", fontSize: 18, fontWeight: "bold" },
+  buttonText: { fontSize: 18, fontWeight: "bold" },
 });
 
 export default ResetPasswordScreen;

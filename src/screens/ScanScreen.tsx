@@ -111,7 +111,9 @@ const ScanScreen: React.FC<ScanScreenProps> = ({ navigation }) => {
         <TouchableOpacity
           onPress={() => navigation.goBack()}
           style={styles.backButton}
-          accessibilityLabel={`${t("general.back")}. Tombol`}
+          accessibilityLabel={
+            t("general.back") + t("general.accessibility.buttonSuffix")
+          }
           accessibilityRole="button"
         >
           <Ionicons name="chevron-back" size={24} color={colors.text} />
@@ -153,24 +155,32 @@ const ScanScreen: React.FC<ScanScreenProps> = ({ navigation }) => {
             style={[styles.button, { backgroundColor: colors.accent }]}
             onPress={handleKameraPress}
             disabled={isLoading}
-            accessibilityLabel={`${t("scanScreen.camera")}. Tombol`}
-            accessibilityHint="Membuka kamera untuk memindai dokumen"
+            accessibilityLabel={
+              t("scanScreen.camera") + t("general.accessibility.buttonSuffix")
+            }
+            accessibilityHint={t("scanScreen.accessibility.cameraHint")}
             accessibilityRole="button"
           >
             <Ionicons name="camera" size={32} color={colors.white} />
-            <Text style={styles.buttonText}>{t("scanScreen.camera")}</Text>
+            <Text style={[styles.buttonText, { color: colors.buttonText }]}>
+              {t("scanScreen.camera")}
+            </Text>
           </AnimatedPressable>
 
           <AnimatedPressable
             style={[styles.button, { backgroundColor: colors.secondary }]}
             onPress={handleUnggahPress}
             disabled={isLoading}
-            accessibilityLabel={`${t("scanScreen.upload")}. Tombol`}
-            accessibilityHint="Mengunggah gambar dari galeri untuk dipindai"
+            accessibilityLabel={
+              t("scanScreen.upload") + t("general.accessibility.buttonSuffix")
+            }
+            accessibilityHint={t("scanScreen.accessibility.uploadHint")}
             accessibilityRole="button"
           >
             <Ionicons name="cloud-upload" size={32} color={colors.white} />
-            <Text style={styles.buttonText}>{t("scanScreen.upload")}</Text>
+            <Text style={[styles.buttonText, { color: colors.buttonText }]}>
+              {t("scanScreen.upload")}
+            </Text>
           </AnimatedPressable>
         </View>
       </View>
@@ -225,7 +235,6 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   buttonText: {
-    color: "#fff",
     fontSize: 20,
     fontWeight: "bold",
     marginTop: 8,

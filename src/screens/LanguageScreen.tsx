@@ -11,6 +11,7 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useTranslation } from "react-i18next";
 import { RootStackParamList } from "../types/navigation";
 import { useAppTheme } from "../hooks/useAppTheme";
+import { useAppStore } from "../store/appStore";
 
 type LanguageScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -20,6 +21,7 @@ type LanguageScreenProps = NativeStackScreenProps<
 const LanguageScreen: React.FC<LanguageScreenProps> = ({ navigation }) => {
   const { t, i18n } = useTranslation();
   const { colors } = useAppTheme();
+  const { setLanguage } = useAppStore();
   const currentLanguage = i18n.language;
 
   const languages = [
@@ -29,6 +31,7 @@ const LanguageScreen: React.FC<LanguageScreenProps> = ({ navigation }) => {
 
   const changeLanguage = (langCode: "id" | "en") => {
     i18n.changeLanguage(langCode);
+    setLanguage(langCode);
   };
 
   return (
@@ -38,7 +41,9 @@ const LanguageScreen: React.FC<LanguageScreenProps> = ({ navigation }) => {
           <TouchableOpacity
             onPress={() => navigation.goBack()}
             style={styles.backButton}
-            accessibilityLabel={`${t("general.back")}. Tombol`}
+            accessibilityLabel={
+              t("general.back") + t("general.accessibility.buttonSuffix")
+            }
             accessibilityRole="button"
           >
             <Ionicons name="chevron-back" size={24} color={colors.text} />
@@ -59,7 +64,10 @@ const LanguageScreen: React.FC<LanguageScreenProps> = ({ navigation }) => {
               onPress={() => changeLanguage(lang.code as "id" | "en")}
               accessibilityRole="button"
               accessibilityState={{ checked: currentLanguage === lang.code }}
-              accessibilityLabel={`Pilih bahasa ${lang.name}.`}
+              accessibilityLabel={t(
+                "languageScreen.accessibility.selectLanguageLabel",
+                { languageName: lang.name }
+              )}
             >
               <Text style={[styles.itemLabel, { color: colors.text }]}>
                 {lang.name}
@@ -107,10 +115,10 @@ const styles = StyleSheet.create({
   },
   itemLabel: {
     fontSize: 17,
+    flex: 1,
   },
   checkmarkIcon: {
-    position: "absolute",
-    right: 0,
+    marginLeft: 10,
   },
 });
 

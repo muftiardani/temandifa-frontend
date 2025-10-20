@@ -99,7 +99,9 @@ const VoiceScreen: React.FC<VoiceScreenProps> = ({ navigation }) => {
         <TouchableOpacity
           onPress={() => navigation.goBack()}
           style={styles.backButton}
-          accessibilityLabel={`${t("general.back")}. Tombol`}
+          accessibilityLabel={
+            t("general.back") + t("general.accessibility.buttonSuffix")
+          }
           accessibilityRole="button"
         >
           <Ionicons name="chevron-back" size={24} color={colors.text} />
@@ -146,10 +148,12 @@ const VoiceScreen: React.FC<VoiceScreenProps> = ({ navigation }) => {
                 disabled={isProcessing}
                 accessibilityLabel={
                   isRecording
-                    ? "Berhenti merekam. Tombol"
-                    : "Mulai merekam. Tombol"
+                    ? t("voiceScreen.accessibility.micStopLabel") +
+                      t("general.accessibility.buttonSuffix")
+                    : t("voiceScreen.accessibility.micStartLabel") +
+                      t("general.accessibility.buttonSuffix")
                 }
-                accessibilityHint="Ketuk dua kali untuk mengaktifkan"
+                accessibilityHint={t("voiceScreen.accessibility.micHint")}
                 accessibilityRole="button"
               >
                 <Ionicons name="mic" size={80} color={colors.white} />

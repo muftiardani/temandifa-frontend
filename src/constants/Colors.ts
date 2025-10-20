@@ -31,6 +31,11 @@ export const lightColors = {
   chevron: "#C7C7CC",
   switchThumb: "#f4f3f4",
   placeholderIcon: "#E0E0E0",
+  buttonText: "#FFFFFF",
+  dangerBorder: "rgba(204, 68, 75, 0.18)",
+  cameraButtonBackground: "rgba(255, 255, 255, 0.9)",
+  cameraButtonText: "#000000",
+  cameraStatusBackground: "rgba(0, 0, 0, 0.5)",
 };
 
 export const darkColors = {
@@ -57,4 +62,9 @@ export const darkColors = {
   chevron: "#C7C7CC",
   switchThumb: "#f4f3f4",
   placeholderIcon: "#424242",
+  buttonText: "#FFFFFF",
+  dangerBorder: "rgba(204, 68, 75, 0.3)",
+  cameraButtonBackground: "rgba(40, 40, 40, 0.9)",
+  cameraButtonText: "#FFFFFF",
+  cameraStatusBackground: "rgba(0, 0, 0, 0.5)",
 };

@@ -94,13 +94,17 @@ const RegisterScreen: React.FC = () => {
           ]}
           onPress={handleRegister}
           disabled={!isFormValid || isLoading}
-          accessibilityLabel={t("auth.register")}
+          accessibilityLabel={
+            t("auth.register") + t("general.accessibility.buttonSuffix")
+          }
           accessibilityRole="button"
         >
           {isLoading ? (
             <ActivityIndicator color={colors.white} />
           ) : (
-            <Text style={styles.buttonText}>{t("auth.register")}</Text>
+            <Text style={[styles.buttonText, { color: colors.buttonText }]}>
+              {t("auth.register")}
+            </Text>
           )}
         </AnimatedPressable>
 
@@ -109,9 +113,10 @@ const RegisterScreen: React.FC = () => {
           style={styles.footer}
           accessibilityRole="link"
           accessibilityLabel={`${t("auth.haveAccount")} ${t("auth.login")}`}
+          accessibilityHint={t("auth.accessibility.loginHint")}
         >
           <Text style={[styles.footerText, { color: colors.grey }]}>
-            {t("auth.haveAccount")}{" "}
+            {t("auth.haveAccount")}
             <Text style={{ color: colors.primary, fontWeight: "bold" }}>
               {t("auth.login")}
             </Text>
@@ -155,7 +160,7 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 3,
   },
-  buttonText: { color: "#fff", fontSize: 18, fontWeight: "bold" },
+  buttonText: { fontSize: 18, fontWeight: "bold" },
   footer: {
     marginTop: 30,
   },

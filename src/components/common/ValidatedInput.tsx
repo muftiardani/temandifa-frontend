@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { useTranslation } from "react-i18next";
 import { useAppTheme } from "../../hooks/useAppTheme";
 
 interface ValidatedInputProps extends TextInputProps, AccessibilityProps {
@@ -25,6 +26,7 @@ const ValidatedInput: React.FC<ValidatedInputProps> = ({
   ...props
 }) => {
   const { colors } = useAppTheme();
+  const { t } = useTranslation();
   const hasError = Boolean(error);
   const [isSecure, setIsSecure] = useState(secureTextEntry);
 
@@ -58,7 +60,9 @@ const ValidatedInput: React.FC<ValidatedInputProps> = ({
             onPress={() => setIsSecure(!isSecure)}
             style={styles.eyeIcon}
             accessibilityLabel={
-              isSecure ? "Tampilkan password" : "Sembunyikan password"
+              isSecure
+                ? t("validatedInput.showPassword")
+                : t("validatedInput.hidePassword")
             }
           >
             <Ionicons

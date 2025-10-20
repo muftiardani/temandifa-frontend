@@ -93,7 +93,9 @@ const ScanResultScreen: React.FC<ScanResultScreenProps> = ({
           <TouchableOpacity
             onPress={() => navigation.goBack()}
             style={styles.backButton}
-            accessibilityLabel={`${t("general.back")}. Tombol`}
+            accessibilityLabel={
+              t("general.back") + t("general.accessibility.buttonSuffix")
+            }
             accessibilityRole="button"
           >
             <Ionicons name="chevron-back" size={24} color={colors.text} />
@@ -118,10 +120,12 @@ const ScanResultScreen: React.FC<ScanResultScreenProps> = ({
             onPress={handleSpeakButton}
             accessibilityLabel={
               isSpeaking
-                ? `${t("scanResult.stop")}. Tombol`
-                : `${t("scanResult.listen")} hasil scan. Tombol`
+                ? t("scanResult.accessibility.stopLabel") +
+                  t("general.accessibility.buttonSuffix")
+                : t("scanResult.accessibility.listenLabel") +
+                  t("general.accessibility.buttonSuffix")
             }
-            accessibilityHint="Ketuk dua kali untuk memutar atau menghentikan suara"
+            accessibilityHint={t("scanResult.accessibility.listenHint")}
             accessibilityRole="button"
           >
             <Ionicons
@@ -129,8 +133,10 @@ const ScanResultScreen: React.FC<ScanResultScreenProps> = ({
               size={32}
               color={colors.white}
             />
-            <Text style={styles.actionButtonText}>
-              {isSpeaking ? t("scanResult.stop") : t("scanResult.listen")}
+            <Text
+              style={[styles.actionButtonText, { color: colors.buttonText }]}
+            >
+              {isSpeaking ? t("scanResult.stop") : t("scanResult.listen")}{" "}
             </Text>
           </TouchableOpacity>
         </View>
@@ -163,7 +169,6 @@ const styles = StyleSheet.create({
     height: 70,
   },
   actionButtonText: {
-    color: "#fff",
     fontSize: 18,
     fontWeight: "bold",
     marginLeft: 10,

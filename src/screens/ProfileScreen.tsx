@@ -51,7 +51,7 @@ const SettingsItem = ({
         />
         <Text style={[styles.itemLabel, { color: textColor }]}>{label}</Text>
       </View>
-      <Ionicons name="chevron-forward" size={24} color="#C7C7CC" />
+      <Ionicons name="chevron-forward" size={24} color={colors.chevron} />
     </TouchableOpacity>
   );
 };
@@ -119,16 +119,19 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
             icon="help-circle-outline"
             textColor={colors.text}
             borderColor={colors.border}
-            accessibilityHint={`Navigasi ke halaman ${t(
-              "settings.helpAndGuide"
-            )}`}
+            accessibilityHint={t("settings.accessibility.navigateToHint", {
+              pageName: t("settings.helpAndGuide"),
+            })}
           />
         </View>
 
         {!isGuest && (
           <View style={styles.logoutSection}>
             <AnimatedPressable
-              style={styles.logoutButton}
+              style={[
+                styles.logoutButton,
+                { borderColor: colors.dangerBorder },
+              ]}
               onPress={handleLogout}
               accessibilityLabel={t("auth.logout")}
               accessibilityRole="button"
@@ -192,7 +195,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: "#CC444B30",
   },
   logoutButtonText: {
     fontSize: 17,

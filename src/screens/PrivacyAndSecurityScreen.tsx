@@ -43,9 +43,62 @@ const PrivacyAndSecurityScreen: React.FC<PrivacyAndSecurityScreenProps> = ({
 
         <ScrollView style={styles.content}>
           <Text style={[styles.title, { color: colors.primary }]}>
-            Kebijakan Privasi dan Keamanan
+            {t("privacyAndSecurity.title")}
           </Text>
-          {/* ... Sisa teks ... */}
+          <Text style={[styles.paragraph, { color: colors.grey }]}>
+            {t("privacyAndSecurity.intro")}
+          </Text>
+
+          <Text style={[styles.subtitle, { color: colors.text }]}>
+            {t("privacyAndSecurity.dataCollectionTitle")}
+          </Text>
+          <Text style={[styles.paragraph, { color: colors.grey }]}>
+            {t("privacyAndSecurity.dataCollectionDesc")}
+          </Text>
+
+          <Text style={[styles.subtitle, { color: colors.text }]}>
+            {t("privacyAndSecurity.dataUsageTitle")}
+          </Text>
+          <Text style={[styles.paragraph, { color: colors.grey }]}>
+            {t("privacyAndSecurity.dataUsageDesc")}
+          </Text>
+
+          <Text style={[styles.subtitle, { color: colors.text }]}>
+            {t("privacyAndSecurity.dataSharingTitle")}
+          </Text>
+          <Text style={[styles.paragraph, { color: colors.grey }]}>
+            {t("privacyAndSecurity.dataSharingDesc")}
+          </Text>
+
+          <Text style={[styles.subtitle, { color: colors.text }]}>
+            {t("privacyAndSecurity.dataSecurityTitle")}
+          </Text>
+          <Text style={[styles.paragraph, { color: colors.grey }]}>
+            {t("privacyAndSecurity.dataSecurityDesc")}
+          </Text>
+
+          <Text style={[styles.subtitle, { color: colors.text }]}>
+            {t("privacyAndSecurity.userRightsTitle")}
+          </Text>
+          <Text style={[styles.paragraph, { color: colors.grey }]}>
+            {t("privacyAndSecurity.userRightsDesc")}
+          </Text>
+
+          <Text style={[styles.subtitle, { color: colors.text }]}>
+            {t("privacyAndSecurity.policyChangesTitle")}
+          </Text>
+          <Text style={[styles.paragraph, { color: colors.grey }]}>
+            {t("privacyAndSecurity.policyChangesDesc")}
+          </Text>
+
+          <Text style={[styles.subtitle, { color: colors.text }]}>
+            {t("privacyAndSecurity.contactTitle")}
+          </Text>
+          <Text
+            style={[styles.paragraph, { color: colors.grey, marginBottom: 40 }]}
+          >
+            {t("privacyAndSecurity.contactDesc")}
+          </Text>
         </ScrollView>
       </View>
     </SafeAreaView>

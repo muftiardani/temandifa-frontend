@@ -1,19 +1,10 @@
 import React from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  Dimensions,
-  TouchableOpacity,
-} from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { CameraView } from "expo-camera";
 import { useNavigation } from "@react-navigation/native";
 import { useTranslation } from "react-i18next";
 import { useCameraDetection } from "../hooks/useCameraDetection";
 import { useAppTheme } from "../hooks/useAppTheme";
-
-const CAM_PREVIEW_WIDTH = Dimensions.get("window").width;
-const CAM_PREVIEW_HEIGHT = Dimensions.get("window").height;
 
 export default function CameraScreen() {
   const navigation = useNavigation();
@@ -36,10 +27,10 @@ export default function CameraScreen() {
           styles.bbox,
           {
             borderColor: colors.primary,
-            top: detection.bbox[1] * CAM_PREVIEW_HEIGHT,
-            left: detection.bbox[0] * CAM_PREVIEW_WIDTH,
-            width: detection.bbox[2] * CAM_PREVIEW_WIDTH,
-            height: detection.bbox[3] * CAM_PREVIEW_HEIGHT,
+            top: `${detection.bbox[1] * 100}%`,
+            left: `${detection.bbox[0] * 100}%`,
+            width: `${detection.bbox[2] * 100}%`,
+            height: `${detection.bbox[3] * 100}%`,
           },
         ]}
       >
@@ -90,10 +81,13 @@ export default function CameraScreen() {
         <TouchableOpacity
           onPress={requestPermission}
           style={[styles.permissionButton, { backgroundColor: colors.primary }]}
-          accessibilityLabel={`${t("permissions.grantPermission")}. Tombol`}
+          accessibilityLabel={
+            t("permissions.grantPermission") +
+            t("general.accessibility.buttonSuffix")
+          }
           accessibilityRole="button"
         >
-          <Text style={[styles.buttonText, { color: colors.white }]}>
+          <Text style={[styles.buttonText, { color: colors.buttonText }]}>
             {t("permissions.grantPermission")}
           </Text>
         </TouchableOpacity>
@@ -107,7 +101,13 @@ export default function CameraScreen() {
         <CameraView style={styles.camera} facing="back" ref={cameraRef} />
       )}
       <View style={styles.detectionContainer}>{renderDetections()}</View>
-      <View style={styles.statusIndicator}>
+
+      <View
+        style={[
+          styles.statusIndicator,
+          { backgroundColor: colors.cameraStatusBackground },
+        ]}
+      >
         <View
           style={[
             styles.statusDot,
@@ -120,17 +120,27 @@ export default function CameraScreen() {
         >
           {isProcessing
             ? t("cameraScreen.processing")
-            : t("cameraScreen.ready")}
+            : t("cameraScreen.ready")}{" "}
         </Text>
       </View>
+
       <TouchableOpacity
-        style={styles.doneButton}
+        style={[
+          styles.doneButton,
+          { backgroundColor: colors.cameraButtonBackground },
+        ]}
         onPress={() => navigation.goBack()}
-        accessibilityLabel={`${t("cameraScreen.done")}. Tombol`}
-        accessibilityHint="Kembali ke layar utama"
+        accessibilityLabel={
+          t("cameraScreen.done") + t("general.accessibility.buttonSuffix")
+        }
+        accessibilityHint={t("cameraScreen.accessibility.doneHint")}
         accessibilityRole="button"
       >
-        <Text style={styles.doneButtonText}>{t("cameraScreen.done")}</Text>
+        <Text
+          style={[styles.doneButtonText, { color: colors.cameraButtonText }]}
+        >
+          {t("cameraScreen.done")}
+        </Text>
       </TouchableOpacity>
     </View>
   );
@@ -142,7 +152,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  camera: { width: CAM_PREVIEW_WIDTH, height: CAM_PREVIEW_HEIGHT },
+  camera: { ...StyleSheet.absoluteFillObject },
   permissionContainer: {
     flex: 1,
     justifyContent: "center",
@@ -155,7 +165,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     borderRadius: 8,
   },
-  buttonText: { color: "#fff" },
+  buttonText: {},
   detectionContainer: {
     position: "absolute",
     top: 0,
@@ -175,19 +185,20 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: 60,
     alignSelf: "center",
-    backgroundColor: "rgba(255, 255, 255, 0.9)",
     paddingVertical: 16,
     paddingHorizontal: 100,
     borderRadius: 50,
   },
-  doneButtonText: { color: "#000", fontSize: 18, fontWeight: "600" },
+  doneButtonText: {
+    fontSize: 18,
+    fontWeight: "600",
+  },
   statusIndicator: {
     position: "absolute",
     top: 60,
     right: 20,
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
     paddingVertical: 5,
     paddingHorizontal: 10,
     borderRadius: 20,

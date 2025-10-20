@@ -39,11 +39,14 @@ const SettingsItem = React.memo(
     icon: keyof typeof Ionicons.glyphMap;
   }) => {
     const { colors } = useAppTheme();
+    const { t } = useTranslation();
     return (
       <TouchableOpacity
         style={[styles.itemContainer, { borderBottomColor: borderColor }]}
         onPress={onPress}
-        accessibilityLabel={label}
+        accessibilityLabel={
+          label + (onPress ? t("general.accessibility.buttonSuffix") : "")
+        }
         accessibilityRole="button"
         accessibilityHint={accessibilityHint}
       >
@@ -56,7 +59,9 @@ const SettingsItem = React.memo(
           />
           <Text style={[styles.itemLabel, { color: textColor }]}>{label}</Text>
         </View>
-        <Ionicons name="chevron-forward" size={24} color="#C7C7CC" />
+        {onPress && (
+          <Ionicons name="chevron-forward" size={24} color={colors.chevron} />
+        )}
       </TouchableOpacity>
     );
   }
@@ -91,7 +96,9 @@ const SettingsScreen: React.FC<SettingsScreenProps> = ({ navigation }) => {
           <TouchableOpacity
             onPress={() => navigation.goBack()}
             style={styles.backButton}
-            accessibilityLabel={t("general.back")}
+            accessibilityLabel={
+              t("general.back") + t("general.accessibility.buttonSuffix")
+            }
             accessibilityRole="button"
           >
             <Ionicons name="chevron-back" size={24} color={colors.text} />
@@ -135,7 +142,9 @@ const SettingsScreen: React.FC<SettingsScreenProps> = ({ navigation }) => {
             onPress={() => navigation.navigate("Language")}
             textColor={colors.text}
             borderColor={colors.border}
-            accessibilityHint={`Navigasi ke halaman ${t("settings.language")}`}
+            accessibilityHint={t("settings.accessibility.navigateToHint", {
+              pageName: t("settings.language"),
+            })}
           />
           {!isGuest && (
             <>
@@ -145,17 +154,19 @@ const SettingsScreen: React.FC<SettingsScreenProps> = ({ navigation }) => {
                 onPress={() => navigation.navigate("EmergencyContacts")}
                 textColor={colors.text}
                 borderColor={colors.border}
-                accessibilityHint={`Navigasi ke halaman ${t(
-                  "settings.emergencyContacts"
-                )}`}
+                accessibilityHint={t("settings.accessibility.navigateToHint", {
+                  pageName: t("settings.emergencyContacts"),
+                })}
               />
               <SettingsItem
                 icon="list-outline"
-                label="Manajemen Sesi"
+                label={t("settings.sessionManagement")}
                 onPress={() => navigation.navigate("SessionManagement")}
                 textColor={colors.text}
                 borderColor={colors.border}
-                accessibilityHint="Navigasi ke halaman Manajemen Sesi"
+                accessibilityHint={t("settings.accessibility.navigateToHint", {
+                  pageName: t("settings.sessionManagement"),
+                })}
               />
             </>
           )}
@@ -165,9 +176,9 @@ const SettingsScreen: React.FC<SettingsScreenProps> = ({ navigation }) => {
             onPress={() => navigation.navigate("HelpAndGuide")}
             textColor={colors.text}
             borderColor={colors.border}
-            accessibilityHint={`Navigasi ke halaman ${t(
-              "settings.helpAndGuide"
-            )}`}
+            accessibilityHint={t("settings.accessibility.navigateToHint", {
+              pageName: t("settings.helpAndGuide"),
+            })}
           />
           <SettingsItem
             icon="lock-closed-outline"
@@ -175,9 +186,9 @@ const SettingsScreen: React.FC<SettingsScreenProps> = ({ navigation }) => {
             onPress={() => navigation.navigate("PrivacyAndSecurity")}
             textColor={colors.text}
             borderColor={colors.border}
-            accessibilityHint={`Navigasi ke halaman ${t(
-              "settings.privacyAndSecurity"
-            )}`}
+            accessibilityHint={t("settings.accessibility.navigateToHint", {
+              pageName: t("settings.privacyAndSecurity"),
+            })}
           />
           <SettingsItem
             icon="information-circle-outline"
@@ -185,7 +196,9 @@ const SettingsScreen: React.FC<SettingsScreenProps> = ({ navigation }) => {
             onPress={() => navigation.navigate("About")}
             textColor={colors.text}
             borderColor={colors.border}
-            accessibilityHint={`Navigasi ke halaman ${t("settings.about")}`}
+            accessibilityHint={t("settings.accessibility.navigateToHint", {
+              pageName: t("settings.about"),
+            })}
           />
 
           {!isGuest && (
