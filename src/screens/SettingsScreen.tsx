@@ -5,7 +5,6 @@ import {
   StyleSheet,
   Switch,
   SafeAreaView,
-  Alert,
   TouchableOpacity,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
@@ -15,7 +14,6 @@ import { RootStackParamList } from "../types/navigation";
 import { useAppStore } from "../store/appStore";
 import { useAppTheme } from "../hooks/useAppTheme";
 import { useAuthStore } from "../store/authStore";
-import AnimatedPressable from "../components/common/AnimatedPressable";
 
 type SettingsScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -71,23 +69,8 @@ const SettingsScreen: React.FC<SettingsScreenProps> = ({ navigation }) => {
   const { toggleTheme } = useAppStore();
   const { t } = useTranslation();
   const { colors, theme } = useAppTheme();
-  const { logout, isGuest } = useAuthStore();
+  const { isGuest } = useAuthStore();
   const isDarkMode = theme === "dark";
-
-  const handleLogout = () => {
-    Alert.alert(
-      t("dialogs.logoutConfirmationTitle"),
-      t("dialogs.logoutConfirmationMessage"),
-      [
-        { text: t("dialogs.cancel"), style: "cancel" },
-        {
-          text: t("auth.logout"),
-          style: "destructive",
-          onPress: () => logout(),
-        },
-      ]
-    );
-  };
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
@@ -128,7 +111,7 @@ const SettingsScreen: React.FC<SettingsScreenProps> = ({ navigation }) => {
                 true: colors.primary,
               }}
               thumbColor={isDarkMode ? colors.white : colors.switchThumb}
-              ios_backgroundColor="#3e3e3e"
+              ios_backgroundColor={colors.darkGrey}
               onValueChange={toggleTheme}
               value={isDarkMode}
               accessibilityLabel={t("settings.darkMode")}
@@ -200,19 +183,6 @@ const SettingsScreen: React.FC<SettingsScreenProps> = ({ navigation }) => {
               pageName: t("settings.about"),
             })}
           />
-
-          {!isGuest && (
-            <AnimatedPressable
-              style={styles.logoutButton}
-              onPress={handleLogout}
-              accessibilityLabel={t("auth.logout")}
-              accessibilityRole="button"
-            >
-              <Text style={[styles.logoutButtonText, { color: colors.danger }]}>
-                {t("auth.logout")}
-              </Text>
-            </AnimatedPressable>
-          )}
         </View>
         <Text style={[styles.footerText, { color: colors.footerText }]}>
           {t("settings.appName")}
@@ -253,15 +223,6 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontSize: 16,
     paddingBottom: 60,
-  },
-  logoutButton: {
-    marginTop: 30,
-    paddingVertical: 16,
-    alignItems: "center",
-  },
-  logoutButtonText: {
-    fontSize: 17,
-    fontWeight: "600",
   },
 });
 

@@ -53,7 +53,7 @@ const ResetPasswordScreen: React.FC<Props> = ({ route, navigation }) => {
     try {
       await authService.resetPassword(token, password);
       Alert.alert(t("general.success"), t("resetPassword.successMessage"), [
-        { text: "OK", onPress: () => navigation.navigate("Login") },
+        { text: t("dialogs.ok"), onPress: () => navigation.navigate("Login") },
       ]);
     } catch (error: any) {
       const errorMessage =
@@ -167,7 +167,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginTop: 15,
   },
-  buttonText: { fontSize: 18, fontWeight: "bold" },
+  buttonText: {
+    fontSize: 18,
+    fontWeight: "bold",
+  },
 });
 
 export default ResetPasswordScreen;

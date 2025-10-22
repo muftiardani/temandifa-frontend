@@ -62,9 +62,7 @@ const OutgoingCallScreen = () => {
         <Text style={[styles.statusText, { color: colors.white }]}>
           {t("call.calling")}
         </Text>
-        <Text
-          style={[styles.calleeText, { color: "rgba(255, 255, 255, 0.7)" }]}
-        >
+        <Text style={[styles.calleeText, { color: colors.lightGrey }]}>
           {t("call.waitingForAnswer")}
         </Text>
       </View>

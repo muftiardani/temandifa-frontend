@@ -63,7 +63,7 @@ export const useEmergencyContacts = () => {
         Toast.show({
           type: "success",
           text1: t("general.success"),
-          text2: "Kontak berhasil diperbarui.",
+          text2: t("contacts.updateSuccess"),
         });
       } else {
         await addContact({ name, phoneNumber });

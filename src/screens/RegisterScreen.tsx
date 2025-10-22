@@ -90,6 +90,7 @@ const RegisterScreen: React.FC = () => {
             {
               backgroundColor:
                 !isFormValid || isLoading ? colors.grey : colors.primary,
+              shadowColor: colors.black,
             },
           ]}
           onPress={handleRegister}
@@ -154,13 +155,15 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     alignItems: "center",
     marginTop: 15,
-    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 3,
   },
-  buttonText: { fontSize: 18, fontWeight: "bold" },
+  buttonText: {
+    fontSize: 18,
+    fontWeight: "bold",
+  },
   footer: {
     marginTop: 30,
   },

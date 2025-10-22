@@ -114,7 +114,7 @@ const SessionManagementScreen: React.FC<Props> = ({ navigation }) => {
             : item.userAgent.substring(0, 30) + "..."}
         </Text>
         <Text style={[styles.itemInfo, { color: colors.grey }]}>
-          IP: {item.ip}
+          {t("sessionManagement.ipLabel")}: {item.ip}
         </Text>
         <Text style={[styles.itemInfo, { color: colors.grey }]}>
           {t("sessionManagement.lastActive")}:{" "}
@@ -192,7 +192,6 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 20,
     fontWeight: "600",
-    marginLeft: 16,
   },
   listContainer: {
     padding: 16,

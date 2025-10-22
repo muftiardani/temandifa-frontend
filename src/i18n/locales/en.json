@@ -191,7 +191,8 @@
     "deleteContactMessage": "Are you sure you want to delete this contact?",
     "cancel": "Cancel",
     "delete": "Delete",
-    "failed": "Failed"
+    "failed": "Failed",
+    "ok": "OK"
   },
   "call": {
     "videoCall": "Video Call",
@@ -260,7 +261,8 @@
     "deleteSessionTitle": "Delete Session",
     "deleteCurrentSessionMessage": "You will be logged out from this device. Are you sure?",
     "deleteOtherSessionMessage": "Are you sure you want to delete this session?",
-    "deleteSuccess": "Session successfully deleted."
+    "deleteSuccess": "Session successfully deleted.",
+    "ipLabel": "IP"
   },
   "agoraVideoCall": {
     "connecting": "Connecting to call...",

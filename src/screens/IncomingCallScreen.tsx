@@ -67,7 +67,7 @@ const IncomingCallScreen = () => {
         <Text style={[styles.callerName, { color: colors.white }]}>
           {callerName || t("call.incomingCall")}
         </Text>
-        <Text style={[styles.callType, { color: "rgba(255, 255, 255, 0.7)" }]}>
+        <Text style={[styles.callType, { color: colors.lightGrey }]}>
           {t("call.temandifaVideoCall")}
         </Text>
       </View>
@@ -114,7 +114,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   callerName: { fontSize: 32, fontWeight: "bold" },
-  callType: { fontSize: 18, marginTop: 10 },
+  callType: {
+    fontSize: 18,
+    marginTop: 10,
+  },
   buttonContainer: {
     flexDirection: "row",
     justifyContent: "space-around",

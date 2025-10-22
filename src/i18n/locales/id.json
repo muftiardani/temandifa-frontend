@@ -191,7 +191,8 @@
     "deleteContactMessage": "Apakah Anda yakin ingin menghapus kontak ini?",
     "cancel": "Batal",
     "delete": "Hapus",
-    "failed": "Gagal"
+    "failed": "Gagal",
+    "ok": "Oke"
   },
   "call": {
     "videoCall": "Panggilan Video",
@@ -260,7 +261,8 @@
     "deleteSessionTitle": "Hapus Sesi",
     "deleteCurrentSessionMessage": "Anda akan keluar dari perangkat ini. Apakah Anda yakin?",
     "deleteOtherSessionMessage": "Apakah Anda yakin ingin menghapus sesi ini?",
-    "deleteSuccess": "Sesi berhasil dihapus."
+    "deleteSuccess": "Sesi berhasil dihapus.",
+    "ipLabel": "IP"
   },
   "agoraVideoCall": {
     "connecting": "Menyambungkan ke panggilan...",

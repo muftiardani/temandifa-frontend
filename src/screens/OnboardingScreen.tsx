@@ -102,7 +102,9 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = () => {
           accessibilityHint={buttonHint}
           accessibilityRole="button"
         >
-          <Text style={styles.buttonText}>{buttonText}</Text>
+          <Text style={[styles.buttonText, { color: colors.buttonText }]}>
+            {buttonText}
+          </Text>
         </TouchableOpacity>
       </View>
     );
@@ -230,7 +232,6 @@ const styles = StyleSheet.create({
     bottom: 50,
   },
   buttonText: {
-    color: "#fff",
     fontSize: 18,
     fontWeight: "600",
   },

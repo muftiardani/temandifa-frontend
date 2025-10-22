@@ -114,7 +114,10 @@ const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({
         <AnimatedPressable
           style={[
             styles.button,
-            { backgroundColor: isLoading ? colors.grey : colors.primary },
+            {
+              backgroundColor: isLoading ? colors.grey : colors.primary,
+              shadowColor: colors.black,
+            },
           ]}
           onPress={handleForgotPassword}
           disabled={isLoading}
@@ -124,7 +127,9 @@ const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({
           {isLoading ? (
             <ActivityIndicator color={colors.white} />
           ) : (
-            <Text style={styles.buttonText}>{t("auth.sendInstructions")}</Text>
+            <Text style={[styles.buttonText, { color: colors.buttonText }]}>
+              {t("auth.sendInstructions")}
+            </Text>
           )}
         </AnimatedPressable>
 
@@ -187,13 +192,15 @@ const styles = StyleSheet.create({
     padding: 15,
     borderRadius: 12,
     alignItems: "center",
-    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 3,
   },
-  buttonText: { color: "#fff", fontSize: 18, fontWeight: "bold" },
+  buttonText: {
+    fontSize: 18,
+    fontWeight: "bold",
+  },
   footer: {
     marginTop: 30,
   },
