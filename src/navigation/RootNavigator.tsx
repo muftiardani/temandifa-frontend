@@ -12,6 +12,7 @@ import * as Notifications from "expo-notifications";
 import * as Linking from "expo-linking";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { jwtDecode } from "jwt-decode";
+import { useTranslation } from "react-i18next";
 
 import AnimatedSplashScreen from "../screens/AnimatedSplashScreen";
 import OnboardingScreen from "../screens/OnboardingScreen";
@@ -175,6 +176,7 @@ const RootNavigator = () => {
     loadToken,
   } = useAuthStore();
   const { setIncomingCall, setCallCredentials } = useCallStore();
+  const { t } = useTranslation();
 
   const onLayoutRootView = useCallback(async () => {
     if (isSplashAnimationComplete) {
@@ -252,7 +254,7 @@ const RootNavigator = () => {
           setIncomingCall({
             callId: data.callId as string,
             channelName: data.channelName as string,
-            callerName: (data.callerName as string) || "Panggilan Masuk",
+            callerName: (data.callerName as string) || t("call.incomingCall"),
           });
           navigationRef.current?.navigate("IncomingCall");
         }
@@ -266,7 +268,7 @@ const RootNavigator = () => {
           setIncomingCall({
             callId: data.callId as string,
             channelName: data.channelName as string,
-            callerName: (data.callerName as string) || "Panggilan Masuk",
+            callerName: (data.callerName as string) || t("call.incomingCall"),
           });
           navigationRef.current?.navigate("IncomingCall");
         }
@@ -276,7 +278,7 @@ const RootNavigator = () => {
       notificationListener.remove();
       responseListener.remove();
     };
-  }, []);
+  }, [t]);
 
   useEffect(() => {
     if (isSplashAnimationComplete && !isAuthLoading) {
@@ -302,7 +304,7 @@ const RootNavigator = () => {
         <View
           style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
         >
-          <Text>Memuat...</Text>
+          <Text>{t("navigation.loading")}</Text>
         </View>
       }
     >

@@ -26,7 +26,7 @@ type ForgotPasswordScreenProps = NativeStackScreenProps<
   "ForgotPassword"
 >;
 
-const LOGO = require("../../assets/icon.png");
+const LOGO = require("../../assets/auth-icon.png");
 
 const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({
   navigation,
@@ -150,9 +150,9 @@ const styles = StyleSheet.create({
     marginBottom: 40,
   },
   logo: {
-    width: 60,
-    height: 60,
-    marginBottom: 20,
+    width: 100,
+    height: 100,
+    marginBottom: 10,
   },
   title: {
     fontSize: 28,
