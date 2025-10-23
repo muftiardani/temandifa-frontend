@@ -19,44 +19,6 @@ import ScreenHeader from "../components/common/ScreenHeader";
 
 type ProfileScreenProps = NativeStackScreenProps<RootStackParamList, "Profile">;
 
-const SettingsItem = ({
-  label,
-  onPress,
-  icon,
-  textColor,
-  borderColor,
-  accessibilityHint,
-}: {
-  label: string;
-  onPress: () => void;
-  icon: keyof typeof Ionicons.glyphMap;
-  textColor: string;
-  borderColor: string;
-  accessibilityHint?: string;
-}) => {
-  const { colors } = useAppTheme();
-  return (
-    <TouchableOpacity
-      style={[styles.itemContainer, { borderBottomColor: borderColor }]}
-      onPress={onPress}
-      accessibilityLabel={label}
-      accessibilityRole="button"
-      accessibilityHint={accessibilityHint}
-    >
-      <View style={styles.itemContent}>
-        <Ionicons
-          name={icon}
-          size={24}
-          color={colors.primary}
-          style={styles.icon}
-        />
-        <Text style={[styles.itemLabel, { color: textColor }]}>{label}</Text>
-      </View>
-      <Ionicons name="chevron-forward" size={24} color={colors.chevron} />
-    </TouchableOpacity>
-  );
-};
-
 const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
   const { t } = useTranslation();
   const { colors } = useAppTheme();
@@ -136,21 +98,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "500",
   },
-  itemContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    paddingVertical: 16,
-    borderBottomWidth: 1,
-  },
-  itemContent: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  icon: {
-    marginRight: 16,
-  },
-  itemLabel: { fontSize: 17 },
   logoutSection: {
     paddingHorizontal: 16,
     marginTop: 40,

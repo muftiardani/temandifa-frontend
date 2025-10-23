@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   StyleSheet,
   Platform,
+  StatusBar,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
@@ -17,6 +18,10 @@ interface ScreenHeaderProps {
   showBackButton?: boolean;
   onBackPress?: () => void;
 }
+
+const STATUSBAR_HEIGHT =
+  StatusBar.currentHeight || (Platform.OS === "ios" ? 44 : 0);
+const HEADER_HEIGHT = 56;
 
 const ScreenHeader: React.FC<ScreenHeaderProps> = ({
   title,
@@ -45,26 +50,34 @@ const ScreenHeader: React.FC<ScreenHeaderProps> = ({
         },
       ]}
     >
-      {showBackButton && (
+      {showBackButton ? (
         <TouchableOpacity
           onPress={handleBackPress}
-          style={styles.backButton}
+          style={styles.buttonContainer}
           accessibilityLabel={
             t("general.back") + t("general.accessibility.buttonSuffix")
           }
           accessibilityHint={t("general.accessibility.backHint")}
           accessibilityRole="button"
         >
-          <Ionicons name="chevron-back" size={24} color={colors.text} />
+          <Ionicons name="chevron-back" size={28} color={colors.text} />
         </TouchableOpacity>
+      ) : (
+        <View style={styles.placeholder} />
       )}
-      <Text
-        style={[styles.headerTitle, { color: colors.headerText }]}
-        numberOfLines={1}
-      >
-        {title}
-      </Text>
-      {showBackButton && <View style={styles.placeholder} />}
+      <View style={styles.titleContainer}>
+        <Text
+          style={[styles.headerTitle, { color: colors.headerText }]}
+          numberOfLines={1}
+        >
+          {title}
+        </Text>
+      </View>
+      {showBackButton ? (
+        <View style={styles.placeholder} />
+      ) : (
+        <View style={styles.placeholder} />
+      )}
     </View>
   );
 };
@@ -74,28 +87,32 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    paddingHorizontal: 16,
-    paddingTop: Platform.OS === "ios" ? 10 : 50,
-    paddingBottom: 16,
+    paddingHorizontal: 8,
+    paddingTop: STATUSBAR_HEIGHT,
+    height: HEADER_HEIGHT + STATUSBAR_HEIGHT,
     borderBottomWidth: 1,
-    height: Platform.OS === "ios" ? 60 : 100,
   },
-  backButton: {
+  buttonContainer: {
     padding: 8,
-    marginRight: 8,
     justifyContent: "center",
     alignItems: "center",
-    width: 40,
+    width: 44,
+    height: HEADER_HEIGHT,
+  },
+  titleContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    height: HEADER_HEIGHT,
   },
   headerTitle: {
     fontSize: 20,
     fontWeight: "600",
     textAlign: "center",
-    flex: 1,
   },
   placeholder: {
-    width: 40,
-    height: 24,
+    width: 44,
+    height: HEADER_HEIGHT,
   },
 });
 
