@@ -14,6 +14,7 @@ import { RootStackParamList } from "../types/navigation";
 import { useAppStore } from "../store/appStore";
 import { useAppTheme } from "../hooks/useAppTheme";
 import { useAuthStore } from "../store/authStore";
+import ScreenHeader from "../components/common/ScreenHeader";
 
 type SettingsScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -74,22 +75,8 @@ const SettingsScreen: React.FC<SettingsScreenProps> = ({ navigation }) => {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
-      <View style={{ flex: 1 }}>
-        <View style={[styles.header, { borderBottomColor: colors.border }]}>
-          <TouchableOpacity
-            onPress={() => navigation.goBack()}
-            style={styles.backButton}
-            accessibilityLabel={
-              t("general.back") + t("general.accessibility.buttonSuffix")
-            }
-            accessibilityRole="button"
-          >
-            <Ionicons name="chevron-back" size={24} color={colors.text} />
-          </TouchableOpacity>
-          <Text style={[styles.headerTitle, { color: colors.headerText }]}>
-            {t("settings.title")}
-          </Text>
-        </View>
+      <ScreenHeader title={t("settings.title")} />
+      <View style={styles.contentContainer}>
         <View style={styles.listContainer}>
           <View
             style={[styles.itemContainer, { borderBottomColor: colors.border }]}
@@ -193,17 +180,14 @@ const SettingsScreen: React.FC<SettingsScreenProps> = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingHorizontal: 16,
-    paddingTop: 50,
-    paddingBottom: 16,
-    borderBottomWidth: 1,
+  contentContainer: {
+    flex: 1,
+    justifyContent: "space-between",
   },
-  backButton: { marginRight: 16, padding: 8 },
-  headerTitle: { fontSize: 20, fontWeight: "600" },
-  listContainer: { flex: 1, paddingHorizontal: 16, marginTop: 10 },
+  listContainer: {
+    paddingHorizontal: 16,
+    marginTop: 10,
+  },
   itemContainer: {
     flexDirection: "row",
     justifyContent: "space-between",

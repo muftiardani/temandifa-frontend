@@ -12,6 +12,7 @@ import { useTranslation } from "react-i18next";
 import { RootStackParamList } from "../types/navigation";
 import { useAppTheme } from "../hooks/useAppTheme";
 import { useAppStore } from "../store/appStore";
+import ScreenHeader from "../components/common/ScreenHeader";
 
 type LanguageScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -36,23 +37,8 @@ const LanguageScreen: React.FC<LanguageScreenProps> = ({ navigation }) => {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
-      <View style={styles.container}>
-        <View style={[styles.header, { borderBottomColor: colors.border }]}>
-          <TouchableOpacity
-            onPress={() => navigation.goBack()}
-            style={styles.backButton}
-            accessibilityLabel={
-              t("general.back") + t("general.accessibility.buttonSuffix")
-            }
-            accessibilityRole="button"
-          >
-            <Ionicons name="chevron-back" size={24} color={colors.text} />
-          </TouchableOpacity>
-          <Text style={[styles.headerTitle, { color: colors.headerText }]}>
-            {t("settings.language")}
-          </Text>
-        </View>
-
+      <ScreenHeader title={t("settings.language")} />
+      <View style={styles.contentContainer}>
         <View style={styles.content}>
           {languages.map((lang) => (
             <TouchableOpacity
@@ -89,22 +75,8 @@ const LanguageScreen: React.FC<LanguageScreenProps> = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1 },
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingHorizontal: 16,
-    paddingTop: 50,
-    paddingBottom: 16,
-    borderBottomWidth: 1,
-  },
-  backButton: {
-    marginRight: 16,
-    padding: 8,
-  },
-  headerTitle: {
-    fontSize: 20,
-    fontWeight: "600",
+  contentContainer: {
+    flex: 1,
   },
   content: { flex: 1, padding: 20 },
   itemContainer: {

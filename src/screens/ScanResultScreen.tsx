@@ -14,6 +14,7 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useTranslation } from "react-i18next";
 import { RootStackParamList } from "../types/navigation";
 import { useAppTheme } from "../hooks/useAppTheme";
+import ScreenHeader from "../components/common/ScreenHeader";
 
 type ScanResultScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -40,14 +41,19 @@ const ScanResultScreen: React.FC<ScanResultScreenProps> = ({
     const intervalId = setInterval(() => {
       if (wordIndex < words.length) {
         currentWords.push(words[wordIndex]);
-        setDisplayedText(currentWords.join(" "));
+        if (isMounted.current) {
+          setDisplayedText(currentWords.join(" "));
+        }
         wordIndex++;
       } else {
         clearInterval(intervalId);
       }
     }, 50);
 
-    return () => clearInterval(intervalId);
+    return () => {
+      clearInterval(intervalId);
+      isMounted.current = false;
+    };
   }, [scannedText, t]);
 
   useEffect(() => {
@@ -58,6 +64,7 @@ const ScanResultScreen: React.FC<ScanResultScreenProps> = ({
     return () => {
       isMounted.current = false;
       unsubscribe();
+      Speech.stop();
     };
   }, [navigation]);
 
@@ -66,9 +73,9 @@ const ScanResultScreen: React.FC<ScanResultScreenProps> = ({
     const speakingStatus = await Speech.isSpeakingAsync();
     if (speakingStatus) {
       Speech.stop();
-      setIsSpeaking(false);
+      if (isMounted.current) setIsSpeaking(false);
     } else {
-      Speech.speak(scannedText, {
+      Speech.speak(scannedText || t("scanResult.noTextDetected"), {
         language: language === "id" ? "id-ID" : "en-US",
         onStart: () => {
           if (isMounted.current) setIsSpeaking(true);
@@ -79,7 +86,8 @@ const ScanResultScreen: React.FC<ScanResultScreenProps> = ({
         onStopped: () => {
           if (isMounted.current) setIsSpeaking(false);
         },
-        onError: () => {
+        onError: (error) => {
+          console.error("Expo Speech Error:", error);
           if (isMounted.current) setIsSpeaking(false);
         },
       });
@@ -88,23 +96,8 @@ const ScanResultScreen: React.FC<ScanResultScreenProps> = ({
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
-      <View style={styles.container}>
-        <View style={[styles.header, { borderBottomColor: colors.border }]}>
-          <TouchableOpacity
-            onPress={() => navigation.goBack()}
-            style={styles.backButton}
-            accessibilityLabel={
-              t("general.back") + t("general.accessibility.buttonSuffix")
-            }
-            accessibilityRole="button"
-          >
-            <Ionicons name="chevron-back" size={24} color={colors.text} />
-          </TouchableOpacity>
-          <Text style={[styles.headerTitle, { color: colors.headerText }]}>
-            {t("scanResult.title")}
-          </Text>
-        </View>
-
+      <ScreenHeader title={t("scanResult.title")} />
+      <View style={styles.contentContainer}>
         <ScrollView style={styles.contentScrollView}>
           <Text style={[styles.resultText, { color: colors.text }]}>
             {displayedText}
@@ -146,17 +139,9 @@ const ScanResultScreen: React.FC<ScanResultScreenProps> = ({
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1 },
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingHorizontal: 16,
-    paddingTop: 50,
-    paddingBottom: 16,
-    borderBottomWidth: 1,
+  contentContainer: {
+    flex: 1,
   },
-  backButton: { marginRight: 16, padding: 8 },
-  headerTitle: { fontSize: 20, fontWeight: "600" },
   contentScrollView: { flex: 1, padding: 20 },
   resultText: { fontSize: 16, lineHeight: 24 },
   bottomBar: { padding: 20, borderTopWidth: 1 },

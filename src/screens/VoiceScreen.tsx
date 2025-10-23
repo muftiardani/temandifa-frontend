@@ -23,6 +23,7 @@ import { useAppTheme } from "../hooks/useAppTheme";
 import { useAudioRecorder } from "../hooks/useAudioRecorder";
 import LoadingIndicator from "../components/common/LoadingIndicator";
 import { useAppStore } from "../store/appStore";
+import ScreenHeader from "../components/common/ScreenHeader";
 
 type VoiceScreenProps = NativeStackScreenProps<RootStackParamList, "Voice">;
 
@@ -95,88 +96,69 @@ const VoiceScreen: React.FC<VoiceScreenProps> = ({ navigation }) => {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
-      <View style={[styles.header, { borderBottomColor: colors.border }]}>
-        <TouchableOpacity
-          onPress={() => navigation.goBack()}
-          style={styles.backButton}
-          accessibilityLabel={
-            t("general.back") + t("general.accessibility.buttonSuffix")
-          }
-          accessibilityRole="button"
-        >
-          <Ionicons name="chevron-back" size={24} color={colors.text} />
-        </TouchableOpacity>
-        <Text style={[styles.headerTitle, { color: colors.headerText }]}>
-          {t("voiceScreen.title")}
-        </Text>
-      </View>
-      <View style={styles.content}>
-        <Text
-          style={[styles.infoText, { color: colors.grey }]}
-          accessibilityLiveRegion="polite"
-        >
-          {isProcessing
-            ? t("voiceScreen.infoProcessing")
-            : isRecording
-            ? t("voiceScreen.infoListening")
-            : t("voiceScreen.infoDefault")}
-        </Text>
-        {isProcessing ? (
-          <LoadingIndicator />
-        ) : (
-          <View style={styles.micContainer}>
-            {isRecording && (
-              <Animated.View
-                style={[
-                  styles.ripple,
-                  { backgroundColor: colors.primary },
-                  animatedRippleStyle,
-                ]}
-              />
-            )}
-            <Animated.View style={[animatedMicStyle]}>
-              <TouchableOpacity
-                style={[
-                  styles.micButton,
-                  {
-                    backgroundColor: isRecording
-                      ? colors.accent
-                      : colors.primary,
-                  },
-                ]}
-                onPress={handleMicPress}
-                disabled={isProcessing}
-                accessibilityLabel={
-                  isRecording
-                    ? t("voiceScreen.accessibility.micStopLabel") +
-                      t("general.accessibility.buttonSuffix")
-                    : t("voiceScreen.accessibility.micStartLabel") +
-                      t("general.accessibility.buttonSuffix")
-                }
-                accessibilityHint={t("voiceScreen.accessibility.micHint")}
-                accessibilityRole="button"
-              >
-                <Ionicons name="mic" size={80} color={colors.white} />
-              </TouchableOpacity>
-            </Animated.View>
-          </View>
-        )}
+      <ScreenHeader title={t("voiceScreen.title")} />
+      <View style={styles.contentContainer}>
+        <View style={styles.content}>
+          <Text
+            style={[styles.infoText, { color: colors.grey }]}
+            accessibilityLiveRegion="polite"
+          >
+            {isProcessing
+              ? t("voiceScreen.infoProcessing")
+              : isRecording
+              ? t("voiceScreen.infoListening")
+              : t("voiceScreen.infoDefault")}
+          </Text>
+          {isProcessing ? (
+            <LoadingIndicator />
+          ) : (
+            <View style={styles.micContainer}>
+              {isRecording && (
+                <Animated.View
+                  style={[
+                    styles.ripple,
+                    { backgroundColor: colors.primary },
+                    animatedRippleStyle,
+                  ]}
+                />
+              )}
+              <Animated.View style={[animatedMicStyle]}>
+                <TouchableOpacity
+                  style={[
+                    styles.micButton,
+                    {
+                      backgroundColor: isRecording
+                        ? colors.accent
+                        : colors.primary,
+                    },
+                  ]}
+                  onPress={handleMicPress}
+                  disabled={isProcessing}
+                  accessibilityLabel={
+                    isRecording
+                      ? t("voiceScreen.accessibility.micStopLabel") +
+                        t("general.accessibility.buttonSuffix")
+                      : t("voiceScreen.accessibility.micStartLabel") +
+                        t("general.accessibility.buttonSuffix")
+                  }
+                  accessibilityHint={t("voiceScreen.accessibility.micHint")}
+                  accessibilityRole="button"
+                >
+                  <Ionicons name="mic" size={80} color={colors.white} />
+                </TouchableOpacity>
+              </Animated.View>
+            </View>
+          )}
+        </View>
       </View>
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingHorizontal: 16,
-    paddingTop: 50,
-    paddingBottom: 16,
-    borderBottomWidth: 1,
+  contentContainer: {
+    flex: 1,
   },
-  backButton: { marginRight: 16, padding: 8 },
-  headerTitle: { fontSize: 20, fontWeight: "600" },
   content: {
     flex: 1,
     justifyContent: "center",

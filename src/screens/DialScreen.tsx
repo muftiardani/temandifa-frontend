@@ -19,6 +19,7 @@ import { useCallStore } from "../store/callStore";
 import { AppNavigationProp } from "../types/navigation";
 import { useContactStore, EmergencyContact } from "../store/contactStore";
 import { useAppStore } from "../store/appStore";
+import ScreenHeader from "../components/common/ScreenHeader";
 
 const DialScreen = () => {
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -93,20 +94,7 @@ const DialScreen = () => {
     <SafeAreaView
       style={[styles.container, { backgroundColor: colors.background }]}
     >
-      <View style={[styles.header, { borderBottomColor: colors.border }]}>
-        <TouchableOpacity
-          onPress={() => navigation.goBack()}
-          style={styles.backButton}
-          accessibilityLabel={t("general.back")}
-          accessibilityRole="button"
-        >
-          <Ionicons name="chevron-back" size={24} color={colors.text} />
-        </TouchableOpacity>
-        <Text style={[styles.headerTitle, { color: colors.headerText }]}>
-          {t("call.videoCall")}
-        </Text>
-      </View>
-
+      <ScreenHeader title={t("call.videoCall")} />
       <FlatList
         data={contacts}
         renderItem={renderContactItem}
@@ -153,7 +141,11 @@ const DialScreen = () => {
               ) : (
                 <>
                   <Ionicons name="call" size={20} color={colors.white} />
-                  <Text style={styles.buttonText}>{t("call.call")}</Text>
+                  <Text
+                    style={[styles.buttonText, { color: colors.buttonText }]}
+                  >
+                    {t("call.call")}
+                  </Text>
                 </>
               )}
             </TouchableOpacity>
@@ -173,16 +165,6 @@ const DialScreen = () => {
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingHorizontal: 16,
-    paddingTop: 50,
-    paddingBottom: 16,
-    borderBottomWidth: 1,
-  },
-  backButton: { marginRight: 16, padding: 8 },
-  headerTitle: { fontSize: 20, fontWeight: "600" },
   manualDialContainer: {
     padding: 20,
     alignItems: "center",
@@ -208,7 +190,6 @@ const styles = StyleSheet.create({
     height: 55,
   },
   buttonText: {
-    color: "#fff",
     fontSize: 18,
     fontWeight: "bold",
     marginLeft: 10,

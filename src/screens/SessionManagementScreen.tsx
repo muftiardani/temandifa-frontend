@@ -16,6 +16,7 @@ import { useAppTheme } from "../hooks/useAppTheme";
 import { authService } from "../services/authService";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../types/navigation";
+import ScreenHeader from "../components/common/ScreenHeader";
 
 type Props = NativeStackScreenProps<RootStackParamList, "SessionManagement">;
 
@@ -135,63 +136,43 @@ const SessionManagementScreen: React.FC<Props> = ({ navigation }) => {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
-      <View style={[styles.header, { borderBottomColor: colors.border }]}>
-        <TouchableOpacity
-          onPress={() => navigation.goBack()}
-          style={styles.backButton}
-          accessibilityLabel={
-            t("general.back") + t("general.accessibility.buttonSuffix")
-          }
-          accessibilityRole="button"
-          accessibilityHint={t("general.accessibility.backHint")}
-        >
-          <Ionicons name="chevron-back" size={24} color={colors.text} />
-        </TouchableOpacity>
-        <Text style={[styles.headerTitle, { color: colors.headerText }]}>
-          {t("sessionManagement.title")}
-        </Text>
+      <ScreenHeader title={t("sessionManagement.title")} />
+      <View style={styles.contentContainer}>
+        {isLoading ? (
+          <ActivityIndicator
+            style={{ marginTop: 20 }}
+            size="large"
+            color={colors.primary}
+          />
+        ) : (
+          <FlatList
+            data={sessions}
+            renderItem={renderItem}
+            keyExtractor={(item) => item.id}
+            contentContainerStyle={styles.listContainer}
+            initialNumToRender={10}
+            windowSize={5}
+            ListEmptyComponent={
+              <Text
+                style={{
+                  textAlign: "center",
+                  color: colors.grey,
+                  marginTop: 20,
+                }}
+              >
+                {t("sessionManagement.noSessions")}
+              </Text>
+            }
+          />
+        )}
       </View>
-
-      {isLoading ? (
-        <ActivityIndicator
-          style={{ marginTop: 20 }}
-          size="large"
-          color={colors.primary}
-        />
-      ) : (
-        <FlatList
-          data={sessions}
-          renderItem={renderItem}
-          keyExtractor={(item) => item.id}
-          contentContainerStyle={styles.listContainer}
-          initialNumToRender={10}
-          windowSize={5}
-          ListEmptyComponent={
-            <Text
-              style={{ textAlign: "center", color: colors.grey, marginTop: 20 }}
-            >
-              {t("sessionManagement.noSessions")}
-            </Text>
-          }
-        />
-      )}
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingHorizontal: 16,
-    paddingTop: 50,
-    paddingBottom: 16,
-    borderBottomWidth: 1,
-  },
-  backButton: { marginRight: 16, padding: 8 },
-  headerTitle: {
-    fontSize: 20,
-    fontWeight: "600",
+  contentContainer: {
+    flex: 1,
   },
   listContainer: {
     padding: 16,

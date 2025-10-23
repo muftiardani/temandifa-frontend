@@ -1,18 +1,12 @@
 import React from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  SafeAreaView,
-} from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import { View, Text, StyleSheet, SafeAreaView } from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import Constants from "expo-constants";
 import { useTranslation } from "react-i18next";
 
 import { RootStackParamList } from "../types/navigation";
 import { useAppTheme } from "../hooks/useAppTheme";
+import ScreenHeader from "../components/common/ScreenHeader";
 
 type AboutScreenProps = NativeStackScreenProps<RootStackParamList, "About">;
 
@@ -24,23 +18,8 @@ const AboutScreen: React.FC<AboutScreenProps> = ({ navigation }) => {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
+      <ScreenHeader title={t("settings.about")} />
       <View style={styles.container}>
-        <View style={[styles.header, { borderBottomColor: colors.border }]}>
-          <TouchableOpacity
-            onPress={() => navigation.goBack()}
-            style={styles.backButton}
-            accessibilityLabel={
-              t("general.back") + t("general.accessibility.buttonSuffix")
-            }
-            accessibilityRole="button"
-          >
-            <Ionicons name="chevron-back" size={24} color={colors.text} />
-          </TouchableOpacity>
-          <Text style={[styles.headerTitle, { color: colors.headerText }]}>
-            {t("settings.about")}
-          </Text>
-        </View>
-
         <View style={styles.content}>
           <Text style={[styles.appName, { color: colors.primary }]}>
             {t("settings.appName")}
@@ -58,22 +37,8 @@ const AboutScreen: React.FC<AboutScreenProps> = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1 },
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingHorizontal: 16,
-    paddingTop: 50,
-    paddingBottom: 16,
-    borderBottomWidth: 1,
-  },
-  backButton: {
-    marginRight: 16,
-    padding: 8,
-  },
-  headerTitle: {
-    fontSize: 20,
-    fontWeight: "600",
+  container: {
+    flex: 1,
   },
   content: {
     flex: 1,

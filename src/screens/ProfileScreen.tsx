@@ -15,6 +15,7 @@ import { useAuthStore } from "../store/authStore";
 import { RootStackParamList } from "../types/navigation";
 import AnimatedPressable from "../components/common/AnimatedPressable";
 import { jwtDecode } from "jwt-decode";
+import ScreenHeader from "../components/common/ScreenHeader";
 
 type ProfileScreenProps = NativeStackScreenProps<RootStackParamList, "Profile">;
 
@@ -65,9 +66,11 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
     if (isGuest) return t("profile.guest");
     if (!accessToken) return t("profile.user");
     try {
-      const decoded: { email: string } = jwtDecode(accessToken);
-      return decoded.email;
+      const decoded: { email?: string; [key: string]: any } =
+        jwtDecode(accessToken);
+      return decoded.email || t("profile.user");
     } catch (e) {
+      console.error("Failed to decode token:", e);
       return t("profile.user");
     }
   })();
@@ -89,40 +92,13 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
+      <ScreenHeader title={t("profile.title")} />
       <View style={styles.container}>
-        <View style={[styles.header, { borderBottomColor: colors.border }]}>
-          <TouchableOpacity
-            onPress={() => navigation.goBack()}
-            style={styles.backButton}
-            accessibilityLabel={t("general.back")}
-            accessibilityHint={t("general.accessibility.backHint")}
-            accessibilityRole="button"
-          >
-            <Ionicons name="chevron-back" size={24} color={colors.text} />
-          </TouchableOpacity>
-          <Text style={[styles.headerTitle, { color: colors.headerText }]}>
-            {t("profile.title")}
-          </Text>
-        </View>
-
         <View style={styles.profileInfoContainer}>
           <Ionicons name="person-circle" size={100} color={colors.primary} />
           <Text style={[styles.emailText, { color: colors.text }]}>
             {userEmail}
           </Text>
-        </View>
-
-        <View style={styles.menuContainer}>
-          <SettingsItem
-            label={t("settings.helpAndGuide")}
-            onPress={() => navigation.navigate("HelpAndGuide")}
-            icon="help-circle-outline"
-            textColor={colors.text}
-            borderColor={colors.border}
-            accessibilityHint={t("settings.accessibility.navigateToHint", {
-              pageName: t("settings.helpAndGuide"),
-            })}
-          />
         </View>
 
         {!isGuest && (
@@ -148,17 +124,9 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1 },
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingHorizontal: 16,
-    paddingTop: 50,
-    paddingBottom: 16,
-    borderBottomWidth: 1,
+  container: {
+    flex: 1,
   },
-  backButton: { marginRight: 16, padding: 8 },
-  headerTitle: { fontSize: 20, fontWeight: "600" },
   profileInfoContainer: {
     alignItems: "center",
     paddingVertical: 40,
@@ -167,9 +135,6 @@ const styles = StyleSheet.create({
     marginTop: 16,
     fontSize: 18,
     fontWeight: "500",
-  },
-  menuContainer: {
-    paddingHorizontal: 16,
   },
   itemContainer: {
     flexDirection: "row",

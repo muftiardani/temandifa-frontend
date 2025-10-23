@@ -1,11 +1,5 @@
 import React, { useEffect } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  SafeAreaView,
-} from "react-native";
+import { View, Text, StyleSheet, SafeAreaView } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import * as ImagePicker from "expo-image-picker";
@@ -26,6 +20,7 @@ import { useAppTheme } from "../hooks/useAppTheme";
 import { AnimationDurations } from "../constants/animations";
 import AnimatedPressable from "../components/common/AnimatedPressable";
 import { useAppStore } from "../store/appStore";
+import ScreenHeader from "../components/common/ScreenHeader";
 
 type ScanScreenProps = NativeStackScreenProps<RootStackParamList, "Scan">;
 
@@ -107,81 +102,68 @@ const ScanScreen: React.FC<ScanScreenProps> = ({ navigation }) => {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
-      <View style={[styles.header, { borderBottomColor: colors.border }]}>
-        <TouchableOpacity
-          onPress={() => navigation.goBack()}
-          style={styles.backButton}
-          accessibilityLabel={
-            t("general.back") + t("general.accessibility.buttonSuffix")
-          }
-          accessibilityRole="button"
-        >
-          <Ionicons name="chevron-back" size={24} color={colors.text} />
-        </TouchableOpacity>
-        <Text style={[styles.headerTitle, { color: colors.headerText }]}>
-          {t("scanScreen.title")}
-        </Text>
-      </View>
-
-      <View style={styles.content}>
-        {isLoading ? (
-          <LoadingIndicator text={t("scanScreen.processing")} />
-        ) : (
-          <Animated.View
-            style={[
-              styles.placeholderContainer,
-              { backgroundColor: colors.placeholder },
-              animatedPlaceholderStyle,
-            ]}
-          >
-            <Ionicons
-              name="document-text-outline"
-              size={100}
-              color={colors.placeholderIcon}
-            />
-            <Text
+      <ScreenHeader title={t("scanScreen.title")} />
+      <View style={styles.contentContainer}>
+        <View style={styles.content}>
+          {isLoading ? (
+            <LoadingIndicator text={t("scanScreen.processing")} />
+          ) : (
+            <Animated.View
               style={[
-                styles.placeholderText,
-                { color: colors.textPlaceholder },
+                styles.placeholderContainer,
+                { backgroundColor: colors.placeholder },
+                animatedPlaceholderStyle,
               ]}
             >
-              {t("scanScreen.placeholder")}
-            </Text>
-          </Animated.View>
-        )}
+              <Ionicons
+                name="document-text-outline"
+                size={100}
+                color={colors.placeholderIcon}
+              />
+              <Text
+                style={[
+                  styles.placeholderText,
+                  { color: colors.textPlaceholder },
+                ]}
+              >
+                {t("scanScreen.placeholder")}
+              </Text>
+            </Animated.View>
+          )}
 
-        <View style={styles.buttonContainer}>
-          <AnimatedPressable
-            style={[styles.button, { backgroundColor: colors.accent }]}
-            onPress={handleKameraPress}
-            disabled={isLoading}
-            accessibilityLabel={
-              t("scanScreen.camera") + t("general.accessibility.buttonSuffix")
-            }
-            accessibilityHint={t("scanScreen.accessibility.cameraHint")}
-            accessibilityRole="button"
-          >
-            <Ionicons name="camera" size={32} color={colors.white} />
-            <Text style={[styles.buttonText, { color: colors.buttonText }]}>
-              {t("scanScreen.camera")}
-            </Text>
-          </AnimatedPressable>
+          <View style={styles.buttonContainer}>
+            <AnimatedPressable
+              style={[styles.button, { backgroundColor: colors.accent }]}
+              onPress={handleKameraPress}
+              disabled={isLoading}
+              accessibilityLabel={
+                t("scanScreen.camera") + t("general.accessibility.buttonSuffix")
+              }
+              accessibilityHint={t("scanScreen.accessibility.cameraHint")}
+              accessibilityRole="button"
+            >
+              <Ionicons name="camera" size={32} color={colors.white} />
+              <Text style={[styles.buttonText, { color: colors.buttonText }]}>
+                {t("scanScreen.camera")}
+              </Text>
+            </AnimatedPressable>
 
-          <AnimatedPressable
-            style={[styles.button, { backgroundColor: colors.secondary }]}
-            onPress={handleUnggahPress}
-            disabled={isLoading}
-            accessibilityLabel={
-              t("scanScreen.upload") + t("general.accessibility.buttonSuffix")
-            }
-            accessibilityHint={t("scanScreen.accessibility.uploadHint")}
-            accessibilityRole="button"
-          >
-            <Ionicons name="cloud-upload" size={32} color={colors.white} />
-            <Text style={[styles.buttonText, { color: colors.buttonText }]}>
-              {t("scanScreen.upload")}
-            </Text>
-          </AnimatedPressable>
+            <AnimatedPressable
+              style={[styles.button, { backgroundColor: colors.secondary }]}
+              onPress={handleUnggahPress}
+              disabled={isLoading}
+              accessibilityLabel={
+                t("scanScreen.upload") + t("general.accessibility.buttonSuffix")
+              }
+              accessibilityHint={t("scanScreen.accessibility.uploadHint")}
+              accessibilityRole="button"
+            >
+              <Ionicons name="cloud-upload" size={32} color={colors.white} />
+              <Text style={[styles.buttonText, { color: colors.buttonText }]}>
+                {t("scanScreen.upload")}
+              </Text>
+            </AnimatedPressable>
+          </View>
         </View>
       </View>
     </SafeAreaView>
@@ -189,21 +171,8 @@ const ScanScreen: React.FC<ScanScreenProps> = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingHorizontal: 16,
-    paddingTop: 50,
-    paddingBottom: 16,
-    borderBottomWidth: 1,
-  },
-  backButton: {
-    marginRight: 16,
-    padding: 8,
-  },
-  headerTitle: {
-    fontSize: 20,
-    fontWeight: "600",
+  contentContainer: {
+    flex: 1,
   },
   content: {
     flex: 1,
@@ -216,6 +185,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     width: "100%",
     borderRadius: 16,
+    marginBottom: 20,
   },
   placeholderText: {
     marginTop: 10,
@@ -223,7 +193,6 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     width: "100%",
-    paddingTop: 20,
   },
   button: {
     width: "100%",

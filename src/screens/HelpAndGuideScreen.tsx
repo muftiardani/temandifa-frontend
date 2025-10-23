@@ -1,17 +1,10 @@
 import React from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  SafeAreaView,
-  ScrollView,
-} from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import { View, Text, StyleSheet, SafeAreaView, ScrollView } from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useTranslation } from "react-i18next";
 import { RootStackParamList } from "../types/navigation";
 import { useAppTheme } from "../hooks/useAppTheme";
+import ScreenHeader from "../components/common/ScreenHeader";
 
 type HelpAndGuideScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -26,23 +19,8 @@ const HelpAndGuideScreen: React.FC<HelpAndGuideScreenProps> = ({
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
-      <View style={styles.container}>
-        <View style={[styles.header, { borderBottomColor: colors.border }]}>
-          <TouchableOpacity
-            onPress={() => navigation.goBack()}
-            style={styles.backButton}
-            accessibilityLabel={
-              t("general.back") + t("general.accessibility.buttonSuffix")
-            }
-            accessibilityRole="button"
-          >
-            <Ionicons name="chevron-back" size={24} color={colors.text} />
-          </TouchableOpacity>
-          <Text style={[styles.headerTitle, { color: colors.headerText }]}>
-            {t("settings.helpAndGuide")}
-          </Text>
-        </View>
-
+      <ScreenHeader title={t("settings.helpAndGuide")} />
+      <View style={styles.contentContainer}>
         <ScrollView style={styles.content}>
           <Text style={[styles.title, { color: colors.primary }]}>
             {t("helpAndGuide.title")}
@@ -94,22 +72,8 @@ const HelpAndGuideScreen: React.FC<HelpAndGuideScreenProps> = ({
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1 },
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingHorizontal: 16,
-    paddingTop: 50,
-    paddingBottom: 16,
-    borderBottomWidth: 1,
-  },
-  backButton: {
-    marginRight: 16,
-    padding: 8,
-  },
-  headerTitle: {
-    fontSize: 20,
-    fontWeight: "600",
+  contentContainer: {
+    flex: 1,
   },
   content: {
     flex: 1,
