@@ -5,7 +5,7 @@ import * as Speech from "expo-speech";
 import { useIsFocused } from "@react-navigation/native";
 import { useTranslation } from "react-i18next";
 
-import { useCameraStore } from "../store/cameraStore";
+import { useCameraStore, DetectionResult } from "../store/cameraStore";
 import { apiService } from "../services/apiService";
 import { useAppStore } from "../store/appStore";
 
@@ -28,7 +28,7 @@ export const useCameraDetection = () => {
   const language = useAppStore((state) => state.language);
 
   const speakTopObject = useCallback(
-    (detectedObjects: any[]) => {
+    (detectedObjects: DetectionResult[]) => {
       if (detectedObjects.length > 0) {
         const topObject = detectedObjects.sort(
           (a, b) => b.confidence - a.confidence
@@ -66,8 +66,8 @@ export const useCameraDetection = () => {
           setDetections(result);
           speakTopObject(result);
         }
-      } catch (error: any) {
-        console.error("Gagal mendeteksi objek:", error.message);
+      } catch (error: unknown) {
+        console.error("Gagal mendeteksi objek:", (error as Error).message);
       } finally {
         setIsProcessing(false);
       }
@@ -78,19 +78,33 @@ export const useCameraDetection = () => {
     let intervalId: NodeJS.Timeout | null = null;
 
     const startInterval = () => {
-      if (!intervalId)
-        intervalId = setInterval(() => takePictureAndDetect(), 2500);
+      if (!intervalId) {
+        intervalId = setInterval(() => {
+          if (permission?.granted && isFocused) {
+            takePictureAndDetect();
+          } else {
+            stopInterval();
+          }
+        }, 2500);
+      }
     };
+
     const stopInterval = () => {
       if (intervalId) {
         clearInterval(intervalId);
         intervalId = null;
       }
+      Speech.stop();
+      lastSpokenRef.current = { name: null, time: 0 };
     };
+
     const handleAppStateChange = (nextAppState: AppStateStatus) => {
       if (isFocused && permission?.granted) {
-        if (nextAppState === "active") startInterval();
-        else stopInterval();
+        if (nextAppState === "active") {
+          startInterval();
+        } else {
+          stopInterval();
+        }
       }
     };
 
@@ -98,14 +112,17 @@ export const useCameraDetection = () => {
       "change",
       handleAppStateChange
     );
-    if (isFocused && permission?.granted) startInterval();
+
+    if (isFocused && permission?.granted) {
+      startInterval();
+    }
 
     return () => {
       stopInterval();
       appStateSubscription.remove();
       clearDetections();
     };
-  }, [isFocused, permission, takePictureAndDetect, clearDetections]);
+  }, [isFocused, permission?.granted, takePictureAndDetect, clearDetections]);
 
   return {
     permission,

@@ -40,16 +40,19 @@ const SessionManagementScreen: React.FC<Props> = ({ navigation }) => {
       setIsLoading(true);
       const data = await authService.getSessions();
       setSessions(data);
-    } catch (error: any) {
+    } catch (error: unknown) {
       const errorMessage =
-        error.message === "networkError"
+        error instanceof Error && error.message === "networkError"
           ? t("general.networkError")
-          : error.message || t("general.genericError");
+          : error instanceof Error && error.message
+          ? error.message
+          : t("general.genericError");
       Toast.show({
         type: "error",
         text1: t("general.failure"),
         text2: errorMessage,
       });
+      console.error("Gagal mengambil sesi:", error);
     } finally {
       setIsLoading(false);
     }
@@ -71,6 +74,7 @@ const SessionManagementScreen: React.FC<Props> = ({ navigation }) => {
           text: t("dialogs.delete"),
           style: "destructive",
           onPress: async () => {
+            setIsLoading(true);
             try {
               await authService.revokeSession(sessionId);
               Toast.show({
@@ -79,16 +83,21 @@ const SessionManagementScreen: React.FC<Props> = ({ navigation }) => {
                 text2: t("sessionManagement.deleteSuccess"),
               });
               fetchSessions();
-            } catch (error: any) {
+            } catch (error: unknown) {
               const errorMessage =
-                error.message === "networkError"
+                error instanceof Error && error.message === "networkError"
                   ? t("general.networkError")
-                  : error.message || t("general.genericError");
+                  : error instanceof Error && error.message
+                  ? error.message
+                  : t("general.genericError");
               Toast.show({
                 type: "error",
                 text1: t("general.failure"),
                 text2: errorMessage,
               });
+              console.error("Gagal menghapus sesi:", error);
+            } finally {
+              setIsLoading(false);
             }
           },
         },
@@ -109,10 +118,11 @@ const SessionManagementScreen: React.FC<Props> = ({ navigation }) => {
         color={colors.primary}
       />
       <View style={styles.itemDetails}>
-        <Text style={[styles.itemUserAgent, { color: colors.text }]}>
-          {item.isCurrent
-            ? t("sessionManagement.thisDevice")
-            : item.userAgent.substring(0, 30) + "..."}
+        <Text
+          style={[styles.itemUserAgent, { color: colors.text }]}
+          numberOfLines={1}
+        >
+          {item.isCurrent ? t("sessionManagement.thisDevice") : item.userAgent}
         </Text>
         <Text style={[styles.itemInfo, { color: colors.grey }]}>
           {t("sessionManagement.ipLabel")}: {item.ip}
@@ -125,9 +135,14 @@ const SessionManagementScreen: React.FC<Props> = ({ navigation }) => {
       <TouchableOpacity
         onPress={() => handleRevokeSession(item.id, item.isCurrent)}
         accessibilityLabel={
-          t("auth.logout") + t("general.accessibility.buttonSuffix")
+          `${t("dialogs.delete")} ${
+            item.isCurrent
+              ? t("sessionManagement.thisDevice")
+              : t("sessionManagement.title")
+          } (${item.ip})` + t("general.accessibility.buttonSuffix")
         }
         accessibilityRole="button"
+        style={styles.deleteButton}
       >
         <Ionicons name="log-out-outline" size={24} color={colors.danger} />
       </TouchableOpacity>
@@ -138,11 +153,12 @@ const SessionManagementScreen: React.FC<Props> = ({ navigation }) => {
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
       <ScreenHeader title={t("sessionManagement.title")} />
       <View style={styles.contentContainer}>
-        {isLoading ? (
+        {isLoading && sessions.length === 0 ? (
           <ActivityIndicator
             style={{ marginTop: 20 }}
             size="large"
             color={colors.primary}
+            accessibilityLabel={t("navigation.loading")}
           />
         ) : (
           <FlatList
@@ -152,16 +168,20 @@ const SessionManagementScreen: React.FC<Props> = ({ navigation }) => {
             contentContainerStyle={styles.listContainer}
             initialNumToRender={10}
             windowSize={5}
+            refreshing={isLoading}
+            onRefresh={fetchSessions}
             ListEmptyComponent={
-              <Text
-                style={{
-                  textAlign: "center",
-                  color: colors.grey,
-                  marginTop: 20,
-                }}
-              >
-                {t("sessionManagement.noSessions")}
-              </Text>
+              !isLoading ? (
+                <Text
+                  style={{
+                    textAlign: "center",
+                    color: colors.grey,
+                    marginTop: 20,
+                  }}
+                >
+                  {t("sessionManagement.noSessions")}
+                </Text>
+              ) : null
             }
           />
         )}
@@ -187,15 +207,19 @@ const styles = StyleSheet.create({
   },
   itemDetails: {
     flex: 1,
-    marginLeft: 16,
+    marginHorizontal: 16,
   },
   itemUserAgent: {
     fontSize: 16,
     fontWeight: "600",
+    marginBottom: 4,
   },
   itemInfo: {
     fontSize: 12,
-    marginTop: 4,
+    marginTop: 2,
+  },
+  deleteButton: {
+    padding: 8,
   },
 });
 

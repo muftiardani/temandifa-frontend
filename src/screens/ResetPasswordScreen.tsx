@@ -49,22 +49,26 @@ const ResetPasswordScreen: React.FC<Props> = ({ route, navigation }) => {
       });
       return;
     }
+
     setIsLoading(true);
     try {
       await authService.resetPassword(token, password);
       Alert.alert(t("general.success"), t("resetPassword.successMessage"), [
         { text: t("dialogs.ok"), onPress: () => navigation.navigate("Login") },
       ]);
-    } catch (error: any) {
+    } catch (error: unknown) {
       const errorMessage =
-        error.message === "networkError"
+        error instanceof Error && error.message === "networkError"
           ? t("general.networkError")
-          : error.message || t("general.genericError");
+          : error instanceof Error && error.message
+          ? error.message
+          : t("general.genericError");
       Toast.show({
         type: "error",
         text1: t("general.failure"),
         text2: errorMessage,
       });
+      console.error("Gagal reset password:", error);
     } finally {
       setIsLoading(false);
     }
@@ -81,6 +85,7 @@ const ResetPasswordScreen: React.FC<Props> = ({ route, navigation }) => {
             onPress={() => navigation.navigate("Login")}
             style={styles.backButton}
             accessibilityLabel={t("resetPassword.backToLoginHint")}
+            accessibilityRole="button"
           >
             <Ionicons name="arrow-back" size={24} color={colors.text} />
           </TouchableOpacity>
@@ -140,10 +145,11 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     justifyContent: "center",
     padding: 20,
+    paddingTop: 80,
   },
   backButton: {
     position: "absolute",
-    top: 60,
+    top: Platform.OS === "ios" ? 60 : 20,
     left: 20,
     zIndex: 1,
     padding: 10,

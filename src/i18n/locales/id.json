@@ -41,7 +41,8 @@
     "accessibility": {
       "skipHint": "Lewati perkenalan dan langsung masuk ke aplikasi.",
       "nextHint": "Lanjutkan ke halaman perkenalan berikutnya.",
-      "getStartedHint": "Selesaikan perkenalan dan mulai gunakan aplikasi."
+      "getStartedHint": "Selesaikan perkenalan dan mulai gunakan aplikasi.",
+      "pageIndicator": "Halaman {{currentPage}} dari {{totalPages}}"
     }
   },
   "permissions": {
@@ -266,7 +267,9 @@
   },
   "agoraVideoCall": {
     "connecting": "Menyambungkan ke panggilan...",
-    "waiting": "Menunggu pengguna lain bergabung..."
+    "waiting": "Menunggu pengguna lain bergabung...",
+    "connectionFailedTitle": "Gagal Terhubung",
+    "connectionFailedMessage": "Tidak dapat terhubung ke server panggilan video setelah beberapa kali percobaan. Periksa koneksi internet Anda."
   },
   "navigation": {
     "loading": "Memuat..."

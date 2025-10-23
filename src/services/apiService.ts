@@ -2,12 +2,16 @@ import { useAuthStore } from "../store/authStore";
 import { Config } from "../config";
 
 let isRefreshing = false;
+type FailedQueuePromise = {
+  resolve: (value: string | null) => void;
+  reject: (reason?: unknown) => void;
+};
 let failedQueue: {
-  resolve: (value: unknown) => void;
-  reject: (reason?: any) => void;
+  resolve: FailedQueuePromise["resolve"];
+  reject: FailedQueuePromise["reject"];
 }[] = [];
 
-const processQueue = (error: any, token: string | null = null) => {
+const processQueue = (error: unknown, token: string | null = null) => {
   failedQueue.forEach((prom) => {
     if (error) {
       prom.reject(error);
@@ -24,7 +28,7 @@ export const fetchWithAuth = async (
 ): Promise<Response> => {
   let { accessToken, refreshAccessToken } = useAuthStore.getState();
 
-  const originalRequest = async (token: string | null) => {
+  const originalRequest = async (token: string | null): Promise<Response> => {
     const headers: Record<string, string> = {
       ...(options.headers as Record<string, string>),
     };
@@ -44,8 +48,11 @@ export const fetchWithAuth = async (
 
     try {
       return await fetch(url, newOptions);
-    } catch (error: any) {
-      if (error.message === "Network request failed") {
+    } catch (error: unknown) {
+      if (
+        error instanceof Error &&
+        error.message === "Network request failed"
+      ) {
         throw new Error("networkError");
       }
       throw error;
@@ -56,10 +63,10 @@ export const fetchWithAuth = async (
 
   if (response.status === 401) {
     if (isRefreshing) {
-      return new Promise((resolve, reject) => {
+      return new Promise<string | null>((resolve, reject) => {
         failedQueue.push({ resolve, reject });
-      }).then((token) => {
-        return originalRequest(token as string);
+      }).then((refreshedToken) => {
+        return originalRequest(refreshedToken);
       });
     }
 
@@ -91,13 +98,16 @@ const postFormDataWithAuth = async (
   uri: string,
   fieldName: string,
   fileType: "image" | "audio"
-) => {
+): Promise<any> => {
   const formData = new FormData();
+
+  const fileName = `${fieldName}.${fileType === "image" ? "jpg" : "m4a"}`;
+  const mimeType = `${fileType}/${fileType === "image" ? "jpeg" : "m4a"}`;
 
   const file = {
     uri,
-    name: `${fieldName}.${fileType === "image" ? "jpg" : "m4a"}`,
-    type: `${fileType}/${fileType === "image" ? "jpeg" : "m4a"}`,
+    name: fileName,
+    type: mimeType,
   } as any;
   formData.append(fieldName, file);
 
@@ -108,7 +118,7 @@ const postFormDataWithAuth = async (
 
   const data = await response.json();
   if (!response.ok) {
-    throw new Error(data.message || "serverError");
+    throw new Error(data?.message || "serverError");
   }
   return data;
 };
@@ -121,7 +131,7 @@ export const apiService = {
   transcribeAudio: (uri: string) =>
     postFormDataWithAuth(Config.api.transcribeUrl, uri, "audio", "audio"),
 
-  updatePushToken: async (token: string) => {
+  updatePushToken: async (token: string): Promise<any> => {
     const response = await fetchWithAuth(
       `${Config.api.baseUrl}/v1/users/pushtoken`,
       {
@@ -131,8 +141,10 @@ export const apiService = {
     );
 
     if (!response.ok) {
-      const data = await response.json();
-      throw new Error(data.message || "Gagal memperbarui push token.");
+      const data = await response
+        .json()
+        .catch(() => ({ message: "Gagal memperbarui push token." }));
+      throw new Error(data?.message || "Gagal memperbarui push token.");
     }
 
     return response.json();

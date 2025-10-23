@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
+import Toast from "react-native-toast-message";
 import { useAppTheme } from "../hooks/useAppTheme";
 import { useCallStore } from "../store/callStore";
 import { callService } from "../services/callService";
@@ -32,15 +33,24 @@ const IncomingCallScreen = () => {
         setCallCredentials(data);
         navigation.replace("VideoCall");
       } else {
-        alert(t("call.answerFailed"));
+        Toast.show({
+          type: "error",
+          text1: t("general.failure"),
+          text2: t("call.answerFailed"),
+        });
         clearCall();
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       const errorMessage =
-        error.message === "networkError"
+        error instanceof Error && error.message === "networkError"
           ? t("general.networkError")
           : t("call.connectionFailed");
-      alert(errorMessage);
+      Toast.show({
+        type: "error",
+        text1: t("general.failure"),
+        text2: errorMessage,
+      });
+      console.error("Gagal menjawab panggilan:", error);
       clearCall();
     }
   };
@@ -50,7 +60,7 @@ const IncomingCallScreen = () => {
     try {
       await callService.end(callId);
     } catch (error) {
-      console.error("Gagal menolak panggilan:", error);
+      console.error("Gagal menolak panggilan via API:", error);
     } finally {
       clearCall();
     }
@@ -71,6 +81,7 @@ const IncomingCallScreen = () => {
           {t("call.temandifaVideoCall")}
         </Text>
       </View>
+
       <View style={styles.buttonContainer}>
         <View style={styles.buttonWrapper}>
           <TouchableOpacity

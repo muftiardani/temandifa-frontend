@@ -146,6 +146,8 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = () => {
               index * width,
               (index + 1) * width,
             ];
+            const isActive = Math.round(scrollX.value / width) === index;
+
             const scale = interpolate(
               scrollX.value,
               inputRange,
@@ -158,7 +160,11 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = () => {
               [0.6, 1, 0.6],
               Extrapolate.CLAMP
             );
-            return { transform: [{ scale }], opacity };
+            return {
+              transform: [{ scale }],
+              opacity,
+              borderWidth: isActive ? 2 : 0,
+            };
           });
           return (
             <Animated.View
@@ -166,8 +172,16 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = () => {
               style={[
                 styles.paginationDot,
                 { backgroundColor: colors.primary },
+                { borderColor: colors.primary },
                 animatedStyle,
               ]}
+              accessibilityLabel={t("onboarding.accessibility.pageIndicator", {
+                currentPage: index + 1,
+                totalPages: onboardingData.length,
+              })}
+              accessibilityState={{
+                selected: Math.round(scrollX.value / width) === index,
+              }}
             />
           );
         })}

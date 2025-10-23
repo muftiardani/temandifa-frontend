@@ -35,10 +35,10 @@ export const useAudioRecorder = () => {
         allowsRecordingIOS: true,
         playsInSilentModeIOS: true,
       });
-      const { recording } = await Audio.Recording.createAsync(
+      const { recording: newRecording } = await Audio.Recording.createAsync(
         Audio.RecordingOptionsPresets.HIGH_QUALITY
       );
-      setRecording(recording);
+      setRecording(newRecording);
       setIsRecording(true);
     } catch (err) {
       console.error("Gagal memulai rekaman", err);
@@ -52,24 +52,27 @@ export const useAudioRecorder = () => {
 
   const stopRecordingAndTranscribe = useCallback(async () => {
     if (!recording) return;
+
     setIsRecording(false);
     setIsProcessing(true);
     try {
       await recording.stopAndUnloadAsync();
       await Audio.setAudioModeAsync({ allowsRecordingIOS: false });
       const uri = recording.getURI();
-      if (!uri) throw new Error("URI rekaman tidak ditemukan.");
+      if (!uri) {
+        throw new Error("URI rekaman tidak ditemukan.");
+      }
       const result = await apiService.transcribeAudio(uri);
       if (result) {
         navigation.navigate("VoiceResult", {
           transcribedText: result.transcribedText,
         });
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       const errorMessage =
-        error.message === "networkError"
+        error instanceof Error && error.message === "networkError"
           ? t("general.networkError")
-          : error.message === "serverError"
+          : error instanceof Error && error.message === "serverError"
           ? t("general.serverError")
           : t("general.genericError");
       Toast.show({
@@ -77,6 +80,7 @@ export const useAudioRecorder = () => {
         text1: t("general.failure"),
         text2: errorMessage,
       });
+      console.error("Gagal menghentikan/transkripsi rekaman:", error);
     } finally {
       setIsProcessing(false);
       setRecording(null);

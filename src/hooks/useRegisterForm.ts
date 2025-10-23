@@ -13,7 +13,7 @@ type RegisterNavigationProp = NativeStackNavigationProp<
   "Register"
 >;
 
-const validateEmail = (email: string) => {
+const validateEmail = (email: string): boolean => {
   const re =
     /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   return re.test(String(email).toLowerCase());
@@ -36,12 +36,12 @@ export const useRegisterForm = () => {
   const [confirmPasswordError, setConfirmPasswordError] = useState("");
   const [isFormValid, setIsFormValid] = useState(false);
 
-  const validatePassword = (password: string) => {
-    if (password.length < 8) return t("auth.passwordMin8Chars");
-    if (!/\d/.test(password)) return t("auth.passwordNeedsNumber");
-    if (!/[a-z]/.test(password)) return t("auth.passwordNeedsLowercase");
-    if (!/[A-Z]/.test(password)) return t("auth.passwordNeedsUppercase");
-    if (!/[!@#$%^&*(),.?":{}|<>]/.test(password))
+  const validatePassword = (passwordInput: string): string => {
+    if (passwordInput.length < 8) return t("auth.passwordMin8Chars");
+    if (!/\d/.test(passwordInput)) return t("auth.passwordNeedsNumber");
+    if (!/[a-z]/.test(passwordInput)) return t("auth.passwordNeedsLowercase");
+    if (!/[A-Z]/.test(passwordInput)) return t("auth.passwordNeedsUppercase");
+    if (!/[!@#$%^&*(),.?":{}|<>]/.test(passwordInput))
       return t("auth.passwordNeedsSymbol");
     return "";
   };
@@ -104,16 +104,19 @@ export const useRegisterForm = () => {
         password,
       });
       await setTokens(accessToken, refreshToken);
-    } catch (error: any) {
+    } catch (error: unknown) {
       const errorMessage =
-        error.message === "networkError"
+        error instanceof Error && error.message === "networkError"
           ? t("general.networkError")
-          : error.message || t("general.genericError");
+          : error instanceof Error && error.message
+          ? error.message
+          : t("general.genericError");
       Toast.show({
         type: "error",
         text1: t("auth.registrationFailed"),
         text2: errorMessage,
       });
+      console.error("Registrasi gagal:", error);
     } finally {
       setIsLoading(false);
     }

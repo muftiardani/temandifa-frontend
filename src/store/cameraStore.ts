@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-interface DetectionResult {
+export interface DetectionResult {
   bbox: [number, number, number, number];
   class: string;
   confidence: number;

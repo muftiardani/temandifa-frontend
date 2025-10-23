@@ -13,10 +13,11 @@ import Toast from "react-native-toast-message";
 import { useAppTheme } from "../hooks/useAppTheme";
 import { useCallStore } from "../store/callStore";
 import { callService } from "../services/callService";
+import { AppNavigationProp } from "../types/navigation";
 
 const OutgoingCallScreen = () => {
   const { colors } = useAppTheme();
-  const navigation = useNavigation();
+  const navigation = useNavigation<AppNavigationProp>();
   const { callId, clearCall } = useCallStore();
   const { t } = useTranslation();
 
@@ -34,17 +35,19 @@ const OutgoingCallScreen = () => {
     if (!callId) return;
     try {
       await callService.end(callId);
-    } catch (error: any) {
+    } catch (error: unknown) {
       const errorMessage =
-        error.message === "networkError"
+        error instanceof Error && error.message === "networkError"
           ? t("general.networkError")
-          : error.message || t("general.genericError");
+          : error instanceof Error && error.message
+          ? error.message
+          : t("general.genericError");
       Toast.show({
         type: "error",
         text1: t("general.failure"),
         text2: errorMessage,
       });
-      console.error("Gagal membatalkan panggilan:", error);
+      console.error("Gagal membatalkan panggilan via API:", error);
     } finally {
       clearCall();
     }
@@ -58,7 +61,11 @@ const OutgoingCallScreen = () => {
       ]}
     >
       <View style={styles.infoContainer}>
-        <ActivityIndicator size="large" color={colors.white} />
+        <ActivityIndicator
+          size="large"
+          color={colors.white}
+          accessibilityLabel={t("call.calling")}
+        />
         <Text style={[styles.statusText, { color: colors.white }]}>
           {t("call.calling")}
         </Text>
@@ -66,6 +73,7 @@ const OutgoingCallScreen = () => {
           {t("call.waitingForAnswer")}
         </Text>
       </View>
+
       <TouchableOpacity
         onPress={handleCancelCall}
         style={[styles.button, { backgroundColor: colors.danger }]}

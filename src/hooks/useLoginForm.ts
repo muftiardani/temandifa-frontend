@@ -55,16 +55,19 @@ export const useLoginForm = () => {
         googleAccessToken
       );
       await setTokens(accessToken, refreshToken, true);
-    } catch (error: any) {
+    } catch (error: unknown) {
       const errorMessage =
-        error.message === "networkError"
+        error instanceof Error && error.message === "networkError"
           ? t("general.networkError")
-          : error.message || t("general.genericError");
+          : error instanceof Error && error.message
+          ? error.message
+          : t("general.genericError");
       Toast.show({
         type: "error",
         text1: t("auth.loginFailed"),
         text2: errorMessage,
       });
+      console.error("Login Google gagal:", error);
     } finally {
       setIsLoading(false);
     }
@@ -82,6 +85,7 @@ export const useLoginForm = () => {
         text1: t("auth.googleLoginFailed"),
         text2: t("auth.googleLoginError"),
       });
+      console.error("Google Auth Response Error:", response.error);
     }
   }, [response, t]);
 
@@ -107,6 +111,7 @@ export const useLoginForm = () => {
         text1: t("general.error"),
         text2: t("auth.biometricAuthFailed"),
       });
+      console.error("Biometric login gagal:", error);
       setIsLoading(false);
     }
   };
@@ -127,16 +132,19 @@ export const useLoginForm = () => {
         password
       );
       await setTokens(accessToken, refreshToken, rememberMe);
-    } catch (error: any) {
+    } catch (error: unknown) {
       const errorMessage =
-        error.message === "networkError"
+        error instanceof Error && error.message === "networkError"
           ? t("general.networkError")
-          : error.message || t("general.genericError");
+          : error instanceof Error && error.message
+          ? error.message
+          : t("general.genericError");
       Toast.show({
         type: "error",
         text1: t("auth.loginFailed"),
         text2: errorMessage,
       });
+      console.error("Login gagal:", error);
     } finally {
       setIsLoading(false);
     }

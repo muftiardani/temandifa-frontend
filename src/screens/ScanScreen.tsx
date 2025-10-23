@@ -83,11 +83,11 @@ const ScanScreen: React.FC<ScanScreenProps> = ({ navigation }) => {
       if (data) {
         navigation.navigate("ScanResult", { scannedText: data.scannedText });
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       const errorMessage =
-        error.message === "networkError"
+        error instanceof Error && error.message === "networkError"
           ? t("general.networkError")
-          : error.message === "serverError"
+          : error instanceof Error && error.message === "serverError"
           ? t("general.serverError")
           : t("general.genericError");
       Toast.show({
@@ -95,6 +95,7 @@ const ScanScreen: React.FC<ScanScreenProps> = ({ navigation }) => {
         text1: t("general.failure"),
         text2: errorMessage,
       });
+      console.error("Gagal memindai gambar:", error);
     } finally {
       setIsLoading(false);
     }

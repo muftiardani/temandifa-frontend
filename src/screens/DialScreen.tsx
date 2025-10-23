@@ -55,16 +55,19 @@ const DialScreen = () => {
         setOutgoingCall(data);
         navigation.replace("OutgoingCall");
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       const errorMessage =
-        error.message === "networkError"
+        error instanceof Error && error.message === "networkError"
           ? t("general.networkError")
-          : error.message || t("general.genericError");
+          : error instanceof Error && error.message
+          ? error.message
+          : t("general.genericError");
       Toast.show({
         type: "error",
         text1: t("general.failure"),
         text2: errorMessage,
       });
+      console.error("Gagal memulai panggilan:", error);
     } finally {
       setIsLoading(false);
     }
@@ -169,8 +172,9 @@ const styles = StyleSheet.create({
     padding: 20,
     alignItems: "center",
     borderBottomWidth: 1,
+    marginBottom: 10,
   },
-  title: { fontSize: 24, fontWeight: "bold", marginBottom: 20 },
+  title: { fontSize: 20, fontWeight: "600", marginBottom: 20 },
   input: {
     width: "100%",
     borderWidth: 1,

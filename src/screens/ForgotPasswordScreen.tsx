@@ -78,7 +78,11 @@ const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({
     >
       <ScrollView contentContainerStyle={styles.container}>
         <View style={styles.header}>
-          <Image source={LOGO} style={styles.logo} />
+          <Image
+            source={LOGO}
+            style={styles.logo}
+            accessibilityLabel={t("settings.appName")}
+          />
           <Text style={[styles.title, { color: colors.text }]}>
             {t("auth.forgotPasswordTitle")}
           </Text>

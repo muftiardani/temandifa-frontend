@@ -47,7 +47,11 @@ const LoginScreen: React.FC = () => {
     >
       <ScrollView contentContainerStyle={styles.container}>
         <View style={styles.header}>
-          <Image source={LOGO} style={styles.logo} />
+          <Image
+            source={LOGO}
+            style={styles.logo}
+            accessibilityLabel={t("settings.appName")}
+          />
           <Text style={[styles.title, { color: colors.text }]}>
             {t("auth.welcomeBack")}
           </Text>
@@ -185,7 +189,11 @@ const LoginScreen: React.FC = () => {
           accessibilityHint={t("auth.accessibility.registerHint")}
         >
           <Text style={[styles.footerText, { color: colors.grey }]}>
-            {t("auth.haveAccount")}{" "}
+            {
+              t(
+                "auth.noAccount"
+              )
+            }{" "}
             <Text style={{ color: colors.primary, fontWeight: "bold" }}>
               {t("auth.register")}
             </Text>

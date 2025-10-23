@@ -7,6 +7,7 @@ import Animated, {
   Easing,
   runOnJS,
 } from "react-native-reanimated";
+import { useTranslation } from "react-i18next";
 import { AnimationDurations } from "../constants/animations";
 import { useAppTheme } from "../hooks/useAppTheme";
 
@@ -22,6 +23,7 @@ const AnimatedSplashScreen: React.FC<Props> = ({
   onReady,
 }) => {
   const { colors } = useAppTheme();
+  const { t } = useTranslation();
   const scale = useSharedValue(1);
   const opacity = useSharedValue(1);
 
@@ -48,7 +50,7 @@ const AnimatedSplashScreen: React.FC<Props> = ({
         }
       }
     );
-  }, [onAnimationComplete]);
+  }, [onAnimationComplete, scale, opacity]);
 
   return (
     <View
@@ -59,6 +61,7 @@ const AnimatedSplashScreen: React.FC<Props> = ({
         source={SPLASH_ICON}
         style={[styles.image, animatedStyle]}
         resizeMode="contain"
+        accessibilityLabel={t("settings.appName")}
       />
     </View>
   );

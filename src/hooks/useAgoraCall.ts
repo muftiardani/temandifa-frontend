@@ -1,6 +1,7 @@
 import { useRef, useState, useEffect, useCallback } from "react";
 import { Platform, PermissionsAndroid, Alert } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import { useTranslation } from "react-i18next";
 import {
   ClientRoleType,
   createAgoraRtcEngine,
@@ -18,6 +19,7 @@ const RETRY_DELAY = 2000;
 export const useAgoraCall = () => {
   const navigation = useNavigation();
   const agoraEngineRef = useRef<IRtcEngine | null>(null);
+  const { t } = useTranslation();
 
   const { channelName, token, uid, callId, clearCall } = useCallStore();
 
@@ -49,6 +51,22 @@ export const useAgoraCall = () => {
       console.error("Error saat meninggalkan channel:", e);
     }
   }, []);
+
+  const handleLeave = useCallback(async () => {
+    leave();
+    const currentCallId = useCallStore.getState().callId;
+    if (currentCallId) {
+      try {
+        await callService.end(currentCallId);
+      } catch (error) {
+        console.error("Gagal mengakhiri panggilan via API:", error);
+      }
+    }
+    clearCall();
+    if (navigation.canGoBack()) {
+      navigation.goBack();
+    }
+  }, [leave, clearCall, navigation]);
 
   useEffect(() => {
     if (!channelName || !token || !uid) {
@@ -89,13 +107,13 @@ export const useAgoraCall = () => {
         });
 
         engine.enableDualStreamMode(true);
-
         engine.setRemoteSubscribeFallbackOption(
           StreamFallbackOptions.StreamFallbackOptionVideoStreamLow
         );
 
         engine.enableVideo();
         await engine.startPreview();
+
         await engine.joinChannel(token, channelName, uid, {
           clientRoleType: ClientRoleType.ClientRoleBroadcaster,
         });
@@ -118,8 +136,8 @@ export const useAgoraCall = () => {
           setTimeout(() => setupAndJoin(retries + 1), delay);
         } else {
           Alert.alert(
-            "Gagal Terhubung",
-            "Tidak dapat terhubung ke server panggilan video setelah beberapa kali percobaan. Periksa koneksi internet Anda."
+            t("agoraVideoCall.connectionFailedTitle"),
+            t("agoraVideoCall.connectionFailedMessage")
           );
           handleLeave();
         }
@@ -131,26 +149,12 @@ export const useAgoraCall = () => {
     return () => {
       leave();
     };
-  }, [channelName, token, uid]);
-
-  const handleLeave = async () => {
-    leave();
-    if (callId) {
-      try {
-        await callService.end(callId);
-      } catch (error) {
-        console.error("Gagal mengakhiri panggilan via API:", error);
-      }
-    }
-    clearCall();
-    if (navigation.canGoBack()) {
-      navigation.goBack();
-    }
-  };
+  }, [channelName, token, uid, t, leave, handleLeave]);
 
   const toggleMute = async () => {
+    if (!agoraEngineRef.current) return;
     try {
-      await agoraEngineRef.current?.muteLocalAudioStream(!isMuted);
+      await agoraEngineRef.current.muteLocalAudioStream(!isMuted);
       setIsMuted(!isMuted);
     } catch (e) {
       console.error("Gagal mengubah status mute:", e);
@@ -158,9 +162,15 @@ export const useAgoraCall = () => {
   };
 
   const toggleCamera = async () => {
+    if (!agoraEngineRef.current) return;
     try {
       const newCameraState = !isCameraOff;
-      await agoraEngineRef.current?.muteLocalVideoStream(newCameraState);
+      await agoraEngineRef.current.muteLocalVideoStream(newCameraState);
+      if (!newCameraState) {
+        await agoraEngineRef.current.startPreview();
+      } else {
+        await agoraEngineRef.current.stopPreview();
+      }
       setIsCameraOff(newCameraState);
     } catch (e) {
       console.error("Gagal mengubah status kamera:", e);
@@ -168,8 +178,9 @@ export const useAgoraCall = () => {
   };
 
   const switchCamera = async () => {
+    if (!agoraEngineRef.current) return;
     try {
-      await agoraEngineRef.current?.switchCamera();
+      await agoraEngineRef.current.switchCamera();
     } catch (e) {
       console.error("Gagal mengganti kamera:", e);
     }

@@ -28,11 +28,21 @@ export const useEmergencyContacts = () => {
   useEffect(() => {
     const loadContacts = async () => {
       setIsFetching(true);
-      await fetchContacts();
-      setIsFetching(false);
+      try {
+        await fetchContacts();
+      } catch (error) {
+        console.error("Gagal memuat kontak awal:", error);
+        Toast.show({
+          type: "error",
+          text1: t("dialogs.failed"),
+          text2: t("general.genericError"),
+        });
+      } finally {
+        setIsFetching(false);
+      }
     };
     loadContacts();
-  }, [fetchContacts]);
+  }, [fetchContacts, t]);
 
   const handleSelectContactForEdit = (contact: EmergencyContact) => {
     setEditingContactId(contact._id);
@@ -75,16 +85,19 @@ export const useEmergencyContacts = () => {
       }
       LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
       handleCancelEdit();
-    } catch (error: any) {
+    } catch (error: unknown) {
       const errorMessage =
-        error.message === "networkError"
+        error instanceof Error && error.message === "networkError"
           ? t("general.networkError")
-          : error.message || t("general.genericError");
+          : error instanceof Error && error.message
+          ? error.message
+          : t("general.genericError");
       Toast.show({
         type: "error",
         text1: t("dialogs.failed"),
         text2: errorMessage,
       });
+      console.error("Gagal menambah/memperbarui kontak:", error);
     } finally {
       setIsLoading(false);
     }
@@ -100,6 +113,7 @@ export const useEmergencyContacts = () => {
           text: t("dialogs.delete"),
           style: "destructive",
           onPress: async () => {
+            setIsLoading(true);
             try {
               await removeContact(id);
               LayoutAnimation.configureNext(
@@ -110,16 +124,21 @@ export const useEmergencyContacts = () => {
                 text1: t("general.success"),
                 text2: t("contacts.deleteSuccess"),
               });
-            } catch (error: any) {
+            } catch (error: unknown) {
               const errorMessage =
-                error.message === "networkError"
+                error instanceof Error && error.message === "networkError"
                   ? t("general.networkError")
-                  : error.message || t("contacts.deleteFailed");
+                  : error instanceof Error && error.message
+                  ? error.message
+                  : t("contacts.deleteFailed");
               Toast.show({
                 type: "error",
                 text1: t("dialogs.failed"),
                 text2: errorMessage,
               });
+              console.error("Gagal menghapus kontak:", error);
+            } finally {
+              setIsLoading(false);
             }
           },
         },

@@ -41,7 +41,8 @@
     "accessibility": {
       "skipHint": "Skips the introduction and goes straight to the app.",
       "nextHint": "Proceeds to the next introduction page.",
-      "getStartedHint": "Finishes the introduction and starts using the app."
+      "getStartedHint": "Finishes the introduction and starts using the app.",
+      "pageIndicator": "Page {{currentPage}} of {{totalPages}}"
     }
   },
   "permissions": {
@@ -266,7 +267,9 @@
   },
   "agoraVideoCall": {
     "connecting": "Connecting to call...",
-    "waiting": "Waiting for other user to join..."
+    "waiting": "Waiting for other user to join...",
+    "connectionFailedTitle": "Connection Failed",
+    "connectionFailedMessage": "Unable to connect to the video call server after several attempts. Please check your internet connection."
   },
   "navigation": {
     "loading": "Loading..."
