@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { View, StyleSheet, Text, ActivityIndicator } from "react-native";
+import { View, StyleSheet, Text } from "react-native";
 import DocumentScanner from "react-native-document-scanner-plugin";
 import * as Speech from "expo-speech";
 import { useNavigation, useIsFocused } from "@react-navigation/native";
@@ -59,6 +59,8 @@ export default function DocumentScannerScreen() {
       const result = await apiService.scanImage(imageUri);
       if (result) {
         navigation.replace("ScanResult", { scannedText: result.scannedText });
+      } else {
+        navigation.goBack();
       }
     } catch (error: any) {
       const errorMessage =
@@ -78,7 +80,6 @@ export default function DocumentScannerScreen() {
 
   return (
     <View style={[styles.container, { backgroundColor: colors.overlay }]}>
-      <ActivityIndicator size="large" color={colors.primary} />
       <Text style={[styles.statusText, { color: colors.white }]}>
         {isLoading
           ? t("scanResult.imageProcessing")
@@ -95,7 +96,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   statusText: {
-    marginTop: 20,
     fontSize: 16,
   },
 });

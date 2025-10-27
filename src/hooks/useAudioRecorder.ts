@@ -6,14 +6,15 @@ import { useNavigation } from "@react-navigation/native";
 import { useTranslation } from "react-i18next";
 import { AppNavigationProp } from "../types/navigation";
 import { apiService } from "../services/apiService";
+import { useAppStore } from "../store/appStore";
 
 export const useAudioRecorder = () => {
   const [recording, setRecording] = useState<Audio.Recording | null>(null);
   const [isRecording, setIsRecording] = useState(false);
-  const [isProcessing, setIsProcessing] = useState(false);
   const [permissionResponse, requestPermission] = Audio.usePermissions();
   const navigation = useNavigation<AppNavigationProp>();
   const { t } = useTranslation();
+  const setIsLoading = useAppStore((state) => state.setIsLoading);
 
   const startRecording = useCallback(async () => {
     try {
@@ -54,7 +55,7 @@ export const useAudioRecorder = () => {
     if (!recording) return;
 
     setIsRecording(false);
-    setIsProcessing(true);
+    setIsLoading(true);
     try {
       await recording.stopAndUnloadAsync();
       await Audio.setAudioModeAsync({ allowsRecordingIOS: false });
@@ -82,14 +83,13 @@ export const useAudioRecorder = () => {
       });
       console.error("Gagal menghentikan/transkripsi rekaman:", error);
     } finally {
-      setIsProcessing(false);
+      setIsLoading(false);
       setRecording(null);
     }
-  }, [recording, navigation, t]);
+  }, [recording, navigation, t, setIsLoading]);
 
   return {
     isRecording,
-    isProcessing,
     startRecording,
     stopRecordingAndTranscribe,
   };

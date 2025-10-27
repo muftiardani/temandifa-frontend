@@ -15,7 +15,6 @@ import Animated, {
 import { useTranslation } from "react-i18next";
 import { RootStackParamList } from "../types/navigation";
 import { apiService } from "../services/apiService";
-import LoadingIndicator from "../components/common/LoadingIndicator";
 import { useAppTheme } from "../hooks/useAppTheme";
 import { AnimationDurations } from "../constants/animations";
 import AnimatedPressable from "../components/common/AnimatedPressable";
@@ -106,31 +105,27 @@ const ScanScreen: React.FC<ScanScreenProps> = ({ navigation }) => {
       <ScreenHeader title={t("scanScreen.title")} />
       <View style={styles.contentContainer}>
         <View style={styles.content}>
-          {isLoading ? (
-            <LoadingIndicator text={t("scanScreen.processing")} />
-          ) : (
-            <Animated.View
+          <Animated.View
+            style={[
+              styles.placeholderContainer,
+              { backgroundColor: colors.placeholder },
+              animatedPlaceholderStyle,
+            ]}
+          >
+            <Ionicons
+              name="document-text-outline"
+              size={100}
+              color={colors.placeholderIcon}
+            />
+            <Text
               style={[
-                styles.placeholderContainer,
-                { backgroundColor: colors.placeholder },
-                animatedPlaceholderStyle,
+                styles.placeholderText,
+                { color: colors.textPlaceholder },
               ]}
             >
-              <Ionicons
-                name="document-text-outline"
-                size={100}
-                color={colors.placeholderIcon}
-              />
-              <Text
-                style={[
-                  styles.placeholderText,
-                  { color: colors.textPlaceholder },
-                ]}
-              >
-                {t("scanScreen.placeholder")}
-              </Text>
-            </Animated.View>
-          )}
+              {t("scanScreen.placeholder")}
+            </Text>
+          </Animated.View>
 
           <View style={styles.buttonContainer}>
             <AnimatedPressable
