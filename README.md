@@ -26,7 +26,7 @@ Selamat datang di repositori *frontend* untuk aplikasi seluler **TemanDifa**. Ap
 
 ## 🚀 Memulai
 
-Pastikan Anda sudah menyiapkan [TemanDifa Backend](https://github.com/muftiardani/temandifa-backend) dan menjalankannya.
+Pastikan sudah menyiapkan [TemanDifa Backend](https://github.com/muftiardani/temandifa-backend) dan menjalankannya.
 
 1.  **Clone repositori ini:**
 
@@ -46,18 +46,18 @@ Pastikan Anda sudah menyiapkan [TemanDifa Backend](https://github.com/muftiardan
 
     ```env
     # URL base dari backend TemanDifa
-    EXPO_PUBLIC_API_BASE_URL=http://<IP_ADDRESS_LOCAL_ANDA>:3000/api
+    EXPO_PUBLIC_API_BASE_URL=http://<IP_ADDRESS_LOCAL>:3000/api
 
     # Kredensial dari Agora untuk fitur panggilan video
-    EXPO_PUBLIC_AGORA_APP_ID=AGORA_APP_ID_ANDA
+    EXPO_PUBLIC_AGORA_APP_ID=AGORA_APP_ID
 
     # DSN untuk integrasi Sentry (Error Reporting)
-    EXPO_PUBLIC_SENTRY_DSN=SENTRY_DSN_ANDA
+    EXPO_PUBLIC_SENTRY_DSN=SENTRY_DSN
 
     # Kredensial Google untuk Otentikasi
-    EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID=ID_KLIEN_WEB_GOOGLE_ANDA
-    EXPO_PUBLIC_GOOGLE_ANDROID_CLIENT_ID=ID_KLIEN_ANDROID_GOOGLE_ANDA
-    EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID=ID_KLIEN_IOS_GOOGLE_ANDA
+    EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID=ID_KLIEN_WEB_GOOGLE
+    EXPO_PUBLIC_GOOGLE_ANDROID_CLIENT_ID=ID_KLIEN_ANDROID_GOOGLE
+    EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID=ID_KLIEN_IOS_GOOGLE
     ```
 
 4.  **Jalankan aplikasi:**
@@ -66,7 +66,7 @@ Pastikan Anda sudah menyiapkan [TemanDifa Backend](https://github.com/muftiardan
     npm start
     ```
 
-    Pindai kode QR yang muncul menggunakan aplikasi Expo Go di perangkat Anda, atau jalankan di simulator (Android/iOS).
+    Pindai kode QR yang muncul menggunakan aplikasi Expo Go di perangkat, atau jalankan di simulator (Android/iOS).
 
 ## 🏗️ Struktur Proyek
 
@@ -101,7 +101,7 @@ Proyek ini menggunakan Jest dan React Native Testing Library untuk pengujian kom
 
 Untuk membuat *file* aplikasi yang dapat diinstal (*standalone build*), proyek ini menggunakan Expo Application Services (EAS).
 
-1.  **Login ke Akun Expo Anda:**
+1.  **Login ke Akun Expo:**
 
     ```bash
     npx eas login
@@ -124,4 +124,4 @@ Untuk membuat *file* aplikasi yang dapat diinstal (*standalone build*), proyek i
     npx eas build --platform ios
     ```
 
-    Ikuti instruksi yang muncul di terminal. Setelah selesai, Anda akan mendapatkan tautan untuk mengunduh *file* aplikasi Anda.
+    Ikuti instruksi yang muncul di terminal. Setelah selesai, akan mendapatkan tautan untuk mengunduh *file* aplikasi.
